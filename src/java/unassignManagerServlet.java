@@ -1,20 +1,24 @@
-package webservice;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
+import dao.DemographicsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import controller.TopKPopularPlaceController;
-import java.util.LinkedHashMap;
-import utility.JsonPrint;
 
 /**
- * This is the web service for Json Top K Popular Places
- * @author Eugene
+ *
+ * @author Jesper
  */
-public class JsonTopKPopular extends HttpServlet {
+@WebServlet(urlPatterns = {"/unassignManagerServlet"})
+public class unassignManagerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -28,39 +32,25 @@ public class JsonTopKPopular extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        if (request.getMethod() != null && (request.getMethod().equals("GET"))) {
-
-            // Instantiate token specified by token
-            String token = request.getParameter("token");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            String sid = request.getParameter("sid");
+            String neighbourhood = request.getParameter("neighbourhood");
+            String role = request.getParameter("role");
+            DemographicsDAO demoDAO = new DemographicsDAO();
+            demoDAO.updateRole(sid, neighbourhood, role);
             
-            // Instantiate k value specified by user
-            String k = request.getParameter("k");
-
-            // Instantiate date specified by user
-            String date = request.getParameter("date");
-
-            // Instatiate writer
-            PrintWriter out = response.getWriter();
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet unassignManagerServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet unassignManagerServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
             
-            // Instantiate TopKPopularPlaceController
-            TopKPopularPlaceController tkpc = new TopKPopularPlaceController();
-
-            // Retrieve and instantiate the results from TopKPopularPlaceController
-            LinkedHashMap<String, Object> popularPlaceResult = tkpc.getTopKPopularPlace(k, date, token, true);
-            
-
-            // Instantiate JsonPrint utility
-            JsonPrint jsonPrint = new JsonPrint();
-            
-            // Get JSON result String
-            String prettyJsonString = jsonPrint.prettyPrint(popularPlaceResult);
-            
-            // Print the JSON output
-            out.print(prettyJsonString);
-            
-            // Close the writer
-            out.close();
+            response.sendRedirect("bootstrap.jsp");
         }
     }
 

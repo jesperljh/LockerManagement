@@ -1,7 +1,7 @@
 <%-- 
     Document   : seat
     Created on : Jun 2, 2017, 10:20:13 AM
-    Author     : Default
+    Author     : Jesper
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

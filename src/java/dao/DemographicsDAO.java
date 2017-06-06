@@ -12,7 +12,7 @@ import utility.DatabaseConnectionManager;
  * DemographicsDAO is the data access object which contains methods needed to
  * access data from demographics table in database
  *
- * @author Kenneth / Eugene
+ * @author Jesper
  */
 public class DemographicsDAO {
 
@@ -71,11 +71,13 @@ public class DemographicsDAO {
                 String macAddress = rs.getString(1);
                 String name = rs.getString(2);
                 String password = rs.getString(3);
-                String email = rs.getString(4);
+                String sid = rs.getString(4);
                 String gender = rs.getString(5);
+                String role = rs.getString(8);
+                String neighbourhood = rs.getString(9);
 
                 //Initialize new Location based on retrieve fields
-                Demographics demographics = new Demographics(macAddress, name, password, email, gender);
+                Demographics demographics = new Demographics(macAddress, name, password, sid, gender, role, neighbourhood);
 
                 //Add location to locationList
                 demographicsList.add(demographics);
@@ -127,11 +129,13 @@ public class DemographicsDAO {
                 String macAddress = resultSet.getString(1);
                 String name = resultSet.getString(2);
                 String password = resultSet.getString(3);
-                String email = resultSet.getString(4);
+                String sid = resultSet.getString(4);
                 String gender = resultSet.getString(5);
+                String role = resultSet.getString(8);
+                String neighbourhood = resultSet.getString(9);
 
                 //Initialize new Demographics
-                Demographics demographics = new Demographics(macAddress, name, password, email, gender);
+                Demographics demographics = new Demographics(macAddress, name, password, sid, gender, role, neighbourhood);
 
                 //Add demographics to demographics List
                 demographicsList.add(demographics);
@@ -192,11 +196,13 @@ public class DemographicsDAO {
                 String macAddressR = rs.getString(1);
                 String nameR = rs.getString(2);
                 String passwordR = rs.getString(3);
-                String emailR = rs.getString(4);
+                String sidR = rs.getString(4);
                 String genderR = rs.getString(5);
+                String roleR = rs.getString(8);
+                String neighbourhoodR = rs.getString(9);
 
                 //Initialize a new object with the variables
-                demographics = new Demographics(macAddressR, nameR, passwordR, emailR, genderR);
+                demographics = new Demographics(macAddressR, nameR, passwordR, sidR, genderR, roleR, neighbourhoodR);
             }
 
             //Close resultset if not null
@@ -251,11 +257,13 @@ public class DemographicsDAO {
                 String macAddressR = rs.getString(1);
                 String nameR = rs.getString(2);
                 String passwordR = rs.getString(3);
-                String emailR = rs.getString(4);
+                String sidR = rs.getString(4);
                 String genderR = rs.getString(5);
+                String roleR = rs.getString(8);
+                String neighbourhoodR = rs.getString(9);
 
                 //Instantiate new Demographics object with the result
-                demographics = new Demographics(macAddressR, nameR, passwordR, emailR, genderR);
+                demographics = new Demographics(macAddressR, nameR, passwordR, sidR, genderR, roleR, neighbourhoodR);
             }
             //If resultSet is not null, then close
             if (rs != null) {
@@ -313,11 +321,13 @@ public class DemographicsDAO {
                 String macAddressR = rs.getString(1);
                 String nameR = rs.getString(2);
                 String passwordR = rs.getString(3);
-                String emailR = rs.getString(4);
+                String sidR = rs.getString(4);
                 String genderR = rs.getString(5);
+                String roleR = rs.getString(8);
+                String neighbourhoodR = rs.getString(9);
 
                 //Instantiate new Demographics object with the result
-                demographics = new Demographics(macAddressR, nameR, passwordR, emailR, genderR);
+                demographics = new Demographics(macAddressR, nameR, passwordR, sidR, genderR, roleR, neighbourhoodR);
             }
             //If resultSet is not null, then close
             if (rs != null) {
@@ -339,7 +349,188 @@ public class DemographicsDAO {
         return demographics;
 
     }
+    
+    /**
+     * <br />Retrieves a Demographics based on role (this method is optimized
+     * to use 1 connection)
+     *
+     * @param conn the shared Connection to be used
+     * @param macAddress the macAddress of the user
+     * 
+     * @return One Demographics matching the role
+     */
+    public ArrayList<Demographics> retrieveByRole (String role) {
+        ArrayList<Demographics> demoList = new ArrayList<Demographics>();
+        //Declare a Demographics object as null
+        Demographics demographics = null;
 
+        //Prepare SQL statement
+        String stmt = "SELECT * FROM demographics WHERE role = ?";
+        try {
+            //Get connection from DatabaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+
+            //Prepare SQL statement
+            pstmt = conn.prepareStatement(stmt);
+
+            //Set parameters into prepared statement
+            pstmt.setString(1, role);
+
+            //Execute query
+            rs = pstmt.executeQuery();
+
+            //If there is results
+            while (rs.next()) {
+
+                //Then let's store the row's result into the variables
+                String macAddressR = rs.getString(1);
+                String nameR = rs.getString(2);
+                String passwordR = rs.getString(3);
+                String sidR = rs.getString(4);
+                String genderR = rs.getString(5);
+                String roleR = rs.getString(8);
+                String neighbourhoodR = rs.getString(9);
+
+                //Instantiate new Demographics object with the result
+                demographics = new Demographics(macAddressR, nameR, passwordR, sidR, genderR, roleR, neighbourhoodR);
+                demoList.add(demographics);
+            }
+            //If resultSet is not null, then close
+            if (rs != null) {
+                rs.close();
+            }
+
+            //If preparedStatement is not null, then close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                        
+            System.out.println("Failed to prepare statement:" + e);
+        } finally {
+            //Close the connection from DatabaseConnectionManager after used
+            DatabaseConnectionManager.closeConnection(conn);
+        }
+        //Return demographics object if there is a found user (or null if no user found)
+        return demoList;
+
+    }
+
+    /**
+     * <br />Retrieves a Demographics based on sid (this method is optimized
+     * to use 1 connection)
+     *
+     * @param conn the shared Connection to be used
+     * @param macAddress the macAddress of the user
+     * 
+     * @return One Demographics matching the sid
+     */
+    public Demographics retrieveBySid (String sid) {
+        //Declare a Demographics object as null
+        Demographics demographics = null;
+
+        //Prepare SQL statement
+        String stmt = "SELECT * FROM demographics WHERE sid = ?";
+        try {
+            //Get connection from DatabaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+
+            //Prepare SQL statement
+            pstmt = conn.prepareStatement(stmt);
+
+            //Set parameters into prepared statement
+            pstmt.setString(1, sid);
+
+            //Execute query
+            rs = pstmt.executeQuery();
+
+            //If there is results
+            if (rs.next()) {
+
+                //Then let's store the row's result into the variables
+                String macAddressR = rs.getString(1);
+                String nameR = rs.getString(2);
+                String passwordR = rs.getString(3);
+                String sidR = rs.getString(4);
+                String genderR = rs.getString(5);
+                String roleR = rs.getString(8);
+                String neighbourhoodR = rs.getString(9);
+
+                //Instantiate new Demographics object with the result
+                demographics = new Demographics(macAddressR, nameR, passwordR, sidR, genderR, roleR, neighbourhoodR);
+            }
+            //If resultSet is not null, then close
+            if (rs != null) {
+                rs.close();
+            }
+
+            //If preparedStatement is not null, then close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                        
+            System.out.println("Failed to prepare statement:" + e);
+        } finally {
+            //Close the connection from DatabaseConnectionManager after used
+            DatabaseConnectionManager.closeConnection(conn);
+        }
+        //Return demographics object if there is a found user (or null if no user found)
+        return demographics;
+
+    }
+    
+    /**
+     * <br />Updates a user in the Demographics table of role based on sid
+     *
+     * @param sid the sid of the user (key)
+     * @param role the role of the user
+     * 
+     * @return true if successfully updated, false if failed to update (perhaps
+     * mac address not found)
+     */
+    public boolean updateRole(String sid, String neighbourhood, String role) {
+        //Assume status is true, set false only if exception is caught
+        boolean status = true;
+
+        //Prepare SQL statement
+        String stmt = "UPDATE demographics "
+                + "SET role=?,"
+                + "neighbourhood=?"
+                + "WHERE sid = ?";
+        try {
+            //Get connection from DatabaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+
+            //Prepare prepared statement
+            pstmt = conn.prepareStatement(stmt);
+
+            //Set parameters into prepared statement
+            pstmt.setString(1, role);
+            pstmt.setString(2, neighbourhood);
+            pstmt.setString(3, sid);
+
+            //Execute update
+            pstmt.executeUpdate();
+
+            //If prepared statement is not null, close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+
+        } catch (SQLException e) {
+            //Set status to false, since there is an error in executing pstmt.executeUpdate();
+            status = false;
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                                    
+            System.out.println("Error occurred with update:" + e);
+        } finally {
+            //Close the connection from DatabaseConnectionManager after used            
+            DatabaseConnectionManager.closeConnection(conn);
+        }
+        //Returns true if successfully updated or false if update fail
+        return status;
+    }
+    
     /**
      * <br />Creates a user in the Demographics table based on specified macAddress, name, password, email and gender
      *

@@ -5,7 +5,7 @@ import is203.JWTUtility;
 
 /**
  * TokenValidation deals with the validation of token
- * @author Eugene
+ * @author Jesper
  */
 public class TokenValidation {
 

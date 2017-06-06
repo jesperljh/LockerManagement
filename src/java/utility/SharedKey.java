@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 /**
  * SharedKey retrieves the key from settings.properties file
- * @author Jingxiang
+ * @author Jesper
  * @version 1.0
  */
 public class SharedKey {

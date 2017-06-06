@@ -1,42 +1,17 @@
 <%-- 
     Document   : heatmap
     Created on : Sep 10, 2014, 3:33:26 AM
-    Author     : Eugene/Kenneth
+    Author     : Jesper
 --%>
 
 <%@page import="utility.ErrorMessage"%>
 <%@page import="entity.Demographics"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="controller.HeatmapController"%>
 <%@page import="java.util.HashMap"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="include/protect.jsp" %>
-<%    //Declare HashMap to store heatmap results 
-    HashMap<String, Object> heatmapResults = null;
-
-    //Declare variables
-    String dateTime = "";
-    String floor = "";
+<%    
     String token = (String) session.getAttribute("token");
-    //if this is a post
-    if (request.getMethod() != null && request.getMethod().equals("POST")) {
-
-        //Note, no need for validation here, the controller will check for null, invalid floor levels, dates etc
-        floor = request.getParameter("floor");
-
-        //This replaces the ' ' with a T as required by the controller.
-        dateTime = request.getParameter("date").replace(" ", "T");
-
-        //This stores the datetime for transferring between from page to page.
-        session.setAttribute("datetimeInput", dateTime);
-
-        //Declare and instantiate HeatmapController into HeatmapController object
-        HeatmapController heatmapController = new HeatmapController();
-
-        //Get heatmap results (could return results or error, depending on the input)
-        heatmapResults = heatmapController.getHeatmap(floor, dateTime, token, false);
-
-    }
 %>
 <!DOCTYPE html>
 <html>
@@ -112,23 +87,14 @@
                     // }
                 %>
                 <form action="" method="POST">
-                    <!--<label><strong>Date & Time<sup><small style="color:red; padding: 0px 5px">**Required </small></sup></strong>
-                        <input name="date" type="text" placeholder="Select a Date & Time" id="default_datetimepicker" value="<%=dateTime.replace("T", " ")%>" required/> 
-                    </label>-->
                     <label><strong>Floor</strong>
                         <select name="floor" required>
                             <%
                                 //Codes here to ensure whatever the user has selected before is selected again - to be more userfriendly
                             %>
-                            <option value="5" <% if (floor.equals("5")) {
-                                    out.print("selected");
-                                } %>>Level 5</option> 
-                            <option value="6" <% if (floor.equals("6")) {
-                                    out.print("selected");
-                                } %>>Level 6</option> 
-                            <option value="7" <% if (floor.equals("7")) {
-                                    out.print("selected");
-                                } %>>Level 7</option>  
+                            <option value="5">Level 5</option> 
+                            <option value="6">Level 6</option> 
+                            <option value="7">Level 7</option>  
                         </select>
                     </label>
                         
@@ -137,42 +103,18 @@
                             <%
                                 //Codes here to ensure whatever the user has selected before is selected again - to be more userfriendly
                             %>
-                            <option value="A-1" <% if (floor.equals("A1")) {
-                                    out.print("selected");
-                                } %>>A-1</option> 
-                            <option value="A-2" <% if (floor.equals("A2")) {
-                                    out.print("selected");
-                                } %>>A-2</option> 
-                            <option value="B-1" <% if (floor.equals("B1")) {
-                                    out.print("selected");
-                                } %>>B-1</option>
-                            <option value="B-2" <% if (floor.equals("B2")) {
-                                    out.print("selected");
-                                } %>>B-2</option>
-                            <option value="B-3" <% if (floor.equals("B3")) {
-                                    out.print("selected");
-                                } %>>B-3</option>
-                            <option value="B-4" <% if (floor.equals("B4")) {
-                                    out.print("selected");
-                                } %>>B-4</option>
-                            <option value="B-5" <% if (floor.equals("B5")) {
-                                    out.print("selected");
-                                } %>>B-5</option>
-                            <option value="C-1" <% if (floor.equals("C1")) {
-                                    out.print("selected");
-                                } %>>C-1</option>
-                            <option value="C-2" <% if (floor.equals("C2")) {
-                                    out.print("selected");
-                                } %>>C-2</option>
-                            <option value="C-3" <% if (floor.equals("C3")) {
-                                    out.print("selected");
-                                } %>>C-3</option>
-                            <option value="C-4" <% if (floor.equals("C4")) {
-                                    out.print("selected");
-                                } %>>C-4</option>
-                            <option value="C-5" <% if (floor.equals("C5")) {
-                                    out.print("selected");
-                                } %>>C-5</option>
+                            <option value="A-1">A-1</option> 
+                            <option value="A-2">A-2</option> 
+                            <option value="B-1">B-1</option>
+                            <option value="B-2">B-2</option>
+                            <option value="B-3">B-3</option>
+                            <option value="B-4">B-4</option>
+                            <option value="B-5">B-5</option>
+                            <option value="C-1">C-1</option>
+                            <option value="C-2">C-2</option>
+                            <option value="C-3">C-3</option>
+                            <option value="C-4">C-4</option>
+                            <option value="C-5">C-5</option>
                         </select>
                     </label>
                     <!--Submit-->
@@ -226,12 +168,12 @@
                 //    }
                 // }
             %>
-
-
-            <div class="medium-8 columns">
+        </div>
+            <div class="row">
+            <!--<div class="medium-8 columns">-->
             <h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
             <div id="holder"> 
-                <ul  id="place">
+                <ul id="place">
                 </ul>    
             </div>
             <div style="float:left;"> 
@@ -245,7 +187,7 @@
                 <input type="button" id="btnShowNew" value="Show Selected Seats" />
                 <input type="button" id="btnShow" value="Show All" />           
             </div>
-            </div>
+            <!--</div>-->
         </div>
 
         <!-- Included JS Files (Compressed) -->
@@ -265,8 +207,8 @@
             //$(document).foundation();
             // ********************* YELLOW *******************************
             var settings1 = {
-                rows: 4,
-                cols: 6,
+                rows: 3,
+                cols: 8,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
                 seatWidth: 35,
@@ -276,8 +218,8 @@
                 selectingSeatCss: 'selectingSeat'
             };
             var settings2 = {
-                rows: 4,
-                cols: 6,
+                rows: 3,
+                cols: 8,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
                 seatWidth: 35,
@@ -289,8 +231,8 @@
             
             // ********************* BLUE *******************************
             var settings3 = {
-                rows: 5,
-                cols: 6,
+                rows: 3,
+                cols: 10,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
                 seatWidth: 35,
@@ -300,8 +242,8 @@
                 selectingSeatCss: 'selectingSeat'
             };
             var settings4 = {
-                rows: 6,
-                cols: 10,
+                rows: 3,
+                cols: 20,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
                 seatWidth: 35,
@@ -311,8 +253,8 @@
                 selectingSeatCss: 'selectingSeat'
             };
             var settings5 = {
-                rows: 6,
-                cols: 10,
+                rows: 3,
+                cols: 20,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
                 seatWidth: 35,
@@ -322,8 +264,8 @@
                 selectingSeatCss: 'selectingSeat'
             };
             var settings6 = {
-                rows: 4,
-                cols: 6,
+                rows: 3,
+                cols: 8,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
                 seatWidth: 35,
@@ -333,8 +275,8 @@
                 selectingSeatCss: 'selectingSeat'
             };
             var settings7 = {
-                rows: 6,
-                cols: 8,
+                rows: 3,
+                cols: 16,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
                 seatWidth: 35,
@@ -372,15 +314,15 @@
                 cols: 4,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
             var settings = {
-                rows: 6,
-                cols: 10,
+                rows: 3,
+                cols: 20,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
                 seatWidth: 50,
@@ -390,12 +332,12 @@
                 selectingSeatCss: 'selectingSeat'
             };
             var settings12 = {
-                rows: 6,
-                cols: 9,
+                rows: 3,
+                cols: 18,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'

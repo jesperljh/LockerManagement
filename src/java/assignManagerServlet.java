@@ -1,20 +1,24 @@
-package webservice;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-import controller.GroupTopKPopularController;
+import dao.DemographicsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.LinkedHashMap;
-import utility.JsonPrint;
 
 /**
- * This is the web service for Json Group Top K Popular Places
- * @author Kenneth
+ *
+ * @author Jesper
  */
-public class JsonGroupTopKPopularPlaces extends HttpServlet {
+@WebServlet(urlPatterns = {"/assignManagerServlet"})
+public class assignManagerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -28,30 +32,26 @@ public class JsonGroupTopKPopularPlaces extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        if (request.getMethod() != null && (request.getMethod().equals("GET"))) {
-
-            String token = request.getParameter("token");
-            String date = request.getParameter("date");
-            String k = request.getParameter("k");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
             
-            GroupTopKPopularController gtpr = new GroupTopKPopularController();
-            LinkedHashMap<String,Object> groupPopularResult=gtpr.getTopKPopularPlaces(date, k, token, true);
-
-            // Instatiate writer
-            PrintWriter out = response.getWriter();
-
-            // Instantiate JsonPrint utility
-            JsonPrint jsonPrint = new JsonPrint();
-
-            // Get JSON result String
-            String prettyJsonString = jsonPrint.prettyPrint(groupPopularResult);
-
-            // Print the JSON output
-            out.print(prettyJsonString);
-
-            // Close the writer
-            out.close();
+            String sid = request.getParameter("searchSID");
+            String neighbourhood = request.getParameter("neighbourhood");
+            String role = request.getParameter("role");
+            DemographicsDAO demoDAO = new DemographicsDAO();
+            demoDAO.updateRole(sid, neighbourhood, role);
+                    
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet assignManagerServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+        out.println("<h1>Servlet assignManagerServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+            
+            response.sendRedirect("bootstrap.jsp");
         }
     }
 
@@ -68,7 +68,6 @@ public class JsonGroupTopKPopularPlaces extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-
     }
 
     /**

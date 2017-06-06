@@ -10,7 +10,7 @@ import utility.SharedKey;
 
 /**
  * Login Controller class deals with the authentication of the user
- * @author Jingxiang
+ * @author Jesper
  */
 public class LoginController {
 
@@ -49,7 +49,7 @@ public class LoginController {
         //Check if admin credentials matches
         if (email != null && password!= null && email.equals("admin") && password.equals("jesper")) {
             //Create demographics object for admin so he can sign in
-            demographics = new Demographics("admin-mac-address", "admin", "jesper!", "admin", "M");
+            demographics = new Demographics("admin-mac-address", "admin", "jesper", "admin", "M", "admin", "");
         } else {
             //If user did not supply credentials matching that of admin, let's call the DAO to attempt to return the Demographics object            
             demographics = demographicsDAO.retrieve(email, password);

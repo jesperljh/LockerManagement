@@ -1,7 +1,7 @@
 <%-- 
     Document   : topbar.jsp
     Created on : Sep 11, 2014, 12:58:38 AM
-    Author     : Eugene/Kenneth
+    Author     : Jesper
 --%>
 
 <nav class="top-bar toggle-topbar" data-topbar>
@@ -52,7 +52,7 @@
                         }
                     %>
                 </p>
-                <p class="lead"><strong>Email:</strong>&nbsp<%= currentUser.getEmail()%></label>
+                <p class="lead"><strong>Email:</strong>&nbsp<%= currentUser.getSid()%></label>
 
                 <a class="close-reveal-modal">&#215;</a> </div>
             <li><a href="logout.jsp"><i class="fi-paw"></i>&nbspLog Out</a></li>

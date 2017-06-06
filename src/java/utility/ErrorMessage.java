@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  * This class deals with retrieving of externalized error messages from
  * errors.properties.
  *
- * @author eugene
+ * @author Jesper
  * @version 1.0
  */
 public class ErrorMessage {

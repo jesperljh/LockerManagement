@@ -1,15 +1,12 @@
 package utility;
 
-import dao.LocationDAO;
-import dao.LocationLookupDAO;
-import entity.LocationLookup;
 import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
  * This class deals with the validation of various fields
- * @author jxsim.2013
+ * @author Jesper
  */
 public class Validation {
 
@@ -97,92 +94,5 @@ public class Validation {
         } else {
             return false;
         }
-    }
-
-    /**
-     * Validate whether the locationId is a positive number
-     *
-     * @param locationId the location id to be validated
-     * @return true if valid, false if invalid
-     */
-    public static boolean validateLocationId(String locationId) {
-
-        // Parse the locationId to check whether it is a whole number 
-        try {
-            int locationIdInt = Integer.parseInt(locationId);
-
-            // check whether it is a positive integer value
-            if (locationIdInt <= 0) {
-                return false;
-            }
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Validate whether the locationId found in the location file matches the
-     * ones in the location-lookup table
-     *
-     * @param locationId the location id to be validated
-     * @return true if valid, false if invalid
-     */
-    public static boolean validateExistingLocationId(Connection conn, String locationId) {
-
-        // Parse the locationId to check whether it is a whole number 
-        int locationIdInt = 0;
-        try {
-            locationIdInt = Integer.parseInt(locationId);
-
-            // check whether it is a positive integer value
-            if (locationIdInt <= 0) {
-                return false;
-            }
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        LocationLookupDAO locationLookupDAO = new LocationLookupDAO();
-        LocationLookup locationLookup = locationLookupDAO.retrieve(conn,locationIdInt);
-        if (locationLookup == null) {
-            return false;
-        }
-        return true;
-    }
-    /**
-     * Validate whether the locationId found in the location file matches the
-     * ones in the location-lookup table
-     *
-     * @param locationId the location id to be validated
-     * @return 0 if nothing to returned, returns a positive integer number if there is a duplicate
-     */
-    public static int validateDuplicateLocation (Connection conn, String timeStamp, String macAddress, int locationId, int currentRowNumber) {
-
-        // Parse the locationId to check whether it is a whole number 
-        LocationDAO locationDAO = new LocationDAO();
-        int locationIdInt = locationDAO.checkDuplicateLocationIdAndReplace(conn, timeStamp, macAddress, locationId, currentRowNumber);
-        
-        return locationIdInt;
-    }
-
-
-    /**
-     * Validate whether semantic place is valid
-     *
-     * @param semanticPlace the semantic place to be validated
-     * @return true if semantic place format is OK (starts with either one - SMUSISL1, SMUSISL2, SMUSISL3, SMUSISL4, SMUSISL5, SMUSISB1) and must be of length above 8 (since SMUSISLX or SMUSISBX is 8 characters, and you need to at least have the location there)
-     *
-     */
-    public static boolean validateSemanticPlace(String semanticPlace) {
-        return (
-                (semanticPlace.startsWith("SMUSISL1") || 
-                semanticPlace.startsWith("SMUSISL2") || 
-                semanticPlace.startsWith("SMUSISL3") || 
-                semanticPlace.startsWith("SMUSISL4") || 
-                semanticPlace.startsWith("SMUSISL5") || 
-                semanticPlace.startsWith("SMUSISB1")
-                )
-                && semanticPlace.length() > 8
-                );
     }
 }

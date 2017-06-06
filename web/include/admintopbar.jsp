@@ -1,7 +1,7 @@
 <%-- 
     Document   : admintopbar
     Created on : Sep 11, 2014, 3:32:04 PM
-    Author     : Eugene/Kenneth
+    Author     : Jesper
 --%>
 <nav class="top-bar" data-topbar>
     <ul class="title-area">
@@ -44,7 +44,7 @@
                         }
                     %>
                 </label>
-                    <label><strong>Email: </strong><%= currentUser.getEmail()%></label>
+                    <label><strong>Email: </strong><%= currentUser.getSid()%></label>
 
                 <a class="close-reveal-modal">&#215;</a> </div>
 

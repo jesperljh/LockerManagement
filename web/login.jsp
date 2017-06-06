@@ -1,7 +1,7 @@
 <%-- 
     Document   : index
     Created on : Sep 10, 2014, 12:20:37 AM
-    Author     : Eugene/Kenneth
+    Author     : Jesper
 --%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="entity.Demographics"%>
@@ -64,7 +64,7 @@
 
     </head>
     <body>
-        <!--SLOCA Image-->
+        <!--JPMorgan Image-->
         <div class="row">
                  <div class="small-7 small-centered column" style="padding:10px">
                     <img src="img/J_P_Morgan_Chase_Logo_2008_1.svg.png" alt="J_P_Morgan_Chase_Logo_2008_1" style="padding-top: 60px"/>

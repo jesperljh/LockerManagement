@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * DatabaseConnectionManager is used to contain methods to retrieve and close
  * connection to database
  *
- * @author Jiacheng / Jing Xiang
+ * @author Jesper
  * @version 1.0
  */
 public class DatabaseConnectionManager {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Demographics object class that represents a Device
  * User Has macAddresss, name, password, email and gender.
  * 
- * @author Eugene
+ * @author Jesper
  */
 
 public class Demographics  {
@@ -15,9 +15,10 @@ public class Demographics  {
     String macAddress;
     String name;
     String password;
-    String email;
+    String sid;
     String gender;
-    ArrayList<Location> locations;
+    String role;
+    String neighbourhood;
 
     /**
      * Creates a Demographics Object with the specified macAddresss, name,
@@ -26,16 +27,20 @@ public class Demographics  {
      * @param macAddress The mac address of the user (40 characters)
      * @param name The name of the user
      * @param password The password of the user
-     * @param email The email of the user 
+     * @param sid The sid of the user 
      * @param gender  The gender (M or F)
+     * @param role The role (admin/manager/user)
      */
-    public Demographics(String macAddress, String name, String password, String email, String gender) {
+    public Demographics(String macAddress, String name, String password, String sid, String gender, String role, String neighbourhood) {
         this.macAddress = macAddress;
         this.name = name;
         this.password = password;
-        this.email = email;
+        this.sid = sid;
         this.gender = gender;
+        this.role = role;
+        this.neighbourhood = neighbourhood;
     }
+    
 
     /**
      * Gets the macAddress of this User
@@ -96,8 +101,8 @@ public class Demographics  {
      *
      * @return the email of this User
      */
-    public String getEmail() {
-        return email;
+    public String getSid() {
+        return sid;
     }
 
     /**
@@ -105,8 +110,8 @@ public class Demographics  {
      *
      * @param email the email of the user
      */
-    public void setEmail(String email) {
-        this.email = email;
+    public void setSid(String sid) {
+        this.sid = sid;
     }
 
     /**
@@ -116,8 +121,8 @@ public class Demographics  {
      */
     public String getGender() {
         return gender;
-    }
-
+    }  
+    
     /**
      * Sets gender of this User
      *
@@ -126,68 +131,30 @@ public class Demographics  {
     public void setGender(String gender) {
         this.gender = gender;
     }
-
+    
     /**
-     * Gets year of this User
+     * Gets the role of this User
      *
-     * @return year the year (2010 - 2014)
+     * @return the role of this User
      */
-    public int getYear() {
-        if (email.indexOf("2010") != -1) {
-            return 2010;
-        } else if (email.indexOf("2011") != -1) {
-            return 2011;
-        } else if (email.indexOf("2012") != -1) {
-            return 2012;
-        } else if (email.indexOf("2013") != -1) {
-            return 2013;
-        } else if (email.indexOf("2014") != -1) {
-            return 2014;
-        }
-        return 0;
+    public String getRole() {
+        return role;
     }
 
     /**
-     * Gets school of this User
+     * Sets role of this User
      *
-     * @return school the school (business/accountancy/sis/economics/law/socsci)
+     * @param role the role of the user (admin/manager/user)
      */
-    public String getSchool() {
-        if (email.indexOf("business.smu.edu.sg") != -1) {
-            return "business";
-        } else if (email.indexOf("accountancy.smu.edu.sg") != -1) {
-            return "accountancy";
-        } else if (email.indexOf("sis.smu.edu.sg") != -1) {
-            return "sis";
-        } else if (email.indexOf("economics.smu.edu.sg") != -1) {
-            return "economics";
-        } else if (email.indexOf("socsc.smu.edu.sg") != -1) {
-            return "socsc";
-        } else if (email.indexOf("law.smu.edu.sg") != -1) {
-            return "law";
-        } else {
-            return null;
-        }
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    /**
-     * Gets locations of where this Demographics user has been (not used except
-     * in Automatic Group Detection)
-     *
-     * @return ArrayList<Location> of locations where the user has been
-     */
-    public ArrayList<Location> getLocations() {
-        return locations;
+    public String getNeighbourhood() {
+        return neighbourhood;
     }
 
-    /**
-     * Sets a location list of users who have been here before.
-     *
-     * @param locations the ArrayList<Location> of locations into the
-     * Demographics object
-     */
-    public void setLocations(ArrayList<Location> locations) {
-        this.locations = locations;
+    public void setNeighbourhood(String neighbourhood) {
+        this.neighbourhood = neighbourhood;
     }
-
 }
