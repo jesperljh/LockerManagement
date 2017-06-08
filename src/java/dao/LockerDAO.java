@@ -94,6 +94,8 @@ public class LockerDAO {
         return lockerList;
 
     }
+    
+    
 
     public boolean updateLockers(ArrayList<Locker> lockerList) {
         //Assume status is  true, set false only if exception is caught

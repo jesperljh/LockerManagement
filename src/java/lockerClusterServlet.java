@@ -67,7 +67,7 @@ public class lockerClusterServlet extends HttpServlet {
 
 
             String nb = request.getParameter("neighbourhood");
-            boolean validateRequest = lc.checkFreeLockersInCluster(lockerCluster);
+            boolean validateRequest = lc.checkFreeLockers(lockerCluster);
             
             boolean lcResult = false;
             if (validateRequest) {
