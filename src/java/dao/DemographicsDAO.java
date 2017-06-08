@@ -490,7 +490,7 @@ public class DemographicsDAO {
      * mac address not found)
      */
     public boolean updateRole(String sid, String neighbourhood, String role) {
-        //Assume status is true, set false only if exception is caught
+        //Assume status is  true, set false only if exception is caught
         boolean status = true;
 
         //Prepare SQL statement
