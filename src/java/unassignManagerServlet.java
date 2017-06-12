@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 
+import controller.DemographicsCSVController;
+import controller.LockerController;
 import dao.DemographicsDAO;
+import dao.LockerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -36,19 +39,13 @@ public class unassignManagerServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             String sid = request.getParameter("sid");
             String neighbourhood = request.getParameter("neighbourhood");
-            String role = request.getParameter("role");
-            DemographicsDAO demoDAO = new DemographicsDAO();
-            demoDAO.updateRole(sid, neighbourhood, role);
-            
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet unassignManagerServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet unassignManagerServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            String choice = request.getParameter("choice");
+            LockerController lockerCtrl = new LockerController();
+            DemographicsCSVController demoCtrl = new DemographicsCSVController();
+            demoCtrl.unassignManager(sid, neighbourhood);
+            if(choice.equals("yes")){
+                lockerCtrl.unassignAllMembersFromNeighbourhood(neighbourhood);
+            }
             
             response.sendRedirect("bootstrap.jsp");
         }

@@ -170,7 +170,6 @@
                 <%
                     for (Demographics demographics : demoList) {
                 %>
-                <form action="unassignManagerServlet" method="POST">
                     <div class="row add-people-section">
                         <div class="small-12 medium-6 columns about-people">
                             <div class="about-people-avatar">
@@ -194,12 +193,28 @@
                         </div>
                         <div class="small-12 medium-6 columns add-friend">
                             <div class="add-friend-action">
-                                <input type="submit" class="button radius primary small" value="Unassign" >
+                                <button data-reveal-id="<%=demographics.getSid()%>Modal" class="button radius primary small">
+                                    <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                    Unassign Manager
+                                </button>
                                 <a href="/LockerAssignment/AssignLockerToManager.jsp?sid=<%=demographics.getSid()%>" class="button radius secondary small">Assign Locker Cluster</a>
                             </div>
                         </div>
                     </div>
-                </form>
+
+                    <!-- Reveal Modals begin -->
+                    <div id="<%=demographics.getSid()%>Modal" class="reveal-modal" data-reveal aria-labelledby="firstModalTitle" aria-hidden="true" role="dialog">
+                        <h2 id="firstModalTitle">Remove all users assigned to this neighbourhood?</h2>
+                        <form action="unassignManagerServlet" method="POST">
+                            <input type="hidden" name="sid" id="sid" value="<%=demographics.getSid()%>">
+                            <input type="hidden" name="neighbourhood" id="neighbourhood" value="<%=demographics.getNeighbourhood()%>">
+                            <label><strong>Please choose:</strong></label>
+                            <input type="radio" name="choice" value="yes" checked> Yes<br>
+                            <input type="radio" name="choice" value="no"> No<br>  
+                            <p><input type="submit" class="button sloca normal" value="Submit" /></p>
+                            <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+                        </form>
+                    </div>
                 <%
                     }
                 %>

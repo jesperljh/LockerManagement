@@ -145,4 +145,17 @@ public class LockerController {
         lockerDAO.updateLockers(subList);*/
         return true;
     }
+    
+    public boolean unassignAllMembersFromNeighbourhood(String nb) {
+        LockerDAO lockerDAO = new LockerDAO();
+        ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();
+        for(Locker l : lockerList){
+            if(l.getNeighbourhood() != null && l.getNeighbourhood().equals(nb)){
+                l.setNeighbourhood(null);
+            }
+        }
+        lockerDAO.updateLockers(lockerList);
+        return true;
+    }
+    
 }

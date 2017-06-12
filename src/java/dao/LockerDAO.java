@@ -94,30 +94,42 @@ public class LockerDAO {
         return lockerList;
 
     }
-    
-    
 
     public boolean updateLockers(ArrayList<Locker> lockerList) {
         //Assume status is  true, set false only if exception is caught
         boolean status = true;
         for (Locker l : lockerList) {
-            
             //Prepare SQL statement
-            String stmt = "UPDATE lockers "
-                    + "SET cluster=?,"
-                    + "neighbourhood=?"
-                    + "WHERE id = ?";
+            String stmt = "";
+            if (l.getNeighbourhood() == null) {
+                stmt = "UPDATE lockers "
+                        + "SET cluster=?,"
+                        + "neighbourhood = NULL"
+                        + " WHERE id = ?";
+            } else {
+                //Prepare SQL statement
+                stmt = "UPDATE lockers "
+                        + "SET cluster=?,"
+                        + "neighbourhood=?"
+                        + " WHERE id = ?";
+            }
+
             try {
                 //Get connection from DatabaseConnectionManager
                 conn = DatabaseConnectionManager.getConnection();
 
                 //Prepare prepared statement
                 pstmt = conn.prepareStatement(stmt);
-
-                //Set parameters into prepared statement
-                pstmt.setString(1, l.getCluster());
-                pstmt.setString(2, l.getNeighbourhood());
-                pstmt.setInt(3, l.getId());
+                if (l.getNeighbourhood() == null) {
+                    //Set parameters into prepared statement
+                    pstmt.setString(1, l.getCluster());
+                    pstmt.setInt(2, l.getId());
+                } else {
+                    //Set parameters into prepared statement
+                    pstmt.setString(1, l.getCluster());
+                    pstmt.setString(2, l.getNeighbourhood());
+                    pstmt.setInt(3, l.getId());
+                }
 
                 //Execute update
                 pstmt.executeUpdate();

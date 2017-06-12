@@ -44,4 +44,8 @@ public class DemographicsCSVController {
         
         return demographic;
     }
+    
+    public boolean unassignManager(String sid, String nb) {
+        return demographicsDAO.updateRole(sid, nb, "user");
+    }
 }
