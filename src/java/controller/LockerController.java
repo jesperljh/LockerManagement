@@ -56,6 +56,32 @@ public class LockerController {
         }
         return lockerClusterMap;
     }
+    
+    
+    public HashMap<String, ArrayList<Locker>> getLockerClusterListByNeighbourhood(String nb) {
+
+        // Creates a sublist of lockers based on a single cluster name
+        ArrayList<Locker> lockerList = lockerDAO.retrieveLockersByNeighbourhood(nb);
+        HashMap<String, ArrayList<Locker>> lockerClusterMap = new HashMap<String, ArrayList<Locker>>();
+
+        for (Locker l : lockerList) {
+            String clusterName = l.getCluster();
+            ArrayList<Locker> subLockers = lockerClusterMap.get(clusterName);
+            if (subLockers == null) {
+                ArrayList<Locker> tempLockerList = new ArrayList<Locker>();
+                tempLockerList.add(l);
+                lockerClusterMap.put(clusterName, tempLockerList);
+            } else {
+                subLockers.add(l);
+                lockerClusterMap.put(clusterName, subLockers);
+            }
+        }
+        return lockerClusterMap;
+    }
+    
+    
+    
+    
 
     public boolean checkFreeLockers(HashMap<String, Integer> lockerCluster) {
 
