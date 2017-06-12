@@ -38,7 +38,7 @@
 
             //If user is an admin
             if (demographics.getName().equals("admin")) {
-                response.sendRedirect("admin");
+                response.sendRedirect("admin.jsp");
             } else {
                 //If user is student
                 response.sendRedirect("heatmap.jsp");

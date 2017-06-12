@@ -1,5 +1,5 @@
 <%-- 
-    Document   : bootstrap.jsp
+    Document   : admin.jsp
     Created on : Sep 11, 2014, 3:14:29 PM
     Author     : Jesper Lim
 --%>

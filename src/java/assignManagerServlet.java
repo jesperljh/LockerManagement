@@ -51,7 +51,7 @@ public class assignManagerServlet extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
             
-            response.sendRedirect("bootstrap.jsp");
+            response.sendRedirect("admin.jsp");
         }
     }
 

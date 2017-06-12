@@ -47,7 +47,7 @@ public class unassignManagerServlet extends HttpServlet {
                 lockerCtrl.unassignAllMembersFromNeighbourhood(neighbourhood);
             }
             
-            response.sendRedirect("bootstrap.jsp");
+            response.sendRedirect("admin.jsp");
         }
     }
 
