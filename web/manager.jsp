@@ -195,7 +195,7 @@
      </div>-->
             <%                //    }
                 // }
-            %>
+%>
         </div>
         <div class="row">
             <!--<div class="medium-8 columns">-->
@@ -232,8 +232,7 @@
         <script src="js/datetime/app.js" type="text/javascript"></script>
 
         <script>
-                            var namesOff = "namesOff";
-                            var namesOn = "namesOn";
+
 
                             function loadNames() {
                                 var names = ["John", "Jacob", "Jingleheimer", "Schmidt"];
@@ -242,6 +241,25 @@
                                 refreshAssignList(names2);
                             }
 
+                            //window.onload = function () {
+                            //  getData();
+                            //};
+                            function getData() {
+
+                                var string = 'id=2&checkval=sex';
+                                $.ajax({
+                                    type: "POST",
+                                    url: '/site/scatterplot',
+                                    data: {name: 'myfilename', _csrf: yii.getCsrfToken()},
+                                    //dataType: "json",
+                                    success: function (response) {
+                                        var resp = response;
+                                        var arr = jQuery.parseJSON(response);
+                                        var data = arr;
+                                        scatterplot(data);
+                                    }});
+                                return false;
+                            }
 
                             function addAllNames() {
 
@@ -252,14 +270,14 @@
                                 while (count > 0) {
                                     // each element in unusedNamesList as a child node called text node with a value
                                     name = unusedNamesList[0].childNodes[0].nodeValue;
-                                    temp_name.push(name);                                    
+                                    temp_name.push(name);
                                     unusedNamesList[0].className = unusedNamesList[0].className.replace("unUsedNamesPoint", "usedNamesPoint");
                                     count--;
                                 }
                                 $("ul#unUsedNames li").remove();
                                 refreshAssignList(temp_name);
                             }
-                            
+
                             function removeAllNames() {
 
                                 var usedNamesList = document.getElementsByClassName("usedNamesPoint");
@@ -269,16 +287,16 @@
                                 while (count > 0) {
                                     // each element in unusedNamesList as a child node called text node with a value
                                     name = usedNamesList[0].childNodes[0].nodeValue;
-                                    temp_name.push(name);                                    
+                                    temp_name.push(name);
                                     usedNamesList[0].className = usedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
                                     count--;
                                 }
                                 $("ul#usedNames li").remove();
                                 refreshUnassignList(temp_name);
                             }
-                            
-                            function refreshUnassignList(temp_name){
-                                
+
+                            function refreshUnassignList(temp_name) {
+
                                 // import all unselected names
                                 for (i = 0; i < temp_name.length; i++) {
                                     var name = temp_name[i];
@@ -295,7 +313,7 @@
                                             $(this).addClass("unUsedBold");
                                         }
                                     })
-                                    );
+                                            );
 
                                     var newTextNode = document.createTextNode(name);
                                     //newListElement.className = "namesOff";
@@ -306,8 +324,8 @@
                                     usedNames.appendChild(newListElement);
                                 }
                             }
-                            function refreshAssignList(temp_name){
-                                
+                            function refreshAssignList(temp_name) {
+
                                 // import all unselected names
                                 for (i = 0; i < temp_name.length; i++) {
                                     var name = temp_name[i];
@@ -324,7 +342,7 @@
                                             $(this).addClass("usedBold");
                                         }
                                     })
-                                    );
+                                            );
 
                                     var newTextNode = document.createTextNode(name);
                                     //newListElement.className = "namesOff";
@@ -344,7 +362,7 @@
                                 while (count > 0) {
                                     // each element in unusedNamesList as a child node called text node with a value
                                     name = selectedNamesList[0].childNodes[0].nodeValue;
-                                    temp_name.push(name);                                    
+                                    temp_name.push(name);
                                     selectedNamesList[0].className = selectedNamesList[0].className.replace("unUsedNamesPoint", "usedNamesPoint");
                                     count--;
                                 }
@@ -363,17 +381,17 @@
                                 while (count > 0) {
                                     // each element in unusedNamesList as a child node called text node with a value
                                     name = selectedNamesList[0].childNodes[0].nodeValue;
-                                    temp_name.push(name);                                    
+                                    temp_name.push(name);
                                     selectedNamesList[0].className = selectedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
                                     count--;
                                 }
                                 $("li").remove(".usedBold");
                                 refreshUnassignList(temp_name);
-                            }                          
-                            
-                            
-                            
-                            
+                            }
+
+
+
+
                             //$(document).foundation();
                             // ********************* YELLOW *******************************
                             var settings1 = {
@@ -530,16 +548,9 @@
                                 $('#place').html(str.join(''));
                             };
 
-                            /*
-                             var $names = $('.namesOff').click(function (e) {
-                             e.preventDefault();
-                             $names.removeClass(namesOn);
-                             $(this).addClass(namesOn);
-                             });
-                             */
-                            //case I: Show from starting
-                            //init();
-
+                             
+                            
+                            
                             //Case II: If already booked
                             var bookedSeats = [5, 10, 25];
                             init(bookedSeats);
