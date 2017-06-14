@@ -4,6 +4,9 @@
     Author     : Default
 --%>
 
+<%@page import="java.util.Map"%>
+<%@page import="entity.Locker"%>
+<%@page import="controller.LockerController"%>
 <%@page import="utility.ErrorMessage"%>
 <%@page import="entity.Demographics"%>
 <%@page import="java.util.ArrayList"%>
@@ -36,7 +39,25 @@
     </head>
     <body>
         <%@include file="include/topbar.jsp" %>
-
+        <input type="hidden" name="currentNB" id="currentNB" value="<%=currentUser.getNeighbourhood()%>">
+        <%
+            LockerController lockerCtrl = new LockerController();
+            HashMap<String, ArrayList<Locker>> mapLockerList = lockerCtrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
+            int clusterNo = 0;
+            for (Map.Entry<String, ArrayList<Locker>> entry : mapLockerList.entrySet()) {
+                String key = entry.getKey();
+                ArrayList<Locker> value = entry.getValue();
+                if (key != null) {
+                    clusterNo++;
+                    out.println("<input type='checkbox' name='cluster" + clusterNo + "' id='cluster" + clusterNo + "' value='" + key + "' hidden>");
+                }
+                if (value != null) {
+                    for (Locker locker : value) {
+                        out.println("<input type='checkbox' name='lockerNo" + clusterNo + "' id='lockerNo" + clusterNo + "' value='" + locker.getLocker_no() + "' hidden>");
+                    }
+                }
+            }
+        %>
         <!--Page Header-->
         <div class="row" style="padding-top: 30px; padding-left: 18px; padding-right: 18px">
             <i class="fi-map size-48"></i>
@@ -46,41 +67,6 @@
         </div>
         <div class="row">
             <div class="small-4 columns">
-                <%// @include file="include/includeDatetime.jsp" %>
-                <%//                    if (heatmapResults != null) {
-                    //If this is not null, then this is a POST and results is stored
-                    //Get the list of messagesList, this contains error
-                    //    ArrayList<String> messages = (ArrayList) heatmapResults.get("messages");
-                    //    ArrayList<HashMap> heatmapList = (ArrayList) heatmapResults.get("heatmap");
-                    //If there are errors :(
-                    //    if (messages != null && messages.size() > 0) {
-                    //For loop to iterate them out
-                    //        for (String message : messages) {
-
-                %> 
-
-                <!--<div data-alert class="alert-box alert radius" align="center">
-                <% // =message%>
-            </div>-->
-                <%
-                    /* }
-                    //If there is no results found, display error message
-                } else if (heatmapList.size() == 0) {
-                     */
-                %>
-                <!--<div data-alert class="alert-box alert radius" align="center">
-                <%// =ErrorMessage.getMsg("noResultsFound")%>
-            </div>-->
-                <%
-                    //Display successful results
-                    // } else {
-                %>
-                <!-- <div data-alert class="alert-box success radius" align="center">
-                    Results Displayed
-                </div>-->
-                <%                    // }
-                    // }
-                %>
                 <form action="" method="POST">
                     <label><strong>Floor</strong>
                         <select name="floor" required>
@@ -95,7 +81,7 @@
                     <label><strong>Locker Cluster</strong>
                         <select name="lockerCluster" required>
                             <%                                //Codes here to ensure whatever the user has selected before is selected again - to be more userfriendly
-                            %>
+%>
                             <option value="A-1">A-1</option> 
                             <option value="A-2">A-2</option> 
                             <option value="B-1">B-1</option>
@@ -117,47 +103,6 @@
                 <input type="submit" value="Random Assign For All" class="button sloca normal radius"/>
             </div>
 
-            <%                //There are results
-                /*if (heatmapResults != null) {
-                    //Get heatmap data
-                    ArrayList<HashMap> heatmapList = (ArrayList) heatmapResults.get("heatmap");
-
-                    //If heatmap data is not empty, and size is bigger than 0 (means this is a successful request!)
-                    if (heatmapList != null && heatmapList.size() > 0) {
-                 */
-            %>
-            <!-- <div class="small-8 columns">
-                <table class="sortable"> 
-                    <thead> 
-                    <th width="200">Semantic Place</th>
-                    <th width="100">Crowd Density</th> 
-                    <th width="100">Number of People</th> 
-                    </thead>         
-                    <tbody> -->
-            <%                            //retrieves results from the hashmap
-                /* for (HashMap hm : heatmapList) {
-                    String semanticPlace = (String) hm.get("semantic-place");
-                    int crowdDensity = (Integer) hm.get("crowd-density");
-                    int numOfPeople = (Integer) hm.get("num-people");
-
-                 */
-            %>
-            <!--Displaying results-->
-            <!--<tr> 
-                <td><center><// =semanticPlace%></center></td> 
-        <td><center><%// =crowdDensity%></center></td> 
-        <td><center><%// =numOfPeople%></center></td> 
-        </tr> -->
-
-            <%
-                // }
-            %>
-            <!-- </tbody> 
-         </table>
-     </div>-->
-            <%                //    }
-                // }
-            %>
         </div>
         <div class="row">
             <!--<div class="medium-8 columns">-->
@@ -195,35 +140,125 @@
 
         <script>
             //window.onload = function () {
-              //  getData();
+            //    getData();
             //};
-            function getData() {
+            /*function getData() {
+             var nb = document.getElementById("currentNB").value;
+             $.ajax({
+             type: "POST",
+             url: 'getLockerClusterListByNeighbourhood',
+             data: {neightbourhood: nb},
+             dataType: 'json',
+             success: function (response) {
+             
+             data = response;
+             var receivedData = [];
+             $.each(data.jsonArray, function (index) {
+             $.each(data.jsonArray[index], function (key, value) {
+             var point = [];
+             
+             point.push(key);
+             point.push(value);
+             
+             receivedData.push(point);
+             //alert("key: " + key + ", value: " + value);
+             if (key == "rat") {
+             setting = settings1;
+             } else if (key == "ox") {
+             settings = settings2;
+             } else if (key == "tiger") {
+             settings = settings3;
+             } else if (key == "rabbit") {
+             settings = settings4;
+             } else if (key == "dragon") {
+             settings = settings5;
+             } else if (key == "snake") {
+             settings = settings6;
+             } else if (key == "horse") {
+             settings = settings7;
+             } else if (key == "sheep") {
+             settings = settings8;
+             } else if (key == "monkey") {
+             settings = settings9;
+             } else if (key == "rooster") {
+             settings = settings10;
+             } else if (key == "dog") {
+             settings = settings11;
+             } else if (key == "pig") {
+             settings = settings12;
+             }
+             for (i = 0; i < value; i++) {
+             bookedSeats.push(i + 1);
+             }
+             });
+             });
+             /*var resp = response;
+             var arr = jQuery.parseJSON(response);
+             var data = arr;
+             alert(arr);*/
 
-                var string = 'id=2&checkval=sex';
-                $.ajax({
-                    type: "POST",
-                    url: '/site/scatterplot',
-                    data: {name: 'myfilename', _csrf: yii.getCsrfToken()},
-                    //dataType: "json",
-                    success: function (response) {
-                        var resp = response;
-                        var arr = jQuery.parseJSON(response);
-                        var data = arr;
-                        scatterplot(data);
-                    }});
-                return false;
-            }
+            //}});
+            //init(bookedSeats);
+            //}
 
+            //Case II: If already booked
+            //var bookedSeats = [5, 10, 25];
+            var bookedSeats = [];
+
+            var initialiseLocker = function (i, key) {
+                $("input[name='lockerNo" + i + "']").each(function () {
+                    value = $(this).val();
+                    bookedSeats.push(parseInt(value.substring(1)));
+                });
+                if (key == "rat") {
+                    setting = settings1;
+                } else if (key == "ox") {
+                    settings = settings2;
+                } else if (key == "tiger") {
+                    settings = settings3;
+                } else if (key == "rabbit") {
+                    settings = settings4;
+                } else if (key == "dragon") {
+                    settings = settings5;
+                } else if (key == "snake") {
+                    settings = settings6;
+                } else if (key == "horse") {
+                    settings = settings7;
+                } else if (key == "sheep") {
+                    settings = settings8;
+                } else if (key == "monkey") {
+                    settings = settings9;
+                } else if (key == "rooster") {
+                    settings = settings10;
+                } else if (key == "dog") {
+                    settings = settings11;
+                } else if (key == "pig") {
+                    settings = settings12;
+                }
+                
+                return bookedSeats;
+            };
 
             //$(document).foundation();
             // ********************* YELLOW *******************************
+            var settings = {
+                rows: 3,
+                cols: 8,
+                rowCssPrefix: 'row-',
+                colCssPrefix: 'col-',
+                seatWidth: 50,
+                seatHeight: 50,
+                seatCss: 'seat',
+                selectedSeatCss: 'selectedSeat',
+                selectingSeatCss: 'selectingSeat'
+            };
             var settings1 = {
                 rows: 3,
                 cols: 8,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -233,8 +268,8 @@
                 cols: 8,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -246,8 +281,8 @@
                 cols: 10,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -257,8 +292,8 @@
                 cols: 20,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -268,8 +303,8 @@
                 cols: 20,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -279,8 +314,8 @@
                 cols: 8,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -290,8 +325,8 @@
                 cols: 16,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -303,8 +338,8 @@
                 cols: 6,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -314,8 +349,8 @@
                 cols: 6,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -331,7 +366,7 @@
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
-            var settings = {
+            var settings11 = {
                 rows: 3,
                 cols: 20,
                 rowCssPrefix: 'row-',
@@ -354,30 +389,45 @@
                 selectingSeatCss: 'selectingSeat'
             };
 
-            //Case II: If already booked
-            var bookedSeats = [5, 10, 25];
-            init(bookedSeats);
-
             //case I: Show from starting
             //init();
             var init = function (reservedSeat) {
-                getData();
-                var str = [], seatNo, className;
-                for (i = 0; i < settings.rows; i++) {
-                    for (j = 0; j < settings.cols; j++) {
-                        seatNo = (i + j * settings.rows + 1);
-                        className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
-                        if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
-                            className += ' ' + settings.selectedSeatCss;
+                for (a = 1; a <= 12; a++) {
+                    if (document.getElementById('cluster' + a) != null) {
+                        reservedSeat = initialiseLocker(a, document.getElementById("cluster" + a).value);
+                        var str = [], seatNo, className;
+                        for (i = 0; i < settings.rows; i++) {
+                            for (j = 0; j < settings.cols; j++) {
+                                seatNo = (i + j * settings.rows + 1);
+                                className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
+                                alert($.isArray(reservedSeat));
+                                alert($.inArray(seatNo, reservedSeat));
+                                if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
+                                    className += ' ' + settings.selectedSeatCss;
+                                }
+                                str.push('<li class="' + className + '"' +
+                                        'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
+                                        '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
+                                        '</li>');
+                            }
                         }
-                        str.push('<li class="' + className + '"' +
-                                'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
-                                '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
-                                '</li>');
+                        $('#place').html(str.join(''));
                     }
                 }
-                $('#place').html(str.join(''));
+
             };
+            //getData();
+            init(bookedSeats);
+
+            /*function toggleBtn() {
+             if ($(this).hasClass(settings.seatCss)) {
+             if ($(this).hasClass(settings.selectedSeatCss)) {
+             alert('This seat is already reserved');
+             } else {
+             $(this).toggleClass(settings.selectingSeatCss);
+             }
+             }
+             }*/
 
             $('.' + settings.seatCss).click(function () {
                 if ($(this).hasClass(settings.selectedSeatCss)) {

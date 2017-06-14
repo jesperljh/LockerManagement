@@ -104,7 +104,7 @@ public class LockerDAO {
         ArrayList<Locker> lockerList = new ArrayList<Locker>();
 
         //Prepare SQL statement
-        String stmt = "SELECT * FROM lockers WHERE neigbourhood=?";
+        String stmt = "SELECT * FROM lockers WHERE neighbourhood=?";
         try {
             //Get connection from DatabaseConnectionManager
             conn = DatabaseConnectionManager.getConnection();
