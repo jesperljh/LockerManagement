@@ -41,6 +41,8 @@
         <link rel="stylesheet" href="css/foundation.css" />
         <link rel="stylesheet" type="text/css" href="css/foundation-icons/foundation-icons.css">
         <link rel="stylesheet" type="text/css" href="css/foundation-icons/foundation-icons.svg">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+        
 
         <!-- DatePicker CSS & Javascript-->
         <link rel="stylesheet" href="css/datetime/jquery.datetimepicker.css">
@@ -78,26 +80,21 @@
             <hr>
         </div>
 
-
-
-
-
-
         <div class="row">
             <div>
                 <div class="row">
-                    <div style="overflow: scroll; height: 300px" class="small-5 columns">
+                    <div style="overflow: scroll; height: 300px; border: 1px solid #ccc!important"" class="small-5 columns">
                         <ul id="unUsedNames" style="list-style-type:none" class="side-nav"></ul>
                     </div>
                     <div class="small-2 columns">
                         <div class="row"></div>
-                        <button name="buttonAddAll" class="button sloca normal radius" onclick="addAllNames()">Assign All</button>
-                        <button name="buttonAddSelected" class="button sloca normal radius" onclick="addSelectedNames()">Assign Selected</button>
-                        <div class="row"></div>
-                        <button name="buttonRemoveAll" class="button sloca normal radius" onclick="removeAllNames()">Remove All</button>
-                        <button name="buttonRemoveSelected" class="button sloca normal radius" onclick="removeSelectedNames()">Remove Selected</button>
+                        <button name="buttonAddAll" class="button small expand radius" onclick="addAllNames()">Assign All <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></button>
+                        <button name="buttonAddSelected" class="button small expand radius" onclick="addSelectedNames()">Assign Selected <i class="fa fa-angle-right fa-lg" aria-hidden="true"></i></button>
+                        <div style="padding-bottom: 30px" class="row"></div>
+                        <button name="buttonRemoveAll" class="button small expand radius" onclick="removeAllNames()"><i class="fa fa-angle-double-left fa-lg" aria-hidden="true"></i> Remove All</button>
+                        <button name="buttonRemoveSelected" class="button small expand radius" onclick="removeSelectedNames()"><i class="fa fa-angle-left fa-lg" aria-hidden="true"></i> Remove Selected</button>
                     </div>
-                    <div style="overflow: scroll; height: 300px" class="small-5 columns">
+                    <div style="overflow: scroll; height: 300px; border: 1px solid #ccc!important" class="small-5 columns">
                         <ul id="usedNames" style="list-style-type:none" class="side-nav"></ul>
                     </div>
                 </div>
@@ -106,16 +103,6 @@
 
             <div class="small-4 columns">
                 <form action="" method="POST">
-                    <label><strong>Floor</strong>
-                        <select name="floor" required>
-                            <%                                //Codes here to ensure whatever the user has selected before is selected again - to be more userfriendly
-                            %>
-                            <option value="5">Level 5</option> 
-                            <option value="6">Level 6</option> 
-                            <option value="7">Level 7</option>  
-                        </select>
-                    </label>
-
                     <label><strong>Locker Cluster</strong>
                         <select name="lockerCluster" required>
                             <%                                //Codes here to ensure whatever the user has selected before is selected again - to be more userfriendly
@@ -135,11 +122,10 @@
                         </select>
                     </label>
                     <!--Submit-->
-                    <input type="submit" value="Submit" class="button sloca normal radius"/>
                     <input type="submit" value="Random Assign" class="button sloca normal radius"/>
                 </form>
-                <input type="submit" value="Random Assign For All" class="button sloca normal radius"/>
             </div>
+                            <hr>
 
         </div>
         <div class="row">
@@ -156,7 +142,7 @@
                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Selected Locker</li>
                 </ul>
             </div>
-            <div style="clear:both;width:100%">
+            <!--<div style="clear:both;width:100%">
                 <input type="button" id="btnShowNew" value="Show Selected Seats" />
                 <input type="button" id="btnShow" value="Show All" />           
             </div>
