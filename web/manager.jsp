@@ -8,9 +8,14 @@
 <%@page import="entity.Demographics"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="include/protect.jsp" %>
 <%    String token = (String) session.getAttribute("token");
+        String error = (String)request.getAttribute("error");
+        if(error != null){
+            out.println("<script>alert('" + error + "');</script>");
+        }
 %>
 <!DOCTYPE html>
 <html>
@@ -63,63 +68,65 @@
 
 
         <div class="row">
-            <div>
-                <div class="row">
-                    <div style="overflow: scroll; height: 300px" class="small-5 columns">
-                        <ul id="unUsedNames" style="list-style-type:none" class="side-nav"></ul>
-                    </div>
-                    <div class="small-2 columns">
-                        <div class="row"></div>
-                        <button name="buttonAddAll" class="button sloca normal radius" onclick="addAllNames()">Assign All</button>
-                        <button name="buttonAddSelected" class="button sloca normal radius" onclick="addSelectedNames()">Assign Selected</button>
-                        <div class="row"></div>
-                        <button name="buttonRemoveAll" class="button sloca normal radius" onclick="removeAllNames()">Remove All</button>
-                        <button name="buttonRemoveSelected" class="button sloca normal radius" onclick="removeSelectedNames()">Remove Selected</button>
-                    </div>
-                    <div style="overflow: scroll; height: 300px" class="small-5 columns">
-                        <ul id="usedNames" style="list-style-type:none" class="side-nav"></ul>
+            <form action="assignLockerServlet" method="POST">
+                <input type="hidden" name="nb" value="<%=currentUser.getNeighbourhood()%>">
+                <div>
+                    <div class="row">
+                        <div style="overflow: scroll; height: 300px" class="small-5 columns">
+                            <ul id="unUsedNames" style="list-style-type:none" class="side-nav"></ul>
+                        </div>
+                        <div class="small-2 columns">
+                            <div class="row"></div>
+                            <input type="button" name="buttonAddAll" class="button tiny sloca normal radius" onclick="addAllNames()" value="Assign All">
+                            <input type="button" name="buttonAddSelected" class="button tiny sloca normal radius" onclick="addSelectedNames()" value="Assign Selected">
+                            
+                            <input type="button" name="buttonRemoveAll" class="button tiny sloca normal radius" onclick="removeAllNames()" value="Remove All">
+                            <input type="button" name="buttonRemoveSelected" class="button tiny sloca normal radius" onclick="removeSelectedNames()" value="Remove Selected">
+                        </div>
+                        <div style="overflow: scroll; height: 300px" class="small-5 columns">
+                            <ul id="usedNames" style="list-style-type:none" class="side-nav"></ul>
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
-            <div class="small-4 columns">
-                <%// @include file="include/includeDatetime.jsp" %>
-                <%//                    if (heatmapResults != null) {
-                    //If this is not null, then this is a POST and results is stored
-                    //Get the list of messagesList, this contains error
-                    //    ArrayList<String> messages = (ArrayList) heatmapResults.get("messages");
-                    //    ArrayList<HashMap> heatmapList = (ArrayList) heatmapResults.get("heatmap");
-                    //If there are errors :(
-                    //    if (messages != null && messages.size() > 0) {
-                    //For loop to iterate them out
-                    //        for (String message : messages) {
+                <div class="small-4 columns">
+                    <%// @include file="include/includeDatetime.jsp" %>
+                    <%//                    if (heatmapResults != null) {
+                        //If this is not null, then this is a POST and results is stored
+                        //Get the list of messagesList, this contains error
+                        //    ArrayList<String> messages = (ArrayList) heatmapResults.get("messages");
+                        //    ArrayList<HashMap> heatmapList = (ArrayList) heatmapResults.get("heatmap");
+                        //If there are errors :(
+                        //    if (messages != null && messages.size() > 0) {
+                        //For loop to iterate them out
+                        //        for (String message : messages) {
 
-                %> 
+                    %> 
 
-                <!--<div data-alert class="alert-box alert radius" align="center">
-                <% // =message%>
-            </div>-->
-                <%
-                    /* }
-                    //If there is no results found, display error message
-                } else if (heatmapList.size() == 0) {
-                     */
-                %>
-                <!--<div data-alert class="alert-box alert radius" align="center">
-                <%// =ErrorMessage.getMsg("noResultsFound")%>
-            </div>-->
-                <%
-                    //Display successful results
-                    // } else {
-                %>
-                <!-- <div data-alert class="alert-box success radius" align="center">
-                    Results Displayed
+                    <!--<div data-alert class="alert-box alert radius" align="center">
+                    <% // =message%>
                 </div>-->
-                <%                    // }
-                    // }
-                %>
-                <form action="" method="POST">
+                    <%
+                        /* }
+                        //If there is no results found, display error message
+                    } else if (heatmapList.size() == 0) {
+                         */
+                    %>
+                    <!--<div data-alert class="alert-box alert radius" align="center">
+                    <%// =ErrorMessage.getMsg("noResultsFound")%>
+                </div>-->
+                    <%
+                        //Display successful results
+                        // } else {
+                    %>
+                    <!-- <div data-alert class="alert-box success radius" align="center">
+                        Results Displayed
+                    </div>-->
+                    <%                    // }
+                        // }
+                    %>
+
                     <label><strong>Floor</strong>
                         <select name="floor" required>
                             <%                                //Codes here to ensure whatever the user has selected before is selected again - to be more userfriendly
@@ -132,10 +139,8 @@
 
                     <label><strong>Locker Cluster</strong>
                         <select name="lockerCluster" required>
-                            <%                                //Codes here to ensure whatever the user has selected before is selected again - to be more userfriendly
-                            %>
-                            <option value="A-1">A-1</option> 
-                            <option value="A-2">A-2</option> 
+                            <option value="rat">rat</option> 
+                            <option value="ox">ox</option> 
                             <option value="B-1">B-1</option>
                             <option value="B-2">B-2</option>
                             <option value="B-3">B-3</option>
@@ -151,9 +156,12 @@
                     <!--Submit-->
                     <input type="submit" value="Submit" class="button sloca normal radius"/>
                     <input type="submit" value="Random Assign" class="button sloca normal radius"/>
-                </form>
-                <input type="submit" value="Random Assign For All" class="button sloca normal radius"/>
-            </div>
+
+                    <!-- 
+        <input type="submit" value="Random Assign For All" class="button sloca normal radius"/>
+                    -->
+                </div>
+            </form>
 
             <%                //There are results
                 /*if (heatmapResults != null) {
@@ -234,349 +242,373 @@
         <script>
 
 
-                            function loadNames() {
-                                var names = ["John", "Jacob", "Jingleheimer", "Schmidt"];
-                                refreshUnassignList(names);
-                                var names2 = ["Super", "Cali", "Fragilistic", "Expiali", "Docious"];
-                                refreshAssignList(names2);
-                            }
+                                function loadNames() {
 
-                            //window.onload = function () {
-                            //  getData();
-                            //};
-                            function getData() {
-
-                                var string = 'id=2&checkval=sex';
-                                $.ajax({
-                                    type: "POST",
-                                    url: '/site/scatterplot',
-                                    data: {name: 'myfilename', _csrf: yii.getCsrfToken()},
-                                    //dataType: "json",
-                                    success: function (response) {
-                                        var resp = response;
-                                        var arr = jQuery.parseJSON(response);
-                                        var data = arr;
-                                        scatterplot(data);
-                                    }});
-                                return false;
-                            }
-
-                            function addAllNames() {
-
-                                var unusedNamesList = document.getElementsByClassName("unUsedNamesPoint");
-                                var count = unusedNamesList.length;
-                                var name;
-                                var temp_name = [];
-                                while (count > 0) {
-                                    // each element in unusedNamesList as a child node called text node with a value
-                                    name = unusedNamesList[0].childNodes[0].nodeValue;
-                                    temp_name.push(name);
-                                    unusedNamesList[0].className = unusedNamesList[0].className.replace("unUsedNamesPoint", "usedNamesPoint");
-                                    count--;
+                                    var names = ["John", "Jacob", "Jingleheimer", "Schmidt", "Super", "Cali", "Fragilistic", "Expiali", "Docious"];
+                                    refreshUnassignList(names);
+                                    var names2 = ["Barnaby", "Marmaduke", "Aloysius", "Benjy", "Cobweb", "Dartagnan", "Egbert", "Felix", "Gaspar", "Humbert", "Ignatius", "Jayden", "Kasper", "Leroy", "Maximilian", "Neddy", "Obiajulu", "Pepin", "Quilliam", "Rosencrantz", "Sexton", "Teddy", "Upwood", "Vivatma", "Wayland", "Xylon", "Yardley", "Zachary", "Usansky"];
+                                    refreshAssignList(names2);
                                 }
-                                $("ul#unUsedNames li").remove();
-                                refreshAssignList(temp_name);
-                            }
 
-                            function removeAllNames() {
+                                //window.onload = function () {
+                                //  getData();
+                                //};
+                                function getData() {
 
-                                var usedNamesList = document.getElementsByClassName("usedNamesPoint");
-                                var count = usedNamesList.length;
-                                var name;
-                                var temp_name = [];
-                                while (count > 0) {
-                                    // each element in unusedNamesList as a child node called text node with a value
-                                    name = usedNamesList[0].childNodes[0].nodeValue;
-                                    temp_name.push(name);
-                                    usedNamesList[0].className = usedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
-                                    count--;
+                                    var string = 'id=2&checkval=sex';
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '/site/scatterplot',
+                                        data: {name: 'myfilename', _csrf: yii.getCsrfToken()},
+                                        //dataType: "json",
+                                        success: function (response) {
+                                            var resp = response;
+                                            var arr = jQuery.parseJSON(response);
+                                            var data = arr;
+                                            scatterplot(data);
+                                        }});
+                                    return false;
                                 }
-                                $("ul#usedNames li").remove();
-                                refreshUnassignList(temp_name);
-                            }
 
-                            function refreshUnassignList(temp_name) {
+                                function addAllNames() {
 
-                                // import all unselected names
-                                for (i = 0; i < temp_name.length; i++) {
-                                    var name = temp_name[i];
-                                    var ID = "list_".concat(name);  // change later to id from demographics
-                                    var newListElement = document.createElement("li");
-                                    newListElement.setAttribute("id", ID);
-                                    newListElement.className = "unUsedNamesPoint";
-                                    newListElement.addEventListener('click', (function (e)
-                                    {
-                                        e.preventDefault();
-                                        if ($(this).hasClass("unUsedBold")) {
-                                            $(this).removeClass("unUsedBold");
-                                        } else {
-                                            $(this).addClass("unUsedBold");
-                                        }
-                                    })
-                                            );
-
-                                    var newTextNode = document.createTextNode(name);
-                                    //newListElement.className = "namesOff";
-                                    newListElement.appendChild(newTextNode); //add the text node to the newly created div. 
-
-                                    // add the newly created element and its content into the DOM
-                                    var usedNames = document.getElementById("unUsedNames");
-                                    usedNames.appendChild(newListElement);
+                                    var unusedNamesList = document.getElementsByClassName("unUsedNamesPoint");
+                                    var count = unusedNamesList.length;
+                                    var name;
+                                    var temp_name = [];
+                                    while (count > 0) {
+                                        // each element in unusedNamesList as a child node called text node with a value
+                                        name = unusedNamesList[0].childNodes[0].nodeValue;
+                                        temp_name.push(name);
+                                        unusedNamesList[0].className = unusedNamesList[0].className.replace("unUsedNamesPoint", "usedNamesPoint");
+                                        count--;
+                                    }
+                                    $("ul#unUsedNames li").remove();
+                                    refreshAssignList(temp_name);
                                 }
-                            }
-                            function refreshAssignList(temp_name) {
 
-                                // import all unselected names
-                                for (i = 0; i < temp_name.length; i++) {
-                                    var name = temp_name[i];
-                                    var ID = "list_".concat(name);  // change later to id from demographics
-                                    var newListElement = document.createElement("li");
-                                    newListElement.setAttribute("id", ID);
-                                    newListElement.className = "usedNamesPoint";
-                                    newListElement.addEventListener('click', (function (e)
-                                    {
-                                        e.preventDefault();
-                                        if ($(this).hasClass("usedBold")) {
-                                            $(this).removeClass("usedBold");
-                                        } else {
-                                            $(this).addClass("usedBold");
-                                        }
-                                    })
-                                            );
+                                function removeAllNames() {
 
-                                    var newTextNode = document.createTextNode(name);
-                                    //newListElement.className = "namesOff";
-                                    newListElement.appendChild(newTextNode); //add the text node to the newly created div. 
-
-                                    // add the newly created element and its content into the DOM
-                                    var usedNames = document.getElementById("usedNames");
-                                    usedNames.appendChild(newListElement);
+                                    var usedNamesList = document.getElementsByClassName("usedNamesPoint");
+                                    var count = usedNamesList.length;
+                                    var name;
+                                    var temp_name = [];
+                                    while (count > 0) {
+                                        // each element in unusedNamesList as a child node called text node with a value
+                                        name = usedNamesList[0].childNodes[0].nodeValue;
+                                        temp_name.push(name);
+                                        usedNamesList[0].className = usedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
+                                        count--;
+                                    }
+                                    $("ul#usedNames li").remove();
+                                    refreshUnassignList(temp_name);
                                 }
-                            }
 
-                            function addSelectedNames() {
-                                var selectedNamesList = document.getElementsByClassName("unUsedNamesPoint unUsedBold");
-                                var count = selectedNamesList.length;
-                                var name;
-                                var temp_name = [];
-                                while (count > 0) {
-                                    // each element in unusedNamesList as a child node called text node with a value
-                                    name = selectedNamesList[0].childNodes[0].nodeValue;
-                                    temp_name.push(name);
-                                    selectedNamesList[0].className = selectedNamesList[0].className.replace("unUsedNamesPoint", "usedNamesPoint");
-                                    count--;
-                                }
-                                $("li").remove(".unUsedBold");
-                                refreshAssignList(temp_name);
-                            }
+                                function refreshUnassignList(temp_name) {
+                                    
+                                    var unUsedNamesList = document.getElementsByClassName("unUsedNamesPoint");
+                                    var count = unUsedNamesList.length;
+                                    var name;                                    
+                                    for(var j=0; j<count; j++) {
+                                        // each element in unusedNamesList as a child node called text node with a value
+                                        name = unUsedNamesList[j].childNodes[0].nodeValue;
+                                        temp_name.push(name);
+                                    }
+                                    $("ul#unUsedNames li").remove();
+                                    // import all unselected names
+                                    for (i = 0; i < temp_name.length; i++) {
+                                        var name = temp_name[i];
+                                        var ID = "list_".concat(name);  // change later to id from demographics
+                                        var newListElement = document.createElement("li");
+                                        newListElement.setAttribute("id", ID);
+                                        newListElement.className = "unUsedNamesPoint";
+                                        newListElement.addEventListener('click', (function (e)
+                                        {
+                                            e.preventDefault();
+                                            if ($(this).hasClass("unUsedBold")) {
+                                                $(this).removeClass("unUsedBold");
+                                            } else {
+                                                $(this).addClass("unUsedBold");
+                                            }
+                                        })
+                                                );
 
-
-
-
-                            function removeSelectedNames() {
-                                var selectedNamesList = document.getElementsByClassName("usedNamesPoint usedBold");
-                                var count = selectedNamesList.length;
-                                var name;
-                                var temp_name = [];
-                                while (count > 0) {
-                                    // each element in unusedNamesList as a child node called text node with a value
-                                    name = selectedNamesList[0].childNodes[0].nodeValue;
-                                    temp_name.push(name);
-                                    selectedNamesList[0].className = selectedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
-                                    count--;
-                                }
-                                $("li").remove(".usedBold");
-                                refreshUnassignList(temp_name);
-                            }
-
-
-
-
-                            //$(document).foundation();
-                            // ********************* YELLOW *******************************
-                            var settings1 = {
-                                rows: 3,
-                                cols: 8,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 35,
-                                seatHeight: 35,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var settings2 = {
-                                rows: 3,
-                                cols: 8,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 35,
-                                seatHeight: 35,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            // ********************* BLUE *******************************
-                            var settings3 = {
-                                rows: 3,
-                                cols: 10,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 35,
-                                seatHeight: 35,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var settings4 = {
-                                rows: 3,
-                                cols: 20,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 35,
-                                seatHeight: 35,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var settings5 = {
-                                rows: 3,
-                                cols: 20,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 35,
-                                seatHeight: 35,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var settings6 = {
-                                rows: 3,
-                                cols: 8,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 35,
-                                seatHeight: 35,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var settings7 = {
-                                rows: 3,
-                                cols: 16,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 35,
-                                seatHeight: 35,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            // ********************* YELLOW *******************************
-                            var settings8 = {
-                                rows: 3,
-                                cols: 6,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 35,
-                                seatHeight: 35,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var settings9 = {
-                                rows: 3,
-                                cols: 6,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 35,
-                                seatHeight: 35,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var settings10 = {
-                                rows: 3,
-                                cols: 4,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 50,
-                                seatHeight: 50,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var settings = {
-                                rows: 3,
-                                cols: 20,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 50,
-                                seatHeight: 50,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var settings12 = {
-                                rows: 3,
-                                cols: 18,
-                                rowCssPrefix: 'row-',
-                                colCssPrefix: 'col-',
-                                seatWidth: 50,
-                                seatHeight: 50,
-                                seatCss: 'seat',
-                                selectedSeatCss: 'selectedSeat',
-                                selectingSeatCss: 'selectingSeat'
-                            };
-                            var init = function (reservedSeat) {
-                                loadNames();
-
-                                var str = [], seatNo, className;
-                                for (i = 0; i < settings.rows; i++) {
-                                    for (j = 0; j < settings.cols; j++) {
-                                        seatNo = (i + j * settings.rows + 1);
-                                        className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
-                                        if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
-                                            className += ' ' + settings.selectedSeatCss;
-                                        }
-                                        str.push('<li class="' + className + '"' +
-                                                'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
-                                                '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
-                                                '</li>');
+                                        var newTextNode = document.createTextNode(name);
+                                        newListElement.appendChild(newTextNode); //add the text node to the newly created div. 
+                                        
+                                        // add the newly created element and its content into the DOM
+                                        var usedNames = document.getElementById("unUsedNames");
+                                        usedNames.appendChild(newListElement);
                                     }
                                 }
-                                $('#place').html(str.join(''));
-                            };
+                                function refreshAssignList(temp_name) {
+                                    var usedNamesList = document.getElementsByClassName("usedNamesPoint");
+                                    var count = usedNamesList.length;
+                                    var name;                                    
+                                    for(var j=0; j<count; j++) {
+                                        // each element in unusedNamesList as a child node called text node with a value
+                                        name = usedNamesList[j].childNodes[0].nodeValue;
+                                        temp_name.push(name);
+                                    }
+                                    $("ul#usedNames li").remove();
+                                    // import all unselected names
+                                    for (var i = 0; i < temp_name.length; i++) {
+                                        var name = temp_name[i];
+                                        var SID = String.fromCharCode(i+65+3).concat("123456");  // change later to id from demographics
+                                        var ID = "list_".concat(name);  
+                                        var newListElement = document.createElement("li");
+                                        newListElement.setAttribute("id", ID);
+                                        newListElement.className = "usedNamesPoint";
+                                        newListElement.addEventListener('click', (function (e)
+                                        {
+                                            e.preventDefault();
+                                            if ($(this).hasClass("usedBold")) {
+                                                $(this).removeClass("usedBold");
+                                            } else {
+                                                $(this).addClass("usedBold");
+                                            }
+                                        })
+                                                );
 
-                             
-                            
-                            
-                            //Case II: If already booked
-                            var bookedSeats = [5, 10, 25];
-                            init(bookedSeats);
-                            $('.' + settings.seatCss).click(function () {
-                                if ($(this).hasClass(settings.selectedSeatCss)) {
-                                    alert('This seat is already reserved');
-                                } else {
-                                    $(this).toggleClass(settings.selectingSeatCss);
+                                        var newTextNode = document.createTextNode(name);
+                                        newListElement.appendChild(newTextNode); //add the text node to the newly created div. 
+                                        
+                                        // =============== Only for assigned names ===========//
+                                        var input = document.createElement("input");
+                                        input.type = "hidden";
+                                        input.name = i+1; // set the input name
+                                        input.value = SID; // set input value ,********* change to SID later
+                                        newListElement.appendChild(input);
+
+                                        // add the newly created element and its content into the DOM
+                                        var usedNames = document.getElementById("usedNames");
+                                        usedNames.appendChild(newListElement);
+                                    }
                                 }
-                            });
-                            $('#btnShow').click(function () {
-                                var str = [];
-                                $.each($('#place li.' + settings.selectedSeatCss + ' a, #place li.' + settings.selectingSeatCss + ' a'), function (index, value) {
-                                    str.push($(this).attr('title'));
-                                });
-                                alert(str.join(','));
-                            })
 
-                            $('#btnShowNew').click(function () {
-                                var str = [], item;
-                                $.each($('#place li.' + settings.selectingSeatCss + ' a'), function (index, value) {
-                                    item = $(this).attr('title');
-                                    str.push(item);
+                                function addSelectedNames() {
+                                    var selectedNamesList = document.getElementsByClassName("unUsedNamesPoint unUsedBold");
+                                    var count = selectedNamesList.length;
+                                    var name;
+                                    var temp_name = [];
+                                    while (count > 0) {
+                                        // each element in unusedNamesList as a child node called text node with a value
+                                        name = selectedNamesList[0].childNodes[0].nodeValue;
+                                        temp_name.push(name);
+                                        selectedNamesList[0].className = selectedNamesList[0].className.replace("unUsedNamesPoint", "usedNamesPoint");
+                                        count--;
+                                    }
+                                    $("li").remove(".unUsedBold");
+                                    refreshAssignList(temp_name);
+                                }
+
+
+
+
+                                function removeSelectedNames() {
+                                    var selectedNamesList = document.getElementsByClassName("usedNamesPoint usedBold");
+                                    var count = selectedNamesList.length;
+                                    var name;
+                                    var temp_name = [];
+                                    while (count > 0) {
+                                        // each element in unusedNamesList as a child node called text node with a value
+                                        name = selectedNamesList[0].childNodes[0].nodeValue;
+                                        temp_name.push(name);
+                                        selectedNamesList[0].className = selectedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
+                                        count--;
+                                    }
+                                    $("li").remove(".usedBold");
+                                    refreshUnassignList(temp_name);
+                                }
+
+
+
+
+                                //$(document).foundation();
+                                // ********************* YELLOW *******************************
+                                var settings1 = {
+                                    rows: 3,
+                                    cols: 8,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 35,
+                                    seatHeight: 35,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var settings2 = {
+                                    rows: 3,
+                                    cols: 8,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 35,
+                                    seatHeight: 35,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                // ********************* BLUE *******************************
+                                var settings3 = {
+                                    rows: 3,
+                                    cols: 10,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 35,
+                                    seatHeight: 35,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var settings4 = {
+                                    rows: 3,
+                                    cols: 20,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 35,
+                                    seatHeight: 35,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var settings5 = {
+                                    rows: 3,
+                                    cols: 20,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 35,
+                                    seatHeight: 35,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var settings6 = {
+                                    rows: 3,
+                                    cols: 8,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 35,
+                                    seatHeight: 35,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var settings7 = {
+                                    rows: 3,
+                                    cols: 16,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 35,
+                                    seatHeight: 35,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                // ********************* YELLOW *******************************
+                                var settings8 = {
+                                    rows: 3,
+                                    cols: 6,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 35,
+                                    seatHeight: 35,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var settings9 = {
+                                    rows: 3,
+                                    cols: 6,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 35,
+                                    seatHeight: 35,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var settings10 = {
+                                    rows: 3,
+                                    cols: 4,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 50,
+                                    seatHeight: 50,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var settings = {
+                                    rows: 3,
+                                    cols: 20,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 50,
+                                    seatHeight: 50,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var settings12 = {
+                                    rows: 3,
+                                    cols: 18,
+                                    rowCssPrefix: 'row-',
+                                    colCssPrefix: 'col-',
+                                    seatWidth: 50,
+                                    seatHeight: 50,
+                                    seatCss: 'seat',
+                                    selectedSeatCss: 'selectedSeat',
+                                    selectingSeatCss: 'selectingSeat'
+                                };
+                                var init = function (reservedSeat) {
+                                    loadNames();
+
+                                    var str = [], seatNo, className;
+                                    for (i = 0; i < settings.rows; i++) {
+                                        for (j = 0; j < settings.cols; j++) {
+                                            seatNo = (i + j * settings.rows + 1);
+                                            className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
+                                            if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
+                                                className += ' ' + settings.selectedSeatCss;
+                                            }
+                                            str.push('<li class="' + className + '"' +
+                                                    'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
+                                                    '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
+                                                    '</li>');
+                                        }
+                                    }
+                                    $('#place').html(str.join(''));
+                                };
+
+
+
+
+                                //Case II: If already booked
+                                var bookedSeats = [5, 10, 25];
+                                init(bookedSeats);
+                                $('.' + settings.seatCss).click(function () {
+                                    if ($(this).hasClass(settings.selectedSeatCss)) {
+                                        alert('This seat is already reserved');
+                                    } else {
+                                        $(this).toggleClass(settings.selectingSeatCss);
+                                    }
                                 });
-                                alert(str.join(','));
-                            })
+                                $('#btnShow').click(function () {
+                                    var str = [];
+                                    $.each($('#place li.' + settings.selectedSeatCss + ' a, #place li.' + settings.selectingSeatCss + ' a'), function (index, value) {
+                                        str.push($(this).attr('title'));
+                                    });
+                                    alert(str.join(','));
+                                })
+
+                                $('#btnShowNew').click(function () {
+                                    var str = [], item;
+                                    $.each($('#place li.' + settings.selectingSeatCss + ' a'), function (index, value) {
+                                        item = $(this).attr('title');
+                                        str.push(item);
+                                    });
+                                    alert(str.join(','));
+                                })
         </script>
     </body>
 </html>

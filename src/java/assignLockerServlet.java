@@ -4,11 +4,16 @@
  * and open the template in the editor.
  */
 
+import controller.DemographicsCSVController;
 import controller.LockerController;
+import dao.DemographicsDAO;
+import dao.LockerDAO;
+import entity.Demographics;
 import entity.Locker;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletException;
@@ -19,10 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Jesper/Jerome
+ * @author Jerome
  */
-@WebServlet(urlPatterns = {"/lockerClusterServlet"})
-public class lockerClusterServlet extends HttpServlet {
+@WebServlet(urlPatterns = {"/assignLockerServlet"})
+public class assignLockerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,48 +43,56 @@ public class lockerClusterServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet assignLockerServlet</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet assignLockerServlet at " + request.getContextPath() + "</h1>");
 
-            LockerController lc = new LockerController();
-            //ArrayList<String> clusterNames = lc.getClusterNames();
-            ArrayList<String> clusterNames = new ArrayList<String>();
-            clusterNames.add("rat");
-            clusterNames.add("ox");
-            clusterNames.add("tiger");
-            clusterNames.add("rabbit");
-            clusterNames.add("dragon");
-            clusterNames.add("snake");
-            clusterNames.add("horse");
-            clusterNames.add("sheep");
-            clusterNames.add("monkey");
-            clusterNames.add("rooster");
-            clusterNames.add("dog");
-            clusterNames.add("pig");
+            String cluster = request.getParameter("lockerCluster");
+            String nb = request.getParameter("nb");
 
-            HashMap<String, Integer> lockerCluster = new HashMap<String, Integer>();
+            DemographicsCSVController demoCtrl = new DemographicsCSVController();
+            //ArrayList<Demographics> demoNb = demoCtrl.getUsersByNeighbourHood(nb);
+            ArrayList<String> sids = new ArrayList<String>();
 
-            for (int i = 0; i < clusterNames.size(); i++) {
-                String clusterName = clusterNames.get(i);
-                String check = request.getParameter("check_" + clusterName);
-                int count = 0;
-                if (check != null) {
-                    count = Integer.parseInt(request.getParameter(clusterName));
-                }
-                lockerCluster.put(clusterName, count); // cluster and range selected
+            String id = request.getParameter("1");
+            int count = 1;
+            while (id != null) {                
+                //out.println("<p>" + id + "</p>");
+                sids.add(id);
+                count++;
+                id = request.getParameter(count + "");                
             }
 
+            LockerController lc = new LockerController();
+            HashMap<String, ArrayList<Locker>> lockerCluster = lc.getLockersWithoutPeople(nb);
 
-            String nb = request.getParameter("neighbourhood");
-            boolean enoughLockers = true;
-            HashMap<String, ArrayList<Locker>> lockerClusterMap= lc.getLockerWithoutNHood();
-             for (Map.Entry m : lockerClusterMap.entrySet()) {
-                 String clusterKey = (String)m.getKey();
-                 int availableClusterSize = lockerClusterMap.get(clusterKey).size();
-                 int selectedClusterSize = lockerCluster.get(clusterKey);
-                 
-                 if(availableClusterSize < selectedClusterSize){
-                     enoughLockers = false; 
-                 }
-             }
+            ArrayList<Locker> lockerList = lockerCluster.get(cluster);
+            if (lockerList.size() < sids.size()) {
+                request.setAttribute("error", "error message");
+                out.println("<p>Not Enough free lcokers</p>");
+                out.println("</body>");
+                out.println("</html>");
+                //response.sendRedirect("manager.jsp");
+
+            } else {
+                LockerDAO lockerDAO = new LockerDAO();
+                for (int i = 0; i < sids.size(); i++) {
+                    lockerList.get(i).setTaken_by(sids.get(i));
+                    out.println("<p>");
+                    out.println(sids.get(i));
+                    out.println("</p>");
+                }
+                lockerDAO.updateLockers(lockerList);
+                out.println("<p>Lockers Assigned</p>");
+                out.println("</body>");
+                out.println("</html>");
+                //response.sendRedirect("manager.jsp");
+            }
+
         }
     }
 

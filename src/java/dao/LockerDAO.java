@@ -169,7 +169,8 @@ public class LockerDAO {
                 //Prepare SQL statement
                 stmt = "UPDATE lockers "
                         + "SET cluster=?,"
-                        + "neighbourhood=?"
+                        + "neighbourhood=?,"
+                        + "taken_by=?"
                         + " WHERE id = ?";
             }
 
@@ -187,7 +188,8 @@ public class LockerDAO {
                     //Set parameters into prepared statement
                     pstmt.setString(1, l.getCluster());
                     pstmt.setString(2, l.getNeighbourhood());
-                    pstmt.setInt(3, l.getId());
+                    pstmt.setString(3, l.getTaken_by());
+                    pstmt.setInt(4, l.getId());
                 }
 
                 //Execute update

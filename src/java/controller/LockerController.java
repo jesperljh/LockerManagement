@@ -56,8 +56,7 @@ public class LockerController {
         }
         return lockerClusterMap;
     }
-    
-    
+
     public HashMap<String, ArrayList<Locker>> getLockerClusterListByNeighbourhood(String nb) {
 
         // Creates a sublist of lockers based on a single cluster name
@@ -78,11 +77,58 @@ public class LockerController {
         }
         return lockerClusterMap;
     }
-    
-    
-    
-    
 
+    public HashMap<String, ArrayList<Locker>> getLockerWithoutNHood() {
+
+        // Creates a sublist of lockers based on a single cluster name
+        ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();
+        HashMap<String, ArrayList<Locker>> lockerClusterMap = new HashMap<String, ArrayList<Locker>>();
+
+        for (Locker l : lockerList) {
+            String clusterName = l.getCluster();
+            if (l.getNeighbourhood() == null) {
+                ArrayList<Locker> subLockers = lockerClusterMap.get(clusterName);
+
+                if (subLockers == null) {
+                    ArrayList<Locker> tempLockerList = new ArrayList<Locker>();
+                    tempLockerList.add(l);
+                    lockerClusterMap.put(clusterName, tempLockerList);
+                } else {
+                    subLockers.add(l);
+                    lockerClusterMap.put(clusterName, subLockers);
+                }
+            }
+        }
+        return lockerClusterMap;
+    }
+
+    public HashMap<String, ArrayList<Locker>> getLockersWithoutPeople(String nb) {
+
+        HashMap<String, ArrayList<Locker>> newlockerClusterMap = new HashMap<String, ArrayList<Locker>>();
+        HashMap<String, ArrayList<Locker>> lockerClusterMap = getLockerClusterListByNeighbourhood(nb);
+
+        for (Map.Entry m : lockerClusterMap.entrySet()) {
+
+            String clusterKey = (m.getKey()).toString();
+            ArrayList<Locker> lockerList = lockerClusterMap.get(clusterKey);
+            for (Locker l : lockerList) {
+
+                ArrayList<Locker> subLockers = newlockerClusterMap.get(clusterKey);
+                if (l.getTaken_by() == null) {
+                    if (subLockers == null) {
+                        ArrayList<Locker> tempLockerList = new ArrayList<Locker>();
+                        tempLockerList.add(l);
+                        newlockerClusterMap.put(clusterKey, tempLockerList);
+                    } else {
+                        subLockers.add(l);
+                        newlockerClusterMap.put(clusterKey, subLockers);
+                    }
+                }
+            }
+        }
+        return lockerClusterMap;
+    }
+/*
     public boolean checkFreeLockers(HashMap<String, Integer> lockerCluster) {
 
         // general check of cluster and range
@@ -118,11 +164,9 @@ public class LockerController {
             }
         }
 
-            return count;
-        }
-
-    
-
+        return count;
+    }
+*/
     public boolean assignLockerToManager(String nb, HashMap<String, Integer> lockerCluster) {
 
         ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();
@@ -171,17 +215,17 @@ public class LockerController {
         lockerDAO.updateLockers(subList);*/
         return true;
     }
-    
+
     public boolean unassignAllMembersFromNeighbourhood(String nb) {
         LockerDAO lockerDAO = new LockerDAO();
         ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();
-        for(Locker l : lockerList){
-            if(l.getNeighbourhood() != null && l.getNeighbourhood().equals(nb)){
+        for (Locker l : lockerList) {
+            if (l.getNeighbourhood() != null && l.getNeighbourhood().equals(nb)) {
                 l.setNeighbourhood(null);
             }
         }
         lockerDAO.updateLockers(lockerList);
         return true;
     }
-    
+      
 }

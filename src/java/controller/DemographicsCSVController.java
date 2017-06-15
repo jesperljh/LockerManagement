@@ -48,4 +48,16 @@ public class DemographicsCSVController {
     public boolean unassignManager(String sid, String nb) {
         return demographicsDAO.updateRole(sid, nb, "user");
     }
+    
+    
+    public ArrayList<Demographics> getUsersByNeighbourHood(String nb){
+        ArrayList<Demographics> demoFull = demographicsDAO.retrieveAll();
+        ArrayList<Demographics> demoNb = new ArrayList<Demographics>();
+        for(Demographics d : demoFull){
+            if(d.getNeighbourhood().equals(nb)){
+                demoNb.add(d);
+            }            
+        }        
+        return demoNb;
+    }
 }
