@@ -41,7 +41,7 @@
                 response.sendRedirect("admin.jsp");
             } else {
                 //If user is student
-                response.sendRedirect("heatmap.jsp");
+                response.sendRedirect("user.jsp");
             }
             return;
         }

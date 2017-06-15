@@ -60,20 +60,37 @@ public class assignLockerServlet extends HttpServlet {
 
             String id = request.getParameter("1");
             int count = 1;
-            while (id != null) {                
-                //out.println("<p>" + id + "</p>");
+            while (id != null) {
+                out.println("<p>" + id + "</p>");
                 sids.add(id);
                 count++;
-                id = request.getParameter(count + "");                
+                id = request.getParameter(count + "");
             }
 
             LockerController lc = new LockerController();
-            HashMap<String, ArrayList<Locker>> lockerCluster = lc.getLockersWithoutPeople(nb);
+            
+            HashMap<String, ArrayList<Locker>> occupiedlockerCluster = lc.getLockersWithPeople(nb);
+            
+            ArrayList<Locker> occupiedlockerList = occupiedlockerCluster.get(cluster);
+            if (occupiedlockerList != null) {
+                for (Locker l : occupiedlockerList) {
+                    String sid = l.getTaken_by();
+                    if (sids.contains(sid)) {
+                        sids.remove(sid);
+                        out.println("<p>Duplicate SID found in list</p>");
+                        out.println("<p>Removing SID: " + sid + "</p>");
+                    }
+                }
+            }
 
-            ArrayList<Locker> lockerList = lockerCluster.get(cluster);
-            if (lockerList.size() < sids.size()) {
+            HashMap<String, ArrayList<Locker>> freelockerCluster = lc.getLockersWithoutPeople(nb);
+
+            ArrayList<Locker> freelockerList = freelockerCluster.get(cluster);
+            out.println("<p>Size Available:" + freelockerList.size() + "</p>");
+            out.println("<p>People Selected:" + sids.size() + "</p>");
+            if (freelockerList.size() < sids.size()) {
                 request.setAttribute("error", "error message");
-                out.println("<p>Not Enough free lcokers</p>");
+                out.println("<p>Not Enough free lockers</p>");
                 out.println("</body>");
                 out.println("</html>");
                 //response.sendRedirect("manager.jsp");
@@ -81,12 +98,9 @@ public class assignLockerServlet extends HttpServlet {
             } else {
                 LockerDAO lockerDAO = new LockerDAO();
                 for (int i = 0; i < sids.size(); i++) {
-                    lockerList.get(i).setTaken_by(sids.get(i));
-                    out.println("<p>");
-                    out.println(sids.get(i));
-                    out.println("</p>");
+                    freelockerList.get(i).setTaken_by(sids.get(i));
                 }
-                lockerDAO.updateLockers(lockerList);
+                lockerDAO.updateLockers(freelockerList);
                 out.println("<p>Lockers Assigned</p>");
                 out.println("</body>");
                 out.println("</html>");
@@ -96,7 +110,7 @@ public class assignLockerServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
