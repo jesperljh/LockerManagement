@@ -426,7 +426,7 @@
                                 $("ul#unUsedNames li").remove();
                                 refreshAssignList(temp_name);
                             }
-
+                            
                             function removeAllNames() {
 
                                 var usedNamesList = document.getElementsByClassName("usedNamesPoint");
