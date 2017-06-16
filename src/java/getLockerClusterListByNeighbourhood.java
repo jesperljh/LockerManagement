@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-import com.google.gson.Gson;
 import dao.LockerDAO;
 import entity.Locker;
 import java.io.IOException;
@@ -18,8 +17,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import net.minidev.json.JSONObject;
-import org.json.simple.JSONArray;
 
 /**
  *
@@ -69,26 +66,17 @@ public class getLockerClusterListByNeighbourhood extends HttpServlet {
             }
             response.setContentType("application/json;charset=utf-8");
             int[] sampleData = null;
-            JSONObject json = new JSONObject();
-            JSONArray array = new JSONArray();
-            JSONObject member = new JSONObject();
 
             for (Map.Entry<String, Integer> entry : lockerClusterMap2.entrySet()) {
                 String key = entry.getKey();
                 Integer value = entry.getValue();
-                member.put(key, value);
 
                 // do what you have to do here
                 // In your case, an other loop.
             }
             //member.put("", sampleData);
 
-            array.add(member);
-            json.put("jsonArray", array);
 
-            PrintWriter pw = response.getWriter();
-            pw.print(json.toString());
-            pw.close();
             //Gson gson = new Gson();
             //String json = gson.toJson(lockerList);
 

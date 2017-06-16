@@ -185,7 +185,7 @@ public class LockerController {
 
         return true; // enough free locker
     }
-
+*/
     public Integer countFreeLockers(ArrayList<Locker> lockerList) {
 
         int count = 0;
@@ -197,7 +197,7 @@ public class LockerController {
 
         return count;
     }
-*/
+
     public boolean assignLockerToManager(String nb, HashMap<String, Integer> lockerCluster) {
 
         ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();

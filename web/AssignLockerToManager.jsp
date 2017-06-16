@@ -247,7 +247,7 @@
                 </row>  
                     <% } %>
                 <row>
-                    <input type="submit" value="assign">
+                    <input style="margin-top: 15px" type="submit" value="Assign" class="button sloca normal radius"/>
                 </row> 
 
             </form>
