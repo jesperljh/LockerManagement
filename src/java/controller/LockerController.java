@@ -58,7 +58,7 @@ public class LockerController {
     }
 
     public HashMap<String, ArrayList<Locker>> getLockerClusterListByNeighbourhood(String nb) {
-        
+
         // Creates a sublist of lockers based on a single cluster name
         ArrayList<Locker> lockerList = lockerDAO.retrieveLockersByNeighbourhood(nb);
         HashMap<String, ArrayList<Locker>> lockerClusterMap = new HashMap<String, ArrayList<Locker>>();
@@ -107,7 +107,7 @@ public class LockerController {
 
     public HashMap<String, ArrayList<Locker>> getLockersWithoutPeople(String nb) {
 
-        HashMap<String, ArrayList<Locker>> newlockerClusterMap = new HashMap<String, ArrayList<Locker>>();        
+        HashMap<String, ArrayList<Locker>> newlockerClusterMap = new HashMap<String, ArrayList<Locker>>();
         HashMap<String, ArrayList<Locker>> lockerClusterMap = getLockerClusterListByNeighbourhood(nb);
 
         for (Map.Entry m : lockerClusterMap.entrySet()) {
@@ -131,11 +131,10 @@ public class LockerController {
         }
         return newlockerClusterMap;
     }
-    
-    
+
     public HashMap<String, ArrayList<Locker>> getLockersWithPeople(String nb) {
 
-        HashMap<String, ArrayList<Locker>> newlockerClusterMap = new HashMap<String, ArrayList<Locker>>();        
+        HashMap<String, ArrayList<Locker>> newlockerClusterMap = new HashMap<String, ArrayList<Locker>>();
         HashMap<String, ArrayList<Locker>> lockerClusterMap = getLockerClusterListByNeighbourhood(nb);
 
         for (Map.Entry m : lockerClusterMap.entrySet()) {
@@ -159,7 +158,24 @@ public class LockerController {
         }
         return newlockerClusterMap;
     }
-/*
+
+    public HashMap<String, Locker> getLockerByUserMap(String nb) {
+
+        HashMap<String, Locker> userLockerMap = new HashMap<String, Locker>();
+        HashMap<String, ArrayList<Locker>> occupiedlockerCluster = getLockersWithPeople(nb);
+
+        for (Map.Entry<String, ArrayList<Locker>> entry : occupiedlockerCluster.entrySet()) {
+            ArrayList<Locker> value = entry.getValue();
+            if (value != null) {
+                for (Locker l : value) {
+                    userLockerMap.put(l.getTaken_by(), l);
+                }
+            }
+        }
+        return userLockerMap;
+    }
+
+    /*
     public boolean checkFreeLockers(HashMap<String, Integer> lockerCluster) {
 
         // general check of cluster and range
@@ -197,7 +213,7 @@ public class LockerController {
 
         return count;
     }
-*/
+     */
     public boolean assignLockerToManager(String nb, HashMap<String, Integer> lockerCluster) {
 
         ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();
@@ -258,5 +274,5 @@ public class LockerController {
         lockerDAO.updateLockers(lockerList);
         return true;
     }
-      
+
 }

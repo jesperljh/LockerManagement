@@ -682,4 +682,75 @@ public class DemographicsDAO {
         //Returns true if successfully deleted or false if delete fail
         return status;
     }
+    
+    
+    
+    
+    /* added by jerome 
+        *
+        * needs commenting
+        *
+        *
+        */
+
+    public ArrayList<Demographics> retrieveByNeighbourhood(String nhood) {
+        
+        //Declare a Demographics object as null            
+        ArrayList<Demographics> demoList = new ArrayList<Demographics>();
+        //Declare a Demographics object as null        
+        Demographics demographics = null;
+
+        //Prepare SQL statement
+        String stmt = "SELECT * FROM demographics WHERE neighbourhood = ? ORDER by name ASC";
+        try {
+            //Get connection from databaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+
+            //Prepare SQL statement
+            pstmt = conn.prepareStatement(stmt);
+
+            //Set parameters into prepared statement
+            pstmt.setString(1, nhood);
+
+            //Execute query
+            rs = pstmt.executeQuery();
+
+            //If there is results
+            while (rs.next()) {
+
+                //Then let's store the row's result into the variables
+                String macAddressR = rs.getString(1);
+                String nameR = rs.getString(2);
+                String passwordR = rs.getString(3);
+                String sidR = rs.getString(4);
+                String genderR = rs.getString(5);
+                String roleR = rs.getString(8);
+                String neighbourhoodR = rs.getString(9);
+
+                //Instantiate new Demographics object with the result
+                demographics = new Demographics(macAddressR, nameR, passwordR, sidR, genderR, roleR, neighbourhoodR);
+                //Add demographics to demographics List
+                demoList.add(demographics);
+            }
+            //If resultSet is not null, then close
+            if (rs != null) {
+                rs.close();
+            }
+
+            //If preparedStatement is not null, then close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                        
+            System.out.println("Failed to prepare statement:" + e);
+        } finally {
+            //Close the connection from DatabaseConnectionManager after used
+            DatabaseConnectionManager.closeConnection(conn);
+        }
+        //Return demographics object if there is a found user (or null if no user found)
+        return demoList;
+
+    }
+
 }
