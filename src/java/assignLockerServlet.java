@@ -68,43 +68,43 @@ public class assignLockerServlet extends HttpServlet {
             }
 
             LockerController lc = new LockerController();
-            
+
             HashMap<String, ArrayList<Locker>> occupiedlockerCluster = lc.getLockersWithPeople(nb);
-            
-            ArrayList<Locker> occupiedlockerList = occupiedlockerCluster.get(cluster);
-            if (occupiedlockerList != null) {
-                for (Locker l : occupiedlockerList) {
-                    String sid = l.getTaken_by();
-                    if (sids.contains(sid)) {
-                        sids.remove(sid);
-                        out.println("<p>Duplicate SID found in list</p>");
-                        out.println("<p>Removing SID: " + sid + "</p>");
-                    }
+            HashMap<String, Locker> userLocker = lc.getLockerByUserMap(nb);
+            for (String sid : sids) {
+                if (userLocker.containsKey(sid)) {
+                    sids.remove(sid);
+                    out.println("<p>Duplicate SID found in list</p>");
+                    out.println("<p>Removing SID: " + sid + "</p>");
                 }
             }
 
             HashMap<String, ArrayList<Locker>> freelockerCluster = lc.getLockersWithoutPeople(nb);
 
             ArrayList<Locker> freelockerList = freelockerCluster.get(cluster);
-            out.println("<p>Size Available:" + freelockerList.size() + "</p>");
-            out.println("<p>People Selected:" + sids.size() + "</p>");
-            if (freelockerList.size() < sids.size()) {
-                request.setAttribute("error", "error message");
-                out.println("<p>Not Enough free lockers</p>");
-                out.println("</body>");
-                out.println("</html>");
-                //response.sendRedirect("manager.jsp");
+            if (freelockerList != null) {
+                out.println("<p>Size Available:" + freelockerList.size() + "</p>");
+                out.println("<p>People Selected:" + sids.size() + "</p>");
+                if (freelockerList.size() < sids.size()) {
+                    request.setAttribute("error", "error message");
+                    out.println("<p>Not Enough free lockers</p>");
+                    out.println("</body>");
+                    out.println("</html>");
+                    //response.sendRedirect("manager.jsp");
 
-            } else {
-                LockerDAO lockerDAO = new LockerDAO();
-                for (int i = 0; i < sids.size(); i++) {
-                    freelockerList.get(i).setTaken_by(sids.get(i));
+                } else {
+                    LockerDAO lockerDAO = new LockerDAO();
+                    for (int i = 0; i < sids.size(); i++) {
+                        freelockerList.get(i).setTaken_by(sids.get(i));
+                    }
+                    lockerDAO.updateLockers(freelockerList);
+                    out.println("<p>Lockers Assigned</p>");
+                    out.println("</body>");
+                    out.println("</html>");
+                    //response.sendRedirect("manager.jsp");
                 }
-                lockerDAO.updateLockers(freelockerList);
-                out.println("<p>Lockers Assigned</p>");
-                out.println("</body>");
-                out.println("</html>");
-                //response.sendRedirect("manager.jsp");
+            } else {
+                out.println("<p>No free lockers left</p>");
             }
 
         }
