@@ -96,9 +96,8 @@
                         <div style="overflow: scroll; height: 300px; border: 1px solid #ccc!important" class="small-5 columns">
                             <ul id="unUsedNames" style="list-style-type: none" class="side-nav">
                                 <%
-                                
-                                HashMap<String, Locker> usersMap = lockerCtrl.getLockerByUserMap(currentUser.getNeighbourhood());
-                                DemographicsCSVController demo = new DemographicsCSVController();
+                                    HashMap<String, Locker> usersMap = lockerCtrl.getLockerByUserMap(currentUser.getNeighbourhood());
+                                    DemographicsCSVController demo = new DemographicsCSVController();
 
                                 ArrayList<Demographics> users = demo.getUsersByNeighbourHood(currentUser.getNeighbourhood());
                                 // Only displays people names whose role = USERS; 
@@ -114,7 +113,6 @@
                                             <%
                                         }
                                     }
-                                }
 
                                 %>
                             </ul>
@@ -159,9 +157,9 @@
                 <hr>
             </form>
         </div>
-        <div class="row">
+        <div class="row" name="displayLocker" id="displayLocker">
             <!--<div class="medium-8 columns">-->
-            <h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
+            <!--<h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
             <div id="holder"> 
                 <ul id="place">
                 </ul>    
@@ -172,12 +170,7 @@
                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Booked Locker</li>
                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Selected Locker</li>
                 </ul>
-            </div>
-            <!--<div style="clear:both;width:100%">
-                <input type="button" id="btnShowNew" value="Show Selected Seats" />
-                <input type="button" id="btnShow" value="Show All" />           
-            </div>
-            <!--</div>-->
+            </div>-->
         </div>
 
         <!-- Included JS Files (Compressed) -->
@@ -228,6 +221,20 @@
                                     } else if (key == "pig") {
                                         settings = settings12;
                                     }
+
+                                    var displayLocker = "<row><div class='medium-8 columns'>" +
+                                            "<h5> Cluster " + key + ": </h5>" +
+                                            "<div id='holder'> <ul id='place'></ul>    </div>" +
+                                            "<div style='float:left;'>" +
+                                            "<ul id='seatDescription'>" +
+                                            "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Available Locker</li>" +
+                                            "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Booked Locker</li>" +
+                                            "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Selected Locker</li>" +
+                                            "</ul>" +
+                                            "</div></row>";
+
+                                    $('#displayLocker').html(displayLocker);
+
 
                                     return bookedSeats;
                                 };
@@ -391,6 +398,8 @@
                                                     seatNo = (i + j * settings.rows + 1);
                                                     className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
                                                     if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
+                                                        
+                                                    }else{
                                                         className += ' ' + settings.selectedSeatCss;
                                                     }
                                                     str.push('<li class="' + className + '"' +
@@ -435,14 +444,14 @@
                                     refreshUnAssignList(names);
 
                                 }
-                                function unUsedBold(li){
+                                function unUsedBold(li) {
                                     if ($(li).hasClass("unUsedBold")) {
                                         $(li).removeClass("unUsedBold");
                                     } else {
                                         $(li).addClass("unUsedBold");
                                     }
                                 }
-                                
+
 
                                 function addAllNames() {
 
@@ -534,7 +543,7 @@
                                     var count = usedNamesList.length;
                                     var sid;
                                     var name;
-                                    if(count != 0){
+                                    if (count != 0) {
                                         for (var j = 0; j < count; j++) {
                                             // each element in unusedNamesList as a child node called text node with a value
                                             name = usedNamesList[j].childNodes[0].nodeValue;
@@ -547,7 +556,7 @@
                                     // import all unselected names
                                     for (var i = 0; i < temp_name.length; i++) {
                                         var name = temp_name[i];
-                                        var SID = temp_sid[i]; 
+                                        var SID = temp_sid[i];
                                         //var ID = "list_".concat(name);
                                         var newListElement = document.createElement("li");
                                         newListElement.setAttribute("id", SID);
@@ -622,22 +631,22 @@
                                     refreshUnassignList(temp_name, temp_sid);
                                 }
                                 /*
-                                function removeSelectedNames() {
-                                    var selectedNamesList = document.getElementsByClassName("usedNamesPoint usedBold");
-                                    var count = selectedNamesList.length;
-                                    var name;
-                                    var temp_name = [];
-                                    while (count > 0) {
-                                        // each element in unusedNamesList as a child node called text node with a value
-                                        name = selectedNamesList[0].childNodes[0].nodeValue;
-                                        temp_name.push(name);
-                                        selectedNamesList[0].className = selectedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
-                                        count--;
-                                    }
-                                    $("li").remove(".usedBold");
-                                    refreshUnassignList(temp_name);
-                                }
-                                */
+                                 function removeSelectedNames() {
+                                 var selectedNamesList = document.getElementsByClassName("usedNamesPoint usedBold");
+                                 var count = selectedNamesList.length;
+                                 var name;
+                                 var temp_name = [];
+                                 while (count > 0) {
+                                 // each element in unusedNamesList as a child node called text node with a value
+                                 name = selectedNamesList[0].childNodes[0].nodeValue;
+                                 temp_name.push(name);
+                                 selectedNamesList[0].className = selectedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
+                                 count--;
+                                 }
+                                 $("li").remove(".usedBold");
+                                 refreshUnassignList(temp_name);
+                                 }
+                                 */
 
         </script>
     </body>
