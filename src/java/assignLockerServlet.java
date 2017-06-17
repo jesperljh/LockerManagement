@@ -43,70 +43,80 @@ public class assignLockerServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet assignLockerServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet assignLockerServlet at " + request.getContextPath() + "</h1>");
-
+            
             String cluster = request.getParameter("lockerCluster");
             String nb = request.getParameter("nb");
 
-            DemographicsCSVController demoCtrl = new DemographicsCSVController();
-            //ArrayList<Demographics> demoNb = demoCtrl.getUsersByNeighbourHood(nb);
             ArrayList<String> sids = new ArrayList<String>();
 
             String id = request.getParameter("1");
             int count = 1;
             while (id != null) {
-                out.println("<p>" + id + "</p>");
+                //out.println("<p>" + id + "</p>");
                 sids.add(id);
                 count++;
                 id = request.getParameter(count + "");
             }
+            // check for users who have existing lockers
+            sids = removeDuplicateSID(sids, nb); 
+            
+            // assign users lockers, return user sids who were not assigned a locker
+            sids = setLockerUsers(sids, nb, cluster);
+        }
+    }
 
-            LockerController lc = new LockerController();
+    protected ArrayList<String> removeDuplicateSID(ArrayList<String> sids, String nb) {
+        // Checks for User SIDs in <SID, Locker> hashMap
+        LockerController lc = new LockerController();
 
-            HashMap<String, ArrayList<Locker>> occupiedlockerCluster = lc.getLockersWithPeople(nb);
-            HashMap<String, Locker> userLocker = lc.getLockerByUserMap(nb);
-            for (String sid : sids) {
-                if (userLocker.containsKey(sid)) {
-                    sids.remove(sid);
-                    out.println("<p>Duplicate SID found in list</p>");
-                    out.println("<p>Removing SID: " + sid + "</p>");
-                }
+        HashMap<String, Locker> userLocker = lc.getLockerByUserMap(nb);
+        for (String sid : sids) {
+            if (userLocker.containsKey(sid)) {
+                sids.remove(sid);
             }
+        }
+        return sids;
+    }
 
-            HashMap<String, ArrayList<Locker>> freelockerCluster = lc.getLockersWithoutPeople(nb);
+    protected ArrayList<String> setLockerUsers(ArrayList<String> sids, String nb, String cluster) {
+        
+        // Sets the Locker Taken_by field and passes it back to DAO
+        LockerController lc = new LockerController();
+        LockerDAO lockerDAO = new LockerDAO();
+        
+        HashMap<String, ArrayList<Locker>> freelockerCluster = lc.getLockersWithoutPeople(nb);
+        ArrayList<Locker> freelockerList = freelockerCluster.get(cluster);
+        ArrayList<Locker> templockerList = new ArrayList<Locker>();
 
-            ArrayList<Locker> freelockerList = freelockerCluster.get(cluster);
-            if (freelockerList != null) {
-                out.println("<p>Size Available:" + freelockerList.size() + "</p>");
-                out.println("<p>People Selected:" + sids.size() + "</p>");
-                if (freelockerList.size() < sids.size()) {
-                    request.setAttribute("error", "error message");
-                    out.println("<p>Not Enough free lockers</p>");
-                    out.println("</body>");
-                    out.println("</html>");
-                    //response.sendRedirect("manager.jsp");
-
-                } else {
-                    LockerDAO lockerDAO = new LockerDAO();
-                    for (int i = 0; i < sids.size(); i++) {
-                        freelockerList.get(i).setTaken_by(sids.get(i));
-                    }
-                    lockerDAO.updateLockers(freelockerList);
-                    out.println("<p>Lockers Assigned</p>");
-                    out.println("</body>");
-                    out.println("</html>");
-                    //response.sendRedirect("manager.jsp");
+        if (freelockerList != null) {
+            
+            if (freelockerList.size() < sids.size()) {
+                // Fill up the free lockers and return the remaining SIDs
+                
+                while(freelockerList.size()>0){
+                    
+                    String temp_sid = sids.get(0);
+                    Locker temp_locker = freelockerList.get(0);
+                    
+                    temp_locker.setTaken_by(temp_sid);
+                    templockerList.add(temp_locker);
+                    
+                    sids.remove(0);
+                    freelockerList.remove(0);                    
                 }
+                lockerDAO.updateLockers(templockerList);
+                return sids;
+
             } else {
-                out.println("<p>No free lockers left</p>");
+                // Fill up the free lockers until SIDs run out                
+                for (int i = 0; i < sids.size(); i++) {
+                    freelockerList.get(i).setTaken_by(sids.get(i));
+                }
+                lockerDAO.updateLockers(freelockerList);
+                return null; // all SIDs used up, return empty list
             }
-
+        } else {
+            return sids;
         }
     }
 

@@ -94,10 +94,7 @@ public class LockerDAO {
         return lockerList;
 
     }
-    
-    
-    
-    
+
     public ArrayList<Locker> retrieveLockersByNeighbourhood(String nb) {
         //Declare a Demographics object as null
         Locker locker = null;
@@ -111,7 +108,7 @@ public class LockerDAO {
 
             //Prepare SQL statement
             pstmt = conn.prepareStatement(stmt);
-            pstmt.setString(1, nb); 
+            pstmt.setString(1, nb);
 
             //Set parameters into prepared statement
             //pstmt.setString(1, sid);
@@ -150,9 +147,6 @@ public class LockerDAO {
         return lockerList;
 
     }
-    
-    
-    
 
     public boolean updateLockers(ArrayList<Locker> lockerList) {
         //Assume status is  true, set false only if exception is caught
@@ -211,6 +205,68 @@ public class LockerDAO {
                 DatabaseConnectionManager.closeConnection(conn);
             }
         }
+        //Returns true if successfully updated or false if update fail
+        return status;
+
+    }
+
+    public boolean updateLocker(Locker l) {
+        //Assume status is  true, set false only if exception is caught
+        boolean status = true;
+
+        //Prepare SQL statement
+        String stmt = "";
+        if (l.getNeighbourhood() == null) {
+            stmt = "UPDATE lockers "
+                    + "SET cluster=?,"
+                    + "neighbourhood = NULL"
+                    + " WHERE id = ?";
+        } else {
+            //Prepare SQL statement
+            stmt = "UPDATE lockers "
+                    + "SET cluster=?,"
+                    + "neighbourhood=?,"
+                    + "taken_by=?"
+                    + " WHERE id = ?";
+        }
+
+        try {
+            //Get connection from DatabaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+
+            //Prepare prepared statement
+            pstmt = conn.prepareStatement(stmt);
+            if (l.getNeighbourhood() == null) {
+                //Set parameters into prepared statement
+                pstmt.setString(1, l.getCluster());
+                pstmt.setInt(2, l.getId());
+            } else {
+                //Set parameters into prepared statement
+                pstmt.setString(1, l.getCluster());
+                pstmt.setString(2, l.getNeighbourhood());
+                pstmt.setString(3, l.getTaken_by());
+                pstmt.setInt(4, l.getId());
+            }
+
+            //Execute update
+            pstmt.executeUpdate();
+
+            //If prepared statement is not null, close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            //end of for loop
+
+        } catch (SQLException e) {
+            //Set status to false, since there is an error in executing pstmt.executeUpdate();
+            status = false;
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                                    
+            System.out.println("Error occurred with update:" + e);
+        } finally {
+            //Close the connection from DatabaseConnectionManager after used            
+            DatabaseConnectionManager.closeConnection(conn);
+        }
+
         //Returns true if successfully updated or false if update fail
         return status;
 

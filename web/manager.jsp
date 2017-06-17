@@ -101,7 +101,9 @@
                                 DemographicsCSVController demo = new DemographicsCSVController();
 
                                 ArrayList<Demographics> users = demo.getUsersByNeighbourHood(currentUser.getNeighbourhood());
-
+                                // Only displays people names whose role = USERS; 
+                                // Iterates through a array of SIDs
+                                // Displays SIDs not found in the <String SID, Locker l> Mapping
                                 for (int i = 0; i < users.size(); i++) {
                                     if (!users.get(i).getRole().equals("manager")) {
                                         String sid = users.get(i).getSid();

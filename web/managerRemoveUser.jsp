@@ -4,6 +4,7 @@
     Author     : Default
 --%>
 
+<%@page import="controller.DemographicsCSVController"%>
 <%@page import="java.util.Map"%>
 <%@page import="entity.Locker"%>
 <%@page import="controller.LockerController"%>
@@ -86,40 +87,46 @@
         </div>
 
         <div class="row">
-            <form action="assignLockerServlet" method="POST">
+            <form action="clearLockerServlet" method="POST">
                 <div>
                     <div class="row">
-                        <div style="overflow: scroll; height: 300px; border: 1px solid #ccc!important"" class="small-5 columns">
-                            <ul id="unUsedNames" style="list-style-type:none" class="side-nav"></ul>
+
+                        <!-- Retrieved users list from the neighbourhood -->
+
+                        <div style="overflow: scroll; height: 300px; border: 1px solid #ccc!important" class="small-5 columns">
+                            <ul id="unUsedNames" style="list-style-type: none" class="side-nav">
+                                <%
+                                
+                                HashMap<String, Locker> usersMap = lockerCtrl.getLockerByUserMap(currentUser.getNeighbourhood());
+                                DemographicsCSVController demo = new DemographicsCSVController();
+
+                                ArrayList<Demographics> users = demo.getUsersByNeighbourHood(currentUser.getNeighbourhood());
+
+                                for (int i = 0; i < users.size(); i++) {
+                                    if (!users.get(i).getRole().equals("manager")) {
+                                        String sid = users.get(i).getSid();
+                                        String name = users.get(i).getName();
+                                        if (usersMap.containsKey(sid)) {
+                                            %> <li name='<%=sid%>' id='<%= sid %>' class='unUsedNamesPoint' onclick='unUsedBold(this)'><%= name%></li> 
+                                                                                        
+                                            <%
+                                        }
+                                    }
+                                }
+
+                                %>
+                            </ul>
                         </div>
                         <div class="small-2 columns">
                             <div class="row"></div>
-                            <input type="button" name="buttonAddAll" class="button small expand radius" onclick="addAllNames()" value="UnAssign All"> 
-                            <input type="button" name="buttonAddSelected" class="button small expand radius" onclick="addSelectedNames()" value="Unassign Selected"> 
+                            <input type="button" name="buttonAddAll" class="button small expand radius" onclick="addAllNames()" value="Assign All"> 
+                            <input type="button" name="buttonAddSelected" class="button small expand radius" onclick="addSelectedNames()" value="Assign Selected"> 
                             <div style="padding-bottom: 30px" class="row"></div>
                             <input type="button" name="buttonRemoveAll" class="button small expand radius" onclick="removeAllNames()" value="Remove All" >
                             <input type="button" name="buttonRemoveSelected" class="button small expand radius" onclick="removeSelectedNames()" value="Remove Selected">
                         </div>
                         <div style="overflow: scroll; height: 300px; border: 1px solid #ccc!important" class="small-5 columns">
                             <ul id="usedNames" style="list-style-type:none" class="side-nav"></ul>
-                            <%
-                                
-                                HashMap<String, ArrayList<Locker>> map = lockerCtrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
-                                int clustNum = 0;
-                                for (Map.Entry<String, ArrayList<Locker>> entry : mapLockerList.entrySet()) {
-                                    String key = entry.getKey();
-                                    ArrayList<Locker> value = entry.getValue();
-                                    if (key != null) {
-                                        clusterNo++;
-                                        out.println("<li name='cluster" + clusterNo + "' id='cluster" + clusterNo + "' value='" + key + "' hidden>");
-                                    }
-                                    if (value != null) {
-                                        for (Locker locker : value) {
-                                            out.println("<input type='checkbox' name='lockerNo" + clusterNo + "' id='lockerNo" + clusterNo + "' value='" + locker.getLocker_no() + "' hidden>");
-                                        }
-                                    }
-                                }
-                            %>
                         </div>
                     </div>
                 </div>
@@ -144,7 +151,7 @@
                         </select>
                     </label>
                     <!--Submit-->
-                    <input type="submit" value="Random Assign" class="button sloca normal radius"/>
+                    <input type="submit" value="Unassign" class="button sloca normal radius"/>
 
                 </div>
                 <hr>
@@ -372,7 +379,7 @@
                                 //case I: Show from starting
                                 //init();
                                 var init = function (reservedSeat) {
-                                    //loadNames(); //******************************Disabled for now
+                                    //loadNames();   //**********************************Diasbled for now
                                     for (a = 1; a <= 12; a++) {
                                         if (document.getElementById('cluster' + a) != null) {
                                             reservedSeat = initialiseLocker(a, document.getElementById("cluster" + a).value);
@@ -423,26 +430,37 @@
                                 function loadNames() {
 
                                     var names = ["Barnaby", "Marmaduke", "Aloysius", "Benjy", "Cobweb", "Dartagnan", "Egbert", "Felix", "Gaspar", "Humbert", "Ignatius", "Jayden", "Kasper", "Leroy", "Maximilian", "Neddy", "Obiajulu", "Pepin", "Quilliam", "Rosencrantz", "Sexton", "Teddy", "Upwood", "Vivatma", "Wayland", "Xylon", "Yardley", "Zachary", "Usansky", "John", "Jacob", "Jingleheimer", "Schmidt", "Super", "Cali", "Fragilistic", "Expiali", "Docious"];
-                                    refreshUnassignList(names);
-                                    //var names2 = 
-                                    //refreshAssignList(names2);
+                                    refreshUnAssignList(names);
+
                                 }
+                                function unUsedBold(li){
+                                    if ($(li).hasClass("unUsedBold")) {
+                                        $(li).removeClass("unUsedBold");
+                                    } else {
+                                        $(li).addClass("unUsedBold");
+                                    }
+                                }
+                                
 
                                 function addAllNames() {
 
                                     var unusedNamesList = document.getElementsByClassName("unUsedNamesPoint");
                                     var count = unusedNamesList.length;
                                     var name;
+                                    var sid;
+                                    var temp_sid = [];
                                     var temp_name = [];
                                     while (count > 0) {
                                         // each element in unusedNamesList as a child node called text node with a value
                                         name = unusedNamesList[0].childNodes[0].nodeValue;
                                         temp_name.push(name);
+                                        sid = unusedNamesList[0].getAttribute("id");
+                                        temp_sid.push(sid);
                                         unusedNamesList[0].className = unusedNamesList[0].className.replace("unUsedNamesPoint", "usedNamesPoint");
                                         count--;
                                     }
                                     $("ul#unUsedNames li").remove();
-                                    refreshAssignList(temp_name);
+                                    refreshAssignList(temp_name, temp_sid);
                                 }
 
                                 function removeAllNames() {
@@ -450,35 +468,44 @@
                                     var usedNamesList = document.getElementsByClassName("usedNamesPoint");
                                     var count = usedNamesList.length;
                                     var name;
+                                    var sid;
                                     var temp_name = [];
+                                    var temp_sid = [];
                                     while (count > 0) {
                                         // each element in unusedNamesList as a child node called text node with a value
                                         name = usedNamesList[0].childNodes[0].nodeValue;
+                                        sid = usedNamesList[0].childNodes[1].getAttribute("value");
                                         temp_name.push(name);
+                                        temp_sid.push(sid);
                                         usedNamesList[0].className = usedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
                                         count--;
                                     }
                                     $("ul#usedNames li").remove();
-                                    refreshUnassignList(temp_name);
+                                    refreshUnassignList(temp_name, temp_sid);
                                 }
 
-                                function refreshUnassignList(temp_name) {
+
+                                function refreshUnassignList(temp_name, temp_sid) {
 
                                     var unUsedNamesList = document.getElementsByClassName("unUsedNamesPoint");
                                     var count = unUsedNamesList.length;
+                                    var sid;
                                     var name;
                                     for (var j = 0; j < count; j++) {
                                         // each element in unusedNamesList as a child node called text node with a value
+                                        sid = unUsedNamesList[j].getAttribute("id");
                                         name = unUsedNamesList[j].childNodes[0].nodeValue;
                                         temp_name.push(name);
+                                        temp_sid.push(sid);
                                     }
                                     $("ul#unUsedNames li").remove();
                                     // import all unselected names
                                     for (i = 0; i < temp_name.length; i++) {
                                         var name = temp_name[i];
-                                        var ID = "list_".concat(name); // change later to id from demographics
+                                        var ID = temp_sid[i]; // change later to id from demographics
                                         var newListElement = document.createElement("li");
                                         newListElement.setAttribute("id", ID);
+                                        newListElement.setAttribute("name", ID);
                                         newListElement.className = "unUsedNamesPoint";
                                         newListElement.addEventListener('click', (function (e)
                                         {
@@ -500,23 +527,28 @@
                                     }
                                 }
 
-                                function refreshAssignList(temp_name) {
+                                function refreshAssignList(temp_name, temp_sid) {
                                     var usedNamesList = document.getElementsByClassName("usedNamesPoint");
                                     var count = usedNamesList.length;
+                                    var sid;
                                     var name;
-                                    for (var j = 0; j < count; j++) {
-                                        // each element in unusedNamesList as a child node called text node with a value
-                                        name = usedNamesList[j].childNodes[0].nodeValue;
-                                        temp_name.push(name);
+                                    if(count != 0){
+                                        for (var j = 0; j < count; j++) {
+                                            // each element in unusedNamesList as a child node called text node with a value
+                                            name = usedNamesList[j].childNodes[0].nodeValue;
+                                            sid = usedNamesList[j].childNodes[1].getAttribute("value");  //*********need to change this
+                                            temp_name.push(name);
+                                            temp_sid.push(sid);
+                                        }
                                     }
                                     $("ul#usedNames li").remove();
                                     // import all unselected names
                                     for (var i = 0; i < temp_name.length; i++) {
                                         var name = temp_name[i];
-                                        var SID = String.fromCharCode(i + 65 + 3).concat("123456"); // change later to id from demographics
-                                        var ID = "list_".concat(name);
+                                        var SID = temp_sid[i]; 
+                                        //var ID = "list_".concat(name);
                                         var newListElement = document.createElement("li");
-                                        newListElement.setAttribute("id", ID);
+                                        newListElement.setAttribute("id", SID);
                                         newListElement.className = "usedNamesPoint";
                                         newListElement.addEventListener('click', (function (e)
                                         {
@@ -549,21 +581,45 @@
                                     var selectedNamesList = document.getElementsByClassName("unUsedNamesPoint unUsedBold");
                                     var count = selectedNamesList.length;
                                     var name;
+                                    var sid;
                                     var temp_name = [];
+                                    var temp_sid = [];
                                     while (count > 0) {
                                         // each element in unusedNamesList as a child node called text node with a value
                                         name = selectedNamesList[0].childNodes[0].nodeValue;
+                                        sid = selectedNamesList[0].getAttribute("id");
                                         temp_name.push(name);
+                                        temp_sid.push(sid);
                                         selectedNamesList[0].className = selectedNamesList[0].className.replace("unUsedNamesPoint", "usedNamesPoint");
                                         count--;
                                     }
                                     $("li").remove(".unUsedBold");
-                                    refreshAssignList(temp_name);
+                                    refreshAssignList(temp_name, temp_sid);
                                 }
 
 
 
 
+                                function removeSelectedNames() {
+                                    var selectedNamesList = document.getElementsByClassName("usedNamesPoint usedBold");
+                                    var count = selectedNamesList.length;
+                                    var name;
+                                    var ID;
+                                    var temp_sid = [];
+                                    var temp_name = [];
+                                    while (count > 0) {
+                                        // each element in unusedNamesList as a child node called text node with a value
+                                        name = selectedNamesList[0].childNodes[0].nodeValue;
+                                        ID = selectedNamesList[0].childNodes[1].getAttribute("value");
+                                        temp_name.push(name);
+                                        temp_sid.push(ID);
+                                        selectedNamesList[0].className = selectedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
+                                        count--;
+                                    }
+                                    $("li").remove(".usedBold");
+                                    refreshUnassignList(temp_name, temp_sid);
+                                }
+                                /*
                                 function removeSelectedNames() {
                                     var selectedNamesList = document.getElementsByClassName("usedNamesPoint usedBold");
                                     var count = selectedNamesList.length;
@@ -579,22 +635,7 @@
                                     $("li").remove(".usedBold");
                                     refreshUnassignList(temp_name);
                                 }
-
-                                function removeSelectedNames() {
-                                    var selectedNamesList = document.getElementsByClassName("usedNamesPoint usedBold");
-                                    var count = selectedNamesList.length;
-                                    var name;
-                                    var temp_name = [];
-                                    while (count > 0) {
-                                        // each element in unusedNamesList as a child node called text node with a value
-                                        name = selectedNamesList[0].childNodes[0].nodeValue;
-                                        temp_name.push(name);
-                                        selectedNamesList[0].className = selectedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
-                                        count--;
-                                    }
-                                    $("li").remove(".usedBold");
-                                    refreshUnassignList(temp_name);
-                                }
+                                */
 
         </script>
     </body>

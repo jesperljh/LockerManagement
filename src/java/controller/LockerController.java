@@ -175,33 +175,6 @@ public class LockerController {
         return userLockerMap;
     }
 
-    /*
-    public boolean checkFreeLockers(HashMap<String, Integer> lockerCluster) {
-
-        // general check of cluster and range
-        ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();
-
-        for (Map.Entry m : lockerCluster.entrySet()) {
-
-            String cluster = (m.getKey()).toString();
-            int clusterSize = (Integer) m.getValue();
-
-            for (int i = 0; i < lockerList.size(); i++) {
-                if (lockerList.get(i).getCluster().equals(cluster)) {
-                    if (lockerList.get(i).getNeighbourhood() == null) {
-                        clusterSize--;
-                    }
-                }
-            }
-            // exit hashmap loop as there are not enough free lockers
-            if (clusterSize > 0) {
-                return false; // not enough free locker
-            }
-        }
-
-        return true; // enough free locker
-    }
-*/
     public Integer countFreeLockers(ArrayList<Locker> lockerList) {
 
         int count = 0;
