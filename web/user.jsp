@@ -10,8 +10,7 @@
 <%@page import="java.util.HashMap"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="include/protect.jsp" %>
-<%    
-    String token = (String) session.getAttribute("token");
+<%    String token = (String) session.getAttribute("token");
 %>
 <!DOCTYPE html>
 <html>
@@ -47,129 +46,18 @@
         </div>
         <div class="row">
             <div class="small-4 columns">
-                <%// @include file="include/includeDatetime.jsp" %>
-                <%//                    if (heatmapResults != null) {
-                        //If this is not null, then this is a POST and results is stored
-                        //Get the list of messagesList, this contains error
-                    //    ArrayList<String> messages = (ArrayList) heatmapResults.get("messages");
+                <h4><strong>My Locker : </strong></h4>
+                <hr>
+                <h5>Request : </h5> 
 
-                    //    ArrayList<HashMap> heatmapList = (ArrayList) heatmapResults.get("heatmap");
+                <!--Submit-->
+                <input type="submit" value="Accept" class="button sloca normal radius"/>
+                <input type="submit" value="Reject" class="button secondary normal radius"/>
 
-                        //If there are errors :(
-                    //    if (messages != null && messages.size() > 0) {
-
-                            //For loop to iterate them out
-                    //        for (String message : messages) {
-                    
-                %> 
-
-                <!--<div data-alert class="alert-box alert radius" align="center">
-                    <% // =message%>
-                </div>-->
-                <%
-                    /* }
-                    //If there is no results found, display error message
-                } else if (heatmapList.size() == 0) {
-                */
-                %>
-                <!--<div data-alert class="alert-box alert radius" align="center">
-                    <%// =ErrorMessage.getMsg("noResultsFound")%>
-                </div>-->
-                <%
-                    //Display successful results
-                // } else {
-                %>
-                <!-- <div data-alert class="alert-box success radius" align="center">
-                    Results Displayed
-                </div>-->
-                <%
-                        // }
-                    // }
-                %>
-                <form action="" method="POST">
-                    <label><strong>Floor</strong>
-                        <select name="floor" required>
-                            <%
-                                //Codes here to ensure whatever the user has selected before is selected again - to be more userfriendly
-                            %>
-                            <option value="5">Level 5</option> 
-                            <option value="6">Level 6</option> 
-                            <option value="7">Level 7</option>  
-                        </select>
-                    </label>
-                        
-                        <label><strong>Locker Cluster</strong>
-                        <select name="lockerCluster" required>
-                            <%
-                                //Codes here to ensure whatever the user has selected before is selected again - to be more userfriendly
-                            %>
-                            <option value="A-1">A-1</option> 
-                            <option value="A-2">A-2</option> 
-                            <option value="B-1">B-1</option>
-                            <option value="B-2">B-2</option>
-                            <option value="B-3">B-3</option>
-                            <option value="B-4">B-4</option>
-                            <option value="B-5">B-5</option>
-                            <option value="C-1">C-1</option>
-                            <option value="C-2">C-2</option>
-                            <option value="C-3">C-3</option>
-                            <option value="C-4">C-4</option>
-                            <option value="C-5">C-5</option>
-                        </select>
-                    </label>
-                    <!--Submit-->
-                    <input type="submit" value="Submit" class="button sloca normal radius"/>
-                    <input type="submit" value="Random Assign" class="button sloca normal radius"/>
-                </form>
-                        <input type="submit" value="Random Assign For All" class="button sloca normal radius"/>
             </div>
-
-            <%
-                //There are results
-                /*if (heatmapResults != null) {
-                    //Get heatmap data
-                    ArrayList<HashMap> heatmapList = (ArrayList) heatmapResults.get("heatmap");
-
-                    //If heatmap data is not empty, and size is bigger than 0 (means this is a successful request!)
-                    if (heatmapList != null && heatmapList.size() > 0) {
-*/
-            %>
-            <!-- <div class="small-8 columns">
-                <table class="sortable"> 
-                    <thead> 
-                    <th width="200">Semantic Place</th>
-                    <th width="100">Crowd Density</th> 
-                    <th width="100">Number of People</th> 
-                    </thead>         
-                    <tbody> -->
-                        <%
-                            //retrieves results from the hashmap
-                           /* for (HashMap hm : heatmapList) {
-                                String semanticPlace = (String) hm.get("semantic-place");
-                                int crowdDensity = (Integer) hm.get("crowd-density");
-                                int numOfPeople = (Integer) hm.get("num-people");
-
-*/
-                        %>
-                        <!--Displaying results-->
-                        <!--<tr> 
-                            <td><center><// =semanticPlace%></center></td> 
-                    <td><center><%// =crowdDensity%></center></td> 
-                    <td><center><%// =numOfPeople%></center></td> 
-                    </tr> -->
-
-                    <%
-                       // }
-                    %>
-                   <!-- </tbody> 
-                </table>
-            </div>-->
-            <%
-                //    }
-                // }
-            %>
         </div>
-            <div class="row">
+        
+        <div class="row">
             <!--<div class="medium-8 columns">-->
             <h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
             <div id="holder"> 
@@ -228,7 +116,7 @@
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
-            
+
             // ********************* BLUE *******************************
             var settings3 = {
                 rows: 3,
@@ -285,7 +173,7 @@
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
-            
+
             // ********************* YELLOW *******************************
             var settings8 = {
                 rows: 3,
@@ -342,7 +230,7 @@
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
-            
+
             var init = function (reservedSeat) {
                 var str = [], seatNo, className;
                 for (i = 0; i < settings.rows; i++) {
