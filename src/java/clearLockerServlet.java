@@ -74,7 +74,8 @@ public class clearLockerServlet extends HttpServlet {
     protected ArrayList<String> removeLockerUsers(ArrayList<String> sids, String nb) {
         // Checks for User SIDs in <SID, Locker> hashMap
         LockerController lc = new LockerController();
-        LockerDAO lockerDAO = new LockerDAO();       
+        LockerDAO lockerDAO = new LockerDAO();
+        ArrayList<String> temp_sids = new ArrayList<String>();
 
         java.util.HashMap<String, Locker> userLocker = lc.getLockerByUserMap(nb);
         if (!userLocker.isEmpty()) {
@@ -84,13 +85,15 @@ public class clearLockerServlet extends HttpServlet {
                     Locker temp_locker = userLocker.get(temp_sid);
                     temp_locker.setTaken_by(null);                    
 
-                    lockerDAO.updateLocker(temp_locker);
-                    sids.remove(temp_sid);
+                    lockerDAO.updateLocker(temp_locker);                    
+                }else{
+                    temp_sids.add(temp_sid);
                 }
+                
             }
             
         }
-        return sids;
+        return temp_sids;
     }
 
 
