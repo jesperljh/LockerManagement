@@ -80,6 +80,11 @@ public class lockerClusterServlet extends HttpServlet {
                      enoughLockers = false; 
                  }
              }
+             if(enoughLockers){
+                 LockerController lockerCtrl = new LockerController();
+                 lockerCtrl.assignLockerToManager(nb, lockerCluster);
+             }
+             response.sendRedirect("admin.jsp");
         }
     }
 

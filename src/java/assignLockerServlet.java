@@ -58,10 +58,11 @@ public class assignLockerServlet extends HttpServlet {
                 id = request.getParameter(count + "");
             }
             // check for users who have existing lockers
-            sids = removeDuplicateSID(sids, nb); 
+            //sids = removeDuplicateSID(sids, nb); 
             
             // assign users lockers, return user sids who were not assigned a locker
             sids = setLockerUsers(sids, nb, cluster);
+            response.sendRedirect("manager.jsp");
         }
     }
 
@@ -84,16 +85,29 @@ public class assignLockerServlet extends HttpServlet {
         LockerController lc = new LockerController();
         LockerDAO lockerDAO = new LockerDAO();
         
-        HashMap<String, ArrayList<Locker>> freelockerCluster = lc.getLockersWithoutPeople(nb);
+        ArrayList<Locker> freelockerClusterList = lc.getLockersWithoutPeopleInNeighbourhood(nb);
+        HashMap<String, ArrayList<Locker>> freelockerCluster = new HashMap<String, ArrayList<Locker>>();
+        for(Locker l : freelockerClusterList){
+            String c = l.getCluster();
+            ArrayList<Locker> tempList = freelockerCluster.get(c);
+            if(tempList == null){
+                ArrayList<Locker> temp = new ArrayList<Locker>();
+                temp.add(l);
+                freelockerCluster.put(c, temp);
+            }else{
+                tempList.add(l);
+                freelockerCluster.put(c, tempList);
+            }
+        }
         ArrayList<Locker> freelockerList = freelockerCluster.get(cluster);
         ArrayList<Locker> templockerList = new ArrayList<Locker>();
-
+        ArrayList<String> sidList = sids;
         if (freelockerList != null) {
             
-            if (freelockerList.size() < sids.size()) {
+            if (freelockerList.size() >= sids.size()) {
                 // Fill up the free lockers and return the remaining SIDs
                 
-                while(freelockerList.size()>0){
+                while(sids.size()>0){
                     
                     String temp_sid = sids.get(0);
                     Locker temp_locker = freelockerList.get(0);
@@ -105,15 +119,11 @@ public class assignLockerServlet extends HttpServlet {
                     freelockerList.remove(0);                    
                 }
                 lockerDAO.updateLockers(templockerList);
-                return sids;
+                return sidList;
 
-            } else {
-                // Fill up the free lockers until SIDs run out                
-                for (int i = 0; i < sids.size(); i++) {
-                    freelockerList.get(i).setTaken_by(sids.get(i));
-                }
-                lockerDAO.updateLockers(freelockerList);
-                return null; // all SIDs used up, return empty list
+            } else { // if locker size is not enough for the number of sids want to assign
+               // send attribute back to display error msg
+                return null; //
             }
         } else {
             return sids;

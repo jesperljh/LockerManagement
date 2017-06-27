@@ -96,8 +96,8 @@
                 <%                            if (oxCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_ox" name="ox" value="ox"> Ox Locker Cluster<br>
-                    <select id="ox" hidden>
+                    <input type="checkbox" id="check_ox" name="check_ox" value="ox"> Ox Locker Cluster<br>
+                    <select id="ox" name="ox" hidden>
                         <%
                             for (int i = 1; i <= oxCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -110,8 +110,8 @@
                     <%                            if (tigerCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_tiger" name="tiger" value="tiger"> Tiger Locker Cluster<br>
-                    <select id="tiger" hidden>
+                    <input type="checkbox" id="check_tiger" name="check_tiger" value="tiger"> Tiger Locker Cluster<br>
+                    <select id="tiger" name="tiger" hidden>
                         <%
                             for (int i = 1; i <= tigerCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -124,8 +124,8 @@
                     <%                            if (rabbitCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_rabbit" name="rabbit" value="rabbit"> Rabbit Locker Cluster<br>  
-                    <select id="rabbit" hidden>
+                    <input type="checkbox" id="check_rabbit" name="check_rabbit" value="rabbit"> Rabbit Locker Cluster<br>  
+                    <select id="rabbit" name="rabbit" hidden>
                         <%
                             for (int i = 1; i <= rabbitCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -138,8 +138,8 @@
                     <%                            if (dragonCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_dragon" name="dragon" value="dragon"> Dragon Locker Cluster<br>
-                    <select id="dragon" hidden>
+                    <input type="checkbox" id="check_dragon" name="check_dragon" value="dragon"> Dragon Locker Cluster<br>
+                    <select id="dragon" name="dragon" hidden>
                         <%
                             for (int i = 1; i <= dragonCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -152,8 +152,8 @@
                     <%                            if (snakeCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_snake" name="snake" value="snake"> Snake Locker Cluster<br>
-                    <select id="snake" hidden>
+                    <input type="checkbox" id="check_snake" name="check_snake" value="snake"> Snake Locker Cluster<br>
+                    <select id="snake" name="snake" hidden>
                         <%
                             for (int i = 1; i <= snakeCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -166,8 +166,8 @@
                     <%                            if (horseCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_horse" name="horse" value="horse"> Horse Locker Cluster<br> 
-                    <select id="horse" hidden>
+                    <input type="checkbox" id="check_horse" name="check_horse" value="horse"> Horse Locker Cluster<br> 
+                    <select id="horse" name="horse" hidden>
                         <%
                             for (int i = 1; i <= horseCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -180,8 +180,8 @@
                     <%                            if (sheepCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_sheep" name="sheep" value="sheep"> Sheep Locker Cluster<br>
-                    <select id="sheep" hidden>
+                    <input type="checkbox" id="check_sheep" name="check_sheep" value="sheep"> Sheep Locker Cluster<br>
+                    <select id="sheep" name="sheep" hidden>
                         <%
                             for (int i = 1; i <= sheepCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -194,8 +194,8 @@
                     <%                            if (monkeyCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_monkey" name="monkey" value="monkey"> Monkey Locker Cluster<br>  
-                    <select id="monkey" hidden>
+                    <input type="checkbox" id="check_monkey" name="check_monkey" value="monkey"> Monkey Locker Cluster<br>  
+                    <select id="monkey" name="monkey" hidden>
                         <%
                             for (int i = 1; i <= monkeyCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -208,8 +208,8 @@
                     <%                            if (roosterCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_rooster" name="rooster" value="rooster"> Rooster Locker Cluster<br>
-                    <select id="rooster" hidden>
+                    <input type="checkbox" id="check_rooster" name="check_rooster" value="rooster"> Rooster Locker Cluster<br>
+                    <select id="rooster" name="rooster" hidden>
                         <%
                             for (int i = 1; i <= roosterCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -222,8 +222,8 @@
                     <%                            if (dogCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_dog" name="dog" value="dog"> Dog Locker Cluster<br> 
-                    <select id="dog" hidden>
+                    <input type="checkbox" id="check_dog" name="check_dog" value="dog"> Dog Locker Cluster<br> 
+                    <select id="dog" name="dog" hidden>
                         <%
                             for (int i = 1; i <= dogCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%
@@ -236,8 +236,8 @@
                     <%                            if (pigCount != 0) {
                 %>
                 <row>
-                    <input type="checkbox" id="check_pig" name="pig" value="pig"> Pig Locker Cluster<br> 
-                    <select id="pig" hidden>
+                    <input type="checkbox" id="check_pig" name="check_pig" value="pig"> Pig Locker Cluster<br> 
+                    <select id="pig" name="pig" hidden>
                         <%
                             for (int i = 1; i <= pigCount; i++) {
                         %>  <option value=<%=i%>><%=i%></option>    <%

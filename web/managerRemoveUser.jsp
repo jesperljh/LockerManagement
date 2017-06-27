@@ -44,6 +44,7 @@
 
         <!-- Zurb Foundations CSS -->
         <link rel="stylesheet" href="css/seat.css" />
+        <link rel="stylesheet" href="css/app.css" />
         <link rel="stylesheet" href="css/foundation.css" />
         <link rel="stylesheet" type="text/css" href="css/foundation-icons/foundation-icons.css">
         <link rel="stylesheet" type="text/css" href="css/foundation-icons/foundation-icons.svg">
@@ -77,11 +78,12 @@
                     }
                 }
             }
+            out.println("<input type='checkbox' name='noOfCluster' id='noOfCluster' value='" + clusterNo + "' hidden>");
         %>
         <!--Page Header-->
         <div class="row" style="padding-top: 30px; padding-left: 18px; padding-right: 18px">
             <i class="fi-map size-48"></i>
-            <h3 style="display: inline-block;"><strong>&nbspLocker Floorplan</strong></h3>
+            <h3 style="display: inline-block;"><strong>&nbspUnassign Locker From User</strong></h3>
             <!--Divider-->
             <hr>
         </div>
@@ -90,37 +92,46 @@
             <form action="clearLockerServlet" method="POST">
                 <div>
                     <div class="row">
+                        <div class="small-5 columns elegantshd"><strong>User With Locker</strong></div>
+                        <div class="small-2 columns"></div>
+                        <div class="small-5 columns deepshd" style="margin-bottom: 20px"><strong>Selected User To Unassign Locker</strong></div>
+                    </div>
+                    <div class="row">
 
                         <!-- Retrieved users list from the neighbourhood -->
 
                         <div style="overflow: scroll; height: 300px; border: 1px solid #ccc!important" class="small-5 columns">
                             <ul id="unUsedNames" style="list-style-type: none" class="side-nav">
                                 <%
-                                
-                                HashMap<String, Locker> usersMap = lockerCtrl.getLockerByUserMap(currentUser.getNeighbourhood());
-                                DemographicsCSVController demo = new DemographicsCSVController();
+                                    ArrayList<Locker> lockerList = lockerCtrl.getLockersWithPeopleInNeighbourhood(currentUser.getNeighbourhood());
+                                    DemographicsCSVController demoCtrl = new DemographicsCSVController();
+                                    ArrayList<Demographics> demoList = demoCtrl.getUsersByNeighbourHood(currentUser.getNeighbourhood());
+                                    ArrayList<String> listOfPeopleWithLockerSid = new ArrayList<String>();
+                                    for(Locker l : lockerList){
+                                        listOfPeopleWithLockerSid.add(l.getTaken_by());
+                                    }
+                                    //ArrayList<Demographics> users = demo.getUsersByNeighbourHood(currentUser.getNeighbourhood());
+                                    // Only displays people names whose role = USERS; 
+                                    // Iterates through a array of SIDs
+                                    // Displays SIDs not found in the <String SID, Locker l> Mapping
+                                    for (Demographics d : demoList) {
+                                        if (listOfPeopleWithLockerSid.contains(d.getSid())) {
+                                            String sid = d.getSid();
+                                            String name = d.getName();
 
-                                ArrayList<Demographics> users = demo.getUsersByNeighbourHood(currentUser.getNeighbourhood());
+                                %> <li name='<%=sid%>' id='<%= sid%>' class='unUsedNamesPoint' onclick='unUsedBold(this)'><%= name%></li> 
 
-                                for (int i = 0; i < users.size(); i++) {
-                                    if (!users.get(i).getRole().equals("manager")) {
-                                        String sid = users.get(i).getSid();
-                                        String name = users.get(i).getName();
-                                        if (usersMap.containsKey(sid)) {
-                                            %> <li name='<%=sid%>' id='<%= sid %>' class='unUsedNamesPoint' onclick='unUsedBold(this)'><%= name%></li> 
-                                                                                        
-                                            <%
+                                <%
                                         }
                                     }
-                                }
 
                                 %>
                             </ul>
                         </div>
                         <div class="small-2 columns">
                             <div class="row"></div>
-                            <input type="button" name="buttonAddAll" class="button small expand radius" onclick="addAllNames()" value="Assign All"> 
-                            <input type="button" name="buttonAddSelected" class="button small expand radius" onclick="addSelectedNames()" value="Assign Selected"> 
+                            <input type="button" name="buttonAddAll" class="button small expand radius" onclick="addAllNames()" value="Unassign All"> 
+                            <input type="button" name="buttonAddSelected" class="button small expand radius" onclick="addSelectedNames()" value="Unassign Selected"> 
                             <div style="padding-bottom: 30px" class="row"></div>
                             <input type="button" name="buttonRemoveAll" class="button small expand radius" onclick="removeAllNames()" value="Remove All" >
                             <input type="button" name="buttonRemoveSelected" class="button small expand radius" onclick="removeSelectedNames()" value="Remove Selected">
@@ -134,10 +145,15 @@
                 <div class="small-4 columns">
 
                     <input type="hidden" name="nb" value="<%=currentUser.getNeighbourhood()%>">
-                    <label><strong>Locker Cluster</strong>
-                        <select name="lockerCluster" required>
-                            <option value="rat">rat</option> 
-                            <option value="ox">ox</option> 
+                    <!--<label><strong>Locker Cluster</strong>
+                        <select name="lockerCluster" required>-->
+                            <%
+                                //LockerController locker_ctrl = new LockerController();
+                                //HashMap<String, ArrayList<Locker>> lockerMap = locker_ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
+                                //for (Map.Entry<String, ArrayList<Locker>> entry : lockerMap.entrySet()) {
+                                  //  String key = (String) entry.getKey();
+                            %>
+                            <!--<option value="ox">ox</option> 
                             <option value="tiger">tiger</option>
                             <option value="rabbit">rabbit</option>
                             <option value="dragon">dragon</option>
@@ -147,19 +163,25 @@
                             <option value="monkey">monkey</option>
                             <option value="rooster">rooster</option>
                             <option value="dog">dog</option>
-                            <option value="pig">pig</option>
-                        </select>
-                    </label>
+                            <option value="pig">pig</option>-->
+                            <%
+                                //}
+                            %>
+                        <!--</select>
+                    </label>-->
                     <!--Submit-->
-                    <input type="submit" value="Unassign" class="button sloca normal radius"/>
+                    <input type="submit" value="Unassign" class="button sloca normal radius" style="margin-top: 30px"/>
 
                 </div>
                 <hr>
             </form>
         </div>
-        <div class="row">
+        <%
+            for (int i = 1; i <= clusterNo; i++) {
+        %>
+        <div class="row" name="displayLocker<%=i%>" id="displayLocker<%=i%>">
             <!--<div class="medium-8 columns">-->
-            <h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
+            <!--<h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
             <div id="holder"> 
                 <ul id="place">
                 </ul>    
@@ -170,13 +192,9 @@
                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Booked Locker</li>
                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Selected Locker</li>
                 </ul>
-            </div>
-            <!--<div style="clear:both;width:100%">
-                <input type="button" id="btnShowNew" value="Show Selected Seats" />
-                <input type="button" id="btnShow" value="Show All" />           
-            </div>
-            <!--</div>-->
+            </div>-->
         </div>
+        <% }%>
 
         <!-- Included JS Files (Compressed) -->
         <script src="js/vendor/jquery.js"></script>
@@ -196,7 +214,9 @@
                                 //Case II: If already booked
                                 //var bookedSeats = [5, 10, 25];
                                 var bookedSeats = [];
+                                var countCluster = document.getElementById('noOfCluster').value;
                                 var initialiseLocker = function (i, key) {
+                                    bookedSeats = [];
                                     $("input[name='lockerNo" + i + "']").each(function () {
                                         value = $(this).val();
                                         bookedSeats.push(parseInt(value.substring(1)));
@@ -226,6 +246,21 @@
                                     } else if (key == "pig") {
                                         settings = settings12;
                                     }
+
+                                    var displayLocker = "<row><div class='medium-8 columns'>" +
+                                            "<h5> Cluster " + key + ": </h5>" +
+                                            "<div id='holder" + i + "'> <ul id='place" + i + "'></ul>    </div>" +
+                                            "<div style='float:left;'>" +
+                                            "<ul id='seatDescription'>" +
+                                            "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Available Locker</li>" +
+                                            "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Booked Locker</li>" +
+                                            "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Selected Locker</li>" +
+                                            "</ul>" +
+                                            "</div></row>";
+
+
+                                    $('#displayLocker' + i).html(displayLocker);
+
 
                                     return bookedSeats;
                                 };
@@ -380,6 +415,7 @@
                                 //init();
                                 var init = function (reservedSeat) {
                                     //loadNames();   //**********************************Diasbled for now
+                                    var clusterNo = 0;
                                     for (a = 1; a <= 12; a++) {
                                         if (document.getElementById('cluster' + a) != null) {
                                             reservedSeat = initialiseLocker(a, document.getElementById("cluster" + a).value);
@@ -389,6 +425,8 @@
                                                     seatNo = (i + j * settings.rows + 1);
                                                     className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
                                                     if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
+
+                                                    } else {
                                                         className += ' ' + settings.selectedSeatCss;
                                                     }
                                                     str.push('<li class="' + className + '"' +
@@ -397,7 +435,9 @@
                                                             '</li>');
                                                 }
                                             }
-                                            $('#place').html(str.join(''));
+                                            clusterNo++;
+                                            $('#place' + clusterNo).html(str.join(''));
+                                            str = [];
                                         }
                                     }
 
@@ -433,14 +473,14 @@
                                     refreshUnAssignList(names);
 
                                 }
-                                function unUsedBold(li){
+                                function unUsedBold(li) {
                                     if ($(li).hasClass("unUsedBold")) {
                                         $(li).removeClass("unUsedBold");
                                     } else {
                                         $(li).addClass("unUsedBold");
                                     }
                                 }
-                                
+
 
                                 function addAllNames() {
 
@@ -525,6 +565,7 @@
                                         var usedNames = document.getElementById("unUsedNames");
                                         usedNames.appendChild(newListElement);
                                     }
+                                    addSelectedNames();
                                 }
 
                                 function refreshAssignList(temp_name, temp_sid) {
@@ -532,7 +573,7 @@
                                     var count = usedNamesList.length;
                                     var sid;
                                     var name;
-                                    if(count != 0){
+                                    if (count != 0) {
                                         for (var j = 0; j < count; j++) {
                                             // each element in unusedNamesList as a child node called text node with a value
                                             name = usedNamesList[j].childNodes[0].nodeValue;
@@ -545,7 +586,7 @@
                                     // import all unselected names
                                     for (var i = 0; i < temp_name.length; i++) {
                                         var name = temp_name[i];
-                                        var SID = temp_sid[i]; 
+                                        var SID = temp_sid[i];
                                         //var ID = "list_".concat(name);
                                         var newListElement = document.createElement("li");
                                         newListElement.setAttribute("id", SID);
@@ -620,22 +661,22 @@
                                     refreshUnassignList(temp_name, temp_sid);
                                 }
                                 /*
-                                function removeSelectedNames() {
-                                    var selectedNamesList = document.getElementsByClassName("usedNamesPoint usedBold");
-                                    var count = selectedNamesList.length;
-                                    var name;
-                                    var temp_name = [];
-                                    while (count > 0) {
-                                        // each element in unusedNamesList as a child node called text node with a value
-                                        name = selectedNamesList[0].childNodes[0].nodeValue;
-                                        temp_name.push(name);
-                                        selectedNamesList[0].className = selectedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
-                                        count--;
-                                    }
-                                    $("li").remove(".usedBold");
-                                    refreshUnassignList(temp_name);
-                                }
-                                */
+                                 function removeSelectedNames() {
+                                 var selectedNamesList = document.getElementsByClassName("usedNamesPoint usedBold");
+                                 var count = selectedNamesList.length;
+                                 var name;
+                                 var temp_name = [];
+                                 while (count > 0) {
+                                 // each element in unusedNamesList as a child node called text node with a value
+                                 name = selectedNamesList[0].childNodes[0].nodeValue;
+                                 temp_name.push(name);
+                                 selectedNamesList[0].className = selectedNamesList[0].className.replace("usedNamesPoint", "unUsedNamesPoint");
+                                 count--;
+                                 }
+                                 $("li").remove(".usedBold");
+                                 refreshUnassignList(temp_name);
+                                 }
+                                 */
 
         </script>
     </body>

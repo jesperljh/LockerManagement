@@ -105,64 +105,39 @@ public class LockerController {
         return lockerClusterMap;
     }
 
-    public HashMap<String, ArrayList<Locker>> getLockersWithoutPeople(String nb) {
-
-        HashMap<String, ArrayList<Locker>> newlockerClusterMap = new HashMap<String, ArrayList<Locker>>();
-        HashMap<String, ArrayList<Locker>> lockerClusterMap = getLockerClusterListByNeighbourhood(nb);
-
-        for (Map.Entry m : lockerClusterMap.entrySet()) {
-
-            String clusterKey = (m.getKey()).toString();
-            ArrayList<Locker> lockerList = lockerClusterMap.get(clusterKey);
-            for (Locker l : lockerList) {
-
-                ArrayList<Locker> subLockers = newlockerClusterMap.get(clusterKey);
-                if (l.getTaken_by() == null) {
-                    if (subLockers == null) {
-                        ArrayList<Locker> tempLockerList = new ArrayList<Locker>();
-                        tempLockerList.add(l);
-                        newlockerClusterMap.put(clusterKey, tempLockerList);
-                    } else {
-                        subLockers.add(l);
-                        newlockerClusterMap.put(clusterKey, subLockers);
-                    }
+    public ArrayList<Locker> getLockersWithoutPeopleInNeighbourhood(String nb) {
+        LockerDAO lockerDAO = new LockerDAO();
+        ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();
+        ArrayList<Locker> lockerList2 = new ArrayList<Locker>();
+        for(Locker l : lockerList){
+            if(l.getNeighbourhood() != null && l.getNeighbourhood().equals(nb)){
+                if(l.getTaken_by() == null){
+                    lockerList2.add(l);
                 }
             }
         }
-        return newlockerClusterMap;
+        return lockerList2;
     }
 
-    public HashMap<String, ArrayList<Locker>> getLockersWithPeople(String nb) {
-
-        HashMap<String, ArrayList<Locker>> newlockerClusterMap = new HashMap<String, ArrayList<Locker>>();
-        HashMap<String, ArrayList<Locker>> lockerClusterMap = getLockerClusterListByNeighbourhood(nb);
-
-        for (Map.Entry m : lockerClusterMap.entrySet()) {
-
-            String clusterKey = (m.getKey()).toString();
-            ArrayList<Locker> lockerList = lockerClusterMap.get(clusterKey);
-            for (Locker l : lockerList) {
-
-                ArrayList<Locker> subLockers = newlockerClusterMap.get(clusterKey);
-                if (l.getTaken_by() != null) {
-                    if (subLockers == null) {
-                        ArrayList<Locker> tempLockerList = new ArrayList<Locker>();
-                        tempLockerList.add(l);
-                        newlockerClusterMap.put(clusterKey, tempLockerList);
-                    } else {
-                        subLockers.add(l);
-                        newlockerClusterMap.put(clusterKey, subLockers);
-                    }
+    public ArrayList<Locker> getLockersWithPeopleInNeighbourhood(String nb) {
+        
+        LockerDAO lockerDAO = new LockerDAO();
+        ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();
+        ArrayList<Locker> lockerList2 = new ArrayList<Locker>();
+        for(Locker l : lockerList){
+            if(l.getNeighbourhood() != null && l.getNeighbourhood().equals(nb)){
+                if(l.getTaken_by() != null){
+                    lockerList2.add(l);
                 }
             }
         }
-        return newlockerClusterMap;
+        return lockerList2;
     }
 
     public HashMap<String, Locker> getLockerByUserMap(String nb) {
 
         HashMap<String, Locker> userLockerMap = new HashMap<String, Locker>();
-        HashMap<String, ArrayList<Locker>> occupiedlockerCluster = getLockersWithPeople(nb);
+        /*HashMap<String, ArrayList<Locker>> occupiedlockerCluster = getLockersWithPeople(nb);
 
         for (Map.Entry<String, ArrayList<Locker>> entry : occupiedlockerCluster.entrySet()) {
             ArrayList<Locker> value = entry.getValue();
@@ -171,7 +146,7 @@ public class LockerController {
                     userLockerMap.put(l.getTaken_by(), l);
                 }
             }
-        }
+        }*/
         return userLockerMap;
     }
 

@@ -34,17 +34,9 @@ public class clearLockerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             //String cluster = request.getParameter("lockerCluster");
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet fsdfsfdsfvsdv</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet clearLockerServlet at " + request.getContextPath() + "</h1>");
             
             String nb = request.getParameter("nb");
 
@@ -62,12 +54,25 @@ public class clearLockerServlet extends HttpServlet {
             
             // check for users within a neighbourhood who have existing lockers and removes their lockers
             // returns list of sids whose lockers are not found
-            sids = removeLockerUsers(sids, nb);
-            if(sids.isEmpty()){
+            LockerDAO lockerDAO = new LockerDAO();
+            ArrayList<Locker> lockerList =  lockerDAO.retrieveLockersByNeighbourhood(nb);
+            ArrayList<Locker> tempLockerList = new ArrayList<Locker>();
+            for(Locker l : lockerList){
+                for(String s : sids){
+                    if(l.getTaken_by() != null && l.getTaken_by().equals(s)){
+                        l.setTaken_by(null);
+                        tempLockerList.add(l);
+                    }
+                }
+            }
+            lockerDAO.updateLockers(tempLockerList);
+            //sids = removeLockerUsers(sids, nb);
+            response.sendRedirect("managerRemoveUser.jsp");
+            /*if(sids.isEmpty()){
                 out.println("<p>Lockers Updated</p>");
             }
             out.println("</body>");
-            out.println("</html>");
+            out.println("</html>");*/
         }
     }
 
