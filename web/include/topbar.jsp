@@ -23,6 +23,7 @@
                     <li><label>Locker Assignment</label></li>
                     <li><a href="manager.jsp"><i class="fi-results"></i>&nbspAssign Locker To User</a></li>
                     <li><a href="managerRemoveUser.jsp"><i class="fi-marker"></i>&nbspUnassign Locker To User</a></li>
+                    <li><a href="managerRegisterUser.jsp"><i class="fi-paw"></i>&nbspRegister User</a></li>
                 </ul>
             <li class="divider"></li>
             <!--<li><a href="automaticgroupdetection.jsp"><i class="fi-torsos-all"></i>&nbspAutomatic Group Detection</a></li>-->
