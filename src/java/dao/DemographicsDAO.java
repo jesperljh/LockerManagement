@@ -752,5 +752,50 @@ public class DemographicsDAO {
         return demoList;
 
     }
+    
+    
+    
+    
+    public boolean updateDemoBySID(String sid, String neighbourhood, String managerSID) {
+        //Assume status is  true, set false only if exception is caught
+        boolean status = true;
+
+        //Prepare SQL statement
+        String stmt = "UPDATE demographics "
+                + "SET neighbourhood_manager=?,"
+                + "neighbourhood=?"
+                + "WHERE sid = ?";
+        try {
+            //Get connection from DatabaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+
+            //Prepare prepared statement
+            pstmt = conn.prepareStatement(stmt);
+
+            //Set parameters into prepared statement
+            pstmt.setString(1, managerSID);
+            pstmt.setString(2, neighbourhood);
+            pstmt.setString(3, sid);
+
+            //Execute update
+            pstmt.executeUpdate();
+
+            //If prepared statement is not null, close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+
+        } catch (SQLException e) {
+            //Set status to false, since there is an error in executing pstmt.executeUpdate();
+            status = false;
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                                    
+            System.out.println("Error occurred with update:" + e);
+        } finally {
+            //Close the connection from DatabaseConnectionManager after used            
+            DatabaseConnectionManager.closeConnection(conn);
+        }
+        //Returns true if successfully updated or false if update fail
+        return status;
+    }
 
 }
