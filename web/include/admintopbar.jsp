@@ -19,10 +19,10 @@
         <ul class="left">
             <li class="divider"></li>
             <li class="has-dropdown"> 
-                <a href="bootstrap.jsp"><i class="fi-upload"></i>  Bootstrap</a>
+                <!--<a href="bootstrap.jsp"><i class="fi-upload"></i>  Bootstrap</a>
                 <ul class="dropdown">
                     <li><a href="uploadcsv.jsp"><i class="fi-plus"></i>   Upload Additional Files</a></li>
-                </ul>  
+                </ul>-->  
             <li class="divider"></li>
         </ul>
         <ul class="right">

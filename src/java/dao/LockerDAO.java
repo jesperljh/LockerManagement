@@ -147,6 +147,57 @@ public class LockerDAO {
         return lockerList;
 
     }
+    
+    public Locker retrieveLockersBySid(String sid) {
+        //Declare a Demographics object as null
+        Locker locker = null;
+
+        //Prepare SQL statement
+        String stmt = "SELECT * FROM lockers WHERE taken_by=?";
+        try {
+            //Get connection from DatabaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+
+            //Prepare SQL statement
+            pstmt = conn.prepareStatement(stmt);
+            pstmt.setString(1, sid);
+
+            //Set parameters into prepared statement
+            //pstmt.setString(1, sid);
+            //Execute query
+            rs = pstmt.executeQuery();
+
+            //If there is results
+            if (rs.next()) { //while
+                int id = rs.getInt(1);
+                String cluster = rs.getString(2);
+                String locker_no = rs.getString(3);
+                String taken_by = rs.getString(4);
+                String neighbourhood = rs.getString(5);
+
+                //Instantiate new Demographics object with the result
+                locker = new Locker(id, cluster, locker_no, taken_by, neighbourhood);
+            }
+            //If resultSet is not null, then close
+            if (rs != null) {
+                rs.close();
+            }
+
+            //If preparedStatement is not null, then close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                        
+            System.out.println("Failed to prepare statement:" + e);
+        } finally {
+            //Close the connection from DatabaseConnectionManager after used
+            DatabaseConnectionManager.closeConnection(conn);
+        }
+        //Return demographics object if there is a found user (or null if no user found)
+        return locker;
+
+    }
 
     public boolean updateLockers(ArrayList<Locker> lockerList) {
         //Assume status is  true, set false only if exception is caught

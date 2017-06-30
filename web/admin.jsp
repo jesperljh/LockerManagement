@@ -95,7 +95,6 @@
                                 Assign Manager
                             </button>
                             <a href="/AssignLockerToManager?sid=<%=demo.getSid()%>" class="button radius secondary small">Assign Locker Cluster</a>
-
                         </div>
                     </div>
                 </div>

@@ -66,19 +66,6 @@ public class assignLockerServlet extends HttpServlet {
         }
     }
 
-    protected ArrayList<String> removeDuplicateSID(ArrayList<String> sids, String nb) {
-        // Checks for User SIDs in <SID, Locker> hashMap
-        LockerController lc = new LockerController();
-
-        HashMap<String, Locker> userLocker = lc.getLockerByUserMap(nb);
-        for (String sid : sids) {
-            if (userLocker.containsKey(sid)) {
-                sids.remove(sid);
-            }
-        }
-        return sids;
-    }
-
     protected ArrayList<String> setLockerUsers(ArrayList<String> sids, String nb, String cluster) {
         
         // Sets the Locker Taken_by field and passes it back to DAO

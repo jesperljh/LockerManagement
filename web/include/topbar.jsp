@@ -15,23 +15,17 @@
 
         <ul class="left">
             <li class="divider"></li>
-            <li><a href="heatmap.jsp"><i class="fi-cloud"></i> Locker</a></li>
+            <!--<li class="has-dropdown not-click"><a href="#"><i class="fi-cloud"></i> Locker</a></li>-->
             <li class="divider"></li>
             <li class="has-dropdown not-click">
-                <a href="#"><i class="fi-book-bookmark"></i>&nbspReports</a>
-                
+                <a href="#"><i class="fi-cloud"></i>&nbspLocker</a>
                 <ul class="dropdown">
-                    <li><label>Basic Location Report</label></li>
-                    <li><a href="basiclocreport.jsp"><i class="fi-results"></i>&nbspBreakdown by Year, Gender & School</a></li>
-                    <li><a href="topkpopular.jsp"><i class="fi-marker"></i>&nbspTop-K Popular Places</a></li>
-                    <li><a href="topkcompanion.jsp"><i class="fi-torsos-male-female"></i>&nbspTop-K Companions</a></li>
-                    <li><a href="topknextplaces.jsp"><i class="fi-arrow-right"></i>&nbspTop-K Next Places</a></li>
-                    <li><label>Group-Aware Location Reports</label></li>
-                    <li><a href="grouptopkpopular.jsp"><i class="fi-arrows-in"></i>&nbspGroup Top-K Popular Places</a></li>
-                    <li><a href="grouptopknextplaces.jsp"><i class="fi-arrows-out"></i>&nbspGroup Top-K Next Places</a></li>
+                    <li><label>Locker Assignment</label></li>
+                    <li><a href="manager.jsp"><i class="fi-results"></i>&nbspAssign Locker To User</a></li>
+                    <li><a href="managerRemoveUser.jsp"><i class="fi-marker"></i>&nbspUnassign Locker To User</a></li>
                 </ul>
             <li class="divider"></li>
-            <li><a href="automaticgroupdetection.jsp"><i class="fi-torsos-all"></i>&nbspAutomatic Group Detection</a></li>
+            <!--<li><a href="automaticgroupdetection.jsp"><i class="fi-torsos-all"></i>&nbspAutomatic Group Detection</a></li>-->
         </ul>
 
         <ul class="right">
@@ -54,7 +48,7 @@
                 </p>
                 <p class="lead"><strong>Email:</strong>&nbsp<%= currentUser.getSid()%></label>
 
-                <a class="close-reveal-modal">&#215;</a> </div>
+                    <a class="close-reveal-modal">&#215;</a> </div>
             <li><a href="logout.jsp"><i class="fi-paw"></i>&nbspLog Out</a></li>
         </ul>
     </section>

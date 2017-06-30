@@ -66,41 +66,10 @@ public class clearLockerServlet extends HttpServlet {
                 }
             }
             lockerDAO.updateLockers(tempLockerList);
-            //sids = removeLockerUsers(sids, nb);
             response.sendRedirect("managerRemoveUser.jsp");
-            /*if(sids.isEmpty()){
-                out.println("<p>Lockers Updated</p>");
-            }
-            out.println("</body>");
-            out.println("</html>");*/
-        }
-    }
-
-    protected ArrayList<String> removeLockerUsers(ArrayList<String> sids, String nb) {
-        // Checks for User SIDs in <SID, Locker> hashMap
-        LockerController lc = new LockerController();
-        LockerDAO lockerDAO = new LockerDAO();
-        ArrayList<String> temp_sids = new ArrayList<String>();
-
-        java.util.HashMap<String, Locker> userLocker = lc.getLockerByUserMap(nb);
-        if (!userLocker.isEmpty()) {
-            for (String temp_sid : sids) {
-                if (userLocker.containsKey(temp_sid)) {
-                    // remove user locker
-                    Locker temp_locker = userLocker.get(temp_sid);
-                    temp_locker.setTaken_by(null);                    
-
-                    lockerDAO.updateLocker(temp_locker);                    
-                }else{
-                    temp_sids.add(temp_sid);
-                }
-                
-            }
             
         }
-        return temp_sids;
     }
-
 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

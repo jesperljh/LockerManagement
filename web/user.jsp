@@ -4,6 +4,12 @@
     Author     : Jesper
 --%>
 
+<%@page import="java.util.Map"%>
+<%@page import="entity.Request"%>
+s<%@page import="controller.RequestController"%>
+<%@page import="entity.Locker"%>
+<%@page import="controller.LockerController"%>
+<%@page import="dao.LockerDAO"%>
 <%@page import="utility.ErrorMessage"%>
 <%@page import="entity.Demographics"%>
 <%@page import="java.util.ArrayList"%>
@@ -36,7 +42,26 @@
     </head>
     <body>
         <%@include file="include/topbar.jsp" %>
-
+        <input type="hidden" name="currentNB" id="currentNB" value="<%=currentUser.getNeighbourhood()%>">
+        <%
+            LockerController locker_Ctrl = new LockerController();
+            HashMap<String, ArrayList<Locker>> mapLockerList = locker_Ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
+            int clusterNo = 0;
+            for (Map.Entry<String, ArrayList<Locker>> entry : mapLockerList.entrySet()) {
+                String key = entry.getKey();
+                ArrayList<Locker> value = entry.getValue();
+                if (key != null) {
+                    clusterNo++;
+                    out.println("<input type='checkbox' name='cluster" + clusterNo + "' id='cluster" + clusterNo + "' value='" + key + "' hidden>");
+                }
+                if (value != null) {
+                    for (Locker locker : value) {
+                        out.println("<input type='checkbox' name='lockerNo" + clusterNo + "' id='lockerNo" + clusterNo + "' value='" + locker.getLocker_no() + "' hidden>");
+                    }
+                }
+            }
+            out.println("<input type='checkbox' name='noOfCluster' id='noOfCluster' value='" + clusterNo + "' hidden>");
+        %>
         <!--Page Header-->
         <div class="row" style="padding-top: 30px; padding-left: 18px; padding-right: 18px">
             <i class="fi-map size-48"></i>
@@ -46,17 +71,104 @@
         </div>
         <div class="row">
             <div class="small-4 columns">
-                <h4><strong>My Locker : </strong></h4>
+                <%                    LockerController lockerCtrl = new LockerController();
+                    Locker myLocker = lockerCtrl.getLockerBySid(currentUser.getSid());
+                    if (myLocker == null) {
+                %>
+                <h4 style="color: teal"><strong>My Locker : </strong>No Locker</h4> 
+                <%
+                } else {
+                %>
+                <h4 style="color: teal"><strong>My Locker : <%= myLocker.getLocker_no()%></strong></h4>
+                <%
+                    }
+                %>
                 <hr>
-                <h5>Request : </h5> 
-
-                <!--Submit-->
-                <input type="submit" value="Accept" class="button sloca normal radius"/>
-                <input type="submit" value="Reject" class="button secondary normal radius"/>
-
             </div>
         </div>
-        
+
+        <%
+            RequestController requestController = new RequestController();
+            ArrayList<Request> requestList = requestController.getRequestsBySid(currentUser.getSid());
+            if (requestList != null && requestList.size() != 0) {
+        %>
+
+        <div class="row">
+            <div class="people-you-might-know">
+                <div class="add-people-header">
+                    <h6 class="header-title">
+                        My Request
+                    </h6>
+                </div>
+                <%
+                    for (Request r : requestList) {
+                %>
+                <div class="row add-people-section" style="margin-left: 0px; margin-right: 0px">
+                    <div class="small-12 medium-6 columns about-people">
+                        <div class="about-people-author" style="margin-left: 20px">
+                            <p class="author-name">
+                                Requester : <%=r.getRequester()%>
+                            </p>
+                            <p class="author-location">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                Locker number : <%=r.getLockerNo()%>
+                            </p>
+                            <p class="author-mutual">
+                                Status : <strong><%=r.getStatus()%></strong>
+                            </p>
+                        </div>    
+                    </div>
+                    <div class="small-12 medium-6 columns add-friend">
+                        <div class="add-friend-action">
+                            <a href="/LockerAssignment/processRequest.jsp?request=accept&id=<%=r.getId()%>&mySid=<%=r.getReceiver()%>&rSid=<%=r.getRequester()%>" class="radius button small">Accept Request</a>
+                            <a href="/LockerAssignment/processRequest.jsp?request=reject&id=<%=r.getId()%>&mySid=<%=r.getReceiver()%>&rSid=<%=r.getRequester()%>" class="button radius secondary small">Reject Request</a>
+                        </div>
+                    </div>
+                </div>
+                <%
+                    }
+                %>
+            </div>
+        </div>  
+        <%
+            }
+        %>
+        <div class="row">
+            <hr>
+            <div class="small-4 columns">
+
+                <input type="hidden" name="nb" value="<%=currentUser.getNeighbourhood()%>">
+                <label><strong>Locker Cluster</strong>
+                    <select name="lockerCluster" required>
+                        <%
+                            LockerController locker_ctrl = new LockerController();
+                            HashMap<String, ArrayList<Locker>> lockerMap = locker_ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
+                            //for (Map.Entry<String, ArrayList<Locker>> entry : lockerMap.entrySet()) {
+                            //  String key = (String) entry.getKey();
+                        %>
+                        <option value="1">1</option> 
+                        <!--<option value="ox">ox</option> 
+                        <option value="tiger">tiger</option>
+                        <option value="rabbit">rabbit</option>
+                        <option value="dragon">dragon</option>
+                        <option value="snake">snake</option>
+                        <option value="horse">horse</option>
+                        <option value="sheep">sheep</option>
+                        <option value="monkey">monkey</option>
+                        <option value="rooster">rooster</option>
+                        <option value="dog">dog</option>
+                        <option value="pig">pig</option>-->
+                        <%
+                            //}
+%>
+                    </select>
+                </label>
+            </div>
+            <div class="small-8 columns">
+                <!--Submit-->
+                <input type="submit" value="Select Cluster" style="margin-top: 10px" class="button sloca normal radius"/>
+            </div>
+        </div>
         <div class="row">
             <!--<div class="medium-8 columns">-->
             <h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
@@ -69,6 +181,7 @@
                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Available Locker</li>
                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Booked Locker</li>
                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Selected Locker</li>
+                    <li style="background:url('https://png.icons8.com/safe/android/24') no-repeat scroll 0 0 transparent; padding-right: 30px">Restricted Locker</li>
                 </ul>
             </div>
             <div style="clear:both;width:100%">

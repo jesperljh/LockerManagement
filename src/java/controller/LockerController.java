@@ -134,20 +134,17 @@ public class LockerController {
         return lockerList2;
     }
 
-    public HashMap<String, Locker> getLockerByUserMap(String nb) {
-
-        HashMap<String, Locker> userLockerMap = new HashMap<String, Locker>();
-        /*HashMap<String, ArrayList<Locker>> occupiedlockerCluster = getLockersWithPeople(nb);
-
-        for (Map.Entry<String, ArrayList<Locker>> entry : occupiedlockerCluster.entrySet()) {
-            ArrayList<Locker> value = entry.getValue();
-            if (value != null) {
-                for (Locker l : value) {
-                    userLockerMap.put(l.getTaken_by(), l);
-                }
+    public Locker getLockerBySid(String sid) {
+        LockerDAO lockerDAO = new LockerDAO();
+        ArrayList<Locker> lockerList = lockerDAO.retrieveLockers();
+        Locker locker = null;
+        for(Locker l : lockerList){
+            if(l.getTaken_by() != null && l.getTaken_by().equals(sid)){
+                locker = l;
+                break;
             }
-        }*/
-        return userLockerMap;
+        }
+        return locker;
     }
 
     public Integer countFreeLockers(ArrayList<Locker> lockerList) {
