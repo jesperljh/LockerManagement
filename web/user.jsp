@@ -48,7 +48,7 @@ s<%@page import="controller.RequestController"%>
                 String cluster = request.getParameter("cluster");
                 LockerController locker_Ctrl = new LockerController();
                 HashMap<String, ArrayList<Locker>> mapLockerList = locker_Ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
-                
+
                 if (cluster == null) {
                     cluster = mapLockerList.keySet().iterator().next();
                 }
@@ -59,6 +59,9 @@ s<%@page import="controller.RequestController"%>
                 if (value != null) {
                     for (Locker locker : value) {
                         out.println("<input type='checkbox' name='lockerNo' id='lockerNo' value='" + locker.getLocker_no() + "' hidden>");
+                        if (locker.getTaken_by() != null) {
+                            out.println("<input type='checkbox' name='taken_by' id='taken_by' value='" + locker.getLocker_no() + "' hidden>");
+                        }
                     }
                 }
             %>
@@ -161,7 +164,7 @@ s<%@page import="controller.RequestController"%>
                         <option value="pig">pig</option>-->
                         <%
                             //}
-%>
+                        %>
                     </select>
                 </label>
             </div>
@@ -206,7 +209,7 @@ s<%@page import="controller.RequestController"%>
         <script src="js/datetime/app.js" type="text/javascript"></script>
 
         <script>
-            
+
             // ********************* YELLOW *******************************
             var settings = {
                 rows: 3,
@@ -355,15 +358,21 @@ s<%@page import="controller.RequestController"%>
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
-            
+
             //Case II: If already booked
             //var bookedSeats = [5, 10, 25];
             var bookedSeats = [];
+            var restrictSeats = [];
             //var countCluster = document.getElementById('noOfCluster').value;
             var initialiseLocker = function (key) {
                 key = document.getElementById("cluster").value;
                 bookedSeats = [];
+                restrictSeats = [];
                 $("input[name='lockerNo']").each(function () {
+                    value = $(this).val();
+                    restrictSeats.push(parseInt(value.substring(1)));
+                });
+                $("input[name='taken_by']").each(function () {
                     value = $(this).val();
                     bookedSeats.push(parseInt(value.substring(1)));
                 });
@@ -409,10 +418,10 @@ s<%@page import="controller.RequestController"%>
                 $('#displayLocker').html(displayLocker);
 
 
-                return bookedSeats;
+                return restrictSeats;
             };
             //$(document).foundation();
-            
+
             //case I: Show from starting
             //init();
             var init = function (reservedSeat) {
@@ -424,11 +433,15 @@ s<%@page import="controller.RequestController"%>
                             seatNo = (i + j * settings.rows + 1);
                             className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
                             if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
-
+                                if($.isArray(bookedSeats) && $.inArray(seatNo, bookedSeats) != -1){
+                                    className += ' ' + settings.selectedSeatCss;
+                                }
                             } else {
-                                className += ' ' + settings.selectedSeatCss;
-                                //className += ' ' + settings.restrictedSeatCss;
+                                //className += ' ' + settings.selectedSeatCss;
+                                className += ' ' + settings.restrictedSeatCss;
                             }
+                            
+                            
                             str.push('<li class="' + className + '"' +
                                     'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
                                     '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
@@ -441,10 +454,16 @@ s<%@page import="controller.RequestController"%>
             };
             init(bookedSeats);
             $('.' + settings.seatCss).click(function () {
-                if ($(this).hasClass(settings.selectedSeatCss)) {
-                    alert('This seat is already reserved');
+                if ($(this).hasClass(settings.restrictedSeatCss)) {
+                    alert('This locker is not under your neighbourhood');
+                }else if ($(this).hasClass(settings.selectedSeatCss)) {
+                    //alert('This seat is already reserved');
+                    $("ul li").removeClass(setting.selectingSeatCss);
+                    $(this).addClass(setting.selectingSeatCss);
                 } else {
-                    $(this).toggleClass(settings.selectingSeatCss);
+                    $("ul li").removeClass(setting.selectingSeatCss);
+                    $(this).addClass(setting.selectingSeatCss);
+                    //$(this).toggleClass(settings.selectingSeatCss);
                 }
             });
             $('#btnShow').click(function () {
