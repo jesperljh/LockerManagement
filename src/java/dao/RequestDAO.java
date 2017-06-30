@@ -158,7 +158,7 @@ public class RequestDAO {
 
     }
 
-    public boolean updateRequest(int id, String action, String mySid) {
+    public boolean updateRequest(int id, String action, String mySid, String rSid) {
         //Assume status is  true, set false only if exception is caught
         boolean status = true;
 
@@ -199,7 +199,7 @@ public class RequestDAO {
         }
 
         if (action.equals("accept")) {
-            updateRequests(mySid);
+            updateRequests(mySid, rSid);
         }
 
         //Returns true if successfully updated or false if update fail
@@ -207,7 +207,7 @@ public class RequestDAO {
 
     }
 
-    public boolean updateRequests(String mySid) {
+    public boolean updateRequests(String mySid, String rSid) {
         //Assume status is  true, set false only if exception is caught
         boolean status = true;
 
@@ -215,7 +215,7 @@ public class RequestDAO {
         String stmt = "";
         stmt = "UPDATE requests "
                 + "SET request_status = ?"
-                + " WHERE receiver = ? AND request_status = ?";
+                + " WHERE receiver = ? OR receiver = ? OR requester = ? OR requester = ?";
 
         try {
             //Get connection from DatabaseConnectionManager
@@ -227,7 +227,9 @@ public class RequestDAO {
             //Set parameters into prepared statement
             pstmt.setString(1, "reject");
             pstmt.setString(2, mySid);
-            pstmt.setString(3, "pending");
+            pstmt.setString(3, rSid);
+            pstmt.setString(4, rSid);
+            pstmt.setString(5, mySid);
 
             //Execute update
             pstmt.executeUpdate();

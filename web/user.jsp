@@ -43,25 +43,32 @@ s<%@page import="controller.RequestController"%>
     <body>
         <%@include file="include/topbar.jsp" %>
         <input type="hidden" name="currentNB" id="currentNB" value="<%=currentUser.getNeighbourhood()%>">
-        <%
-            LockerController locker_Ctrl = new LockerController();
-            HashMap<String, ArrayList<Locker>> mapLockerList = locker_Ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
-            int clusterNo = 0;
-            for (Map.Entry<String, ArrayList<Locker>> entry : mapLockerList.entrySet()) {
-                String key = entry.getKey();
-                ArrayList<Locker> value = entry.getValue();
-                if (key != null) {
-                    clusterNo++;
-                    out.println("<input type='checkbox' name='cluster" + clusterNo + "' id='cluster" + clusterNo + "' value='" + key + "' hidden>");
-                }
-                if (value != null) {
-                    for (Locker locker : value) {
-                        out.println("<input type='checkbox' name='lockerNo" + clusterNo + "' id='lockerNo" + clusterNo + "' value='" + locker.getLocker_no() + "' hidden>");
+        <div id="clusterInfo">
+            <%
+                String cluster = request.getParameter("cluster");
+                if(cluster == null){
+                    LockerController locker_Ctrl = new LockerController();
+                HashMap<String, ArrayList<Locker>> mapLockerList = locker_Ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
+                int clusterNo = 0;
+                for (Map.Entry<String, ArrayList<Locker>> entry : mapLockerList.entrySet()) {
+                    String key = entry.getKey();
+                    ArrayList<Locker> value = entry.getValue();
+                    if (key != null) {
+                        clusterNo++;
+                        out.println("<input type='checkbox' name='cluster" + clusterNo + "' id='cluster" + clusterNo + "' value='" + key + "' hidden>");
+                    }
+                    if (value != null) {
+                        for (Locker locker : value) {
+                            out.println("<input type='checkbox' name='lockerNo" + clusterNo + "' id='lockerNo" + clusterNo + "' value='" + locker.getLocker_no() + "' hidden>");
+                        }
                     }
                 }
-            }
-            out.println("<input type='checkbox' name='noOfCluster' id='noOfCluster' value='" + clusterNo + "' hidden>");
-        %>
+                out.println("<input type='checkbox' name='noOfCluster' id='noOfCluster' value='" + clusterNo + "' hidden>");
+                }else{
+                    
+                }
+            %>
+        </div>
         <!--Page Header-->
         <div class="row" style="padding-top: 30px; padding-left: 18px; padding-right: 18px">
             <i class="fi-map size-48"></i>
@@ -160,7 +167,7 @@ s<%@page import="controller.RequestController"%>
                         <option value="pig">pig</option>-->
                         <%
                             //}
-%>
+                        %>
                     </select>
                 </label>
             </div>
@@ -169,25 +176,25 @@ s<%@page import="controller.RequestController"%>
                 <input type="submit" value="Select Cluster" style="margin-top: 10px" class="button sloca normal radius"/>
             </div>
         </div>
-        <div class="row">
+        <div class="row" name="displayLocker" id="displayLocker">
             <!--<div class="medium-8 columns">-->
-            <h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
-            <div id="holder"> 
-                <ul id="place">
-                </ul>    
-            </div>
-            <div style="float:left;"> 
-                <ul id="seatDescription">
-                    <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Available Locker</li>
-                    <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Booked Locker</li>
-                    <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Selected Locker</li>
-                    <li style="background:url('https://png.icons8.com/safe/android/24') no-repeat scroll 0 0 transparent; padding-right: 30px">Restricted Locker</li>
-                </ul>
-            </div>
-            <div style="clear:both;width:100%">
-                <input type="button" id="btnShowNew" value="Show Selected Seats" />
-                <input type="button" id="btnShow" value="Show All" />           
-            </div>
+            <!-- <h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
+             <div id="holder"> 
+                 <ul id="place">
+                 </ul>    
+             </div>
+             <div style="float:left;"> 
+                 <ul id="seatDescription">
+                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Available Locker</li>
+                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Booked Locker</li>
+                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Selected Locker</li>
+                     <li style="background:url('https://png.icons8.com/safe/android/24') no-repeat scroll 0 0 transparent; padding-right: 30px">Restricted Locker</li>
+                 </ul>
+             </div>
+             <div style="clear:both;width:100%">
+                 <input type="button" id="btnShowNew" value="Show Selected Seats" />
+                 <input type="button" id="btnShow" value="Show All" />           
+             </div>-->
             <!--</div>-->
         </div>
 
@@ -205,15 +212,82 @@ s<%@page import="controller.RequestController"%>
         <script src="js/datetime/app.js" type="text/javascript"></script>
 
         <script>
+            //Case II: If already booked
+            //var bookedSeats = [5, 10, 25];
+            var bookedSeats = [];
+            var countCluster = document.getElementById('noOfCluster').value;
+            var initialiseLocker = function (i, key) {
+                i = 1;
+                key = document.getElementById("cluster1").value;
+                bookedSeats = [];
+                $("input[name='lockerNo" + i + "']").each(function () {
+                    value = $(this).val();
+                    bookedSeats.push(parseInt(value.substring(1)));
+                });
+                alert(bookedSeats);
+                if (key == "rat") {
+                    setting = settings1;
+                } else if (key == "ox") {
+                    settings = settings2;
+                } else if (key == "tiger") {
+                    settings = settings3;
+                } else if (key == "rabbit") {
+                    settings = settings4;
+                } else if (key == "dragon") {
+                    settings = settings5;
+                } else if (key == "snake") {
+                    settings = settings6;
+                } else if (key == "horse") {
+                    settings = settings7;
+                } else if (key == "sheep") {
+                    settings = settings8;
+                } else if (key == "monkey") {
+                    settings = settings9;
+                } else if (key == "rooster") {
+                    settings = settings10;
+                } else if (key == "dog") {
+                    settings = settings11;
+                } else if (key == "pig") {
+                    settings = settings12;
+                }
+
+                var displayLocker = "<row><div class='medium-8 columns'>" +
+                        "<h5> Cluster " + key + ": </h5>" +
+                        "<div id='holder'> <ul id='place'></ul>    </div>" +
+                        "<div style='float:left;'>" +
+                        "<ul id='seatDescription'>" +
+                        "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Available Locker</li>" +
+                        "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Booked Locker</li>" +
+                        "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Selected Locker</li>" +
+                        "</ul>" +
+                        "</div></row>";
+
+
+                $('#displayLocker').html(displayLocker);
+
+
+                return bookedSeats;
+            };
             //$(document).foundation();
             // ********************* YELLOW *******************************
+            var settings = {
+                rows: 3,
+                cols: 8,
+                rowCssPrefix: 'row-',
+                colCssPrefix: 'col-',
+                seatWidth: 50,
+                seatHeight: 50,
+                seatCss: 'seat',
+                selectedSeatCss: 'selectedSeat',
+                selectingSeatCss: 'selectingSeat'
+            };
             var settings1 = {
                 rows: 3,
                 cols: 8,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -223,21 +297,20 @@ s<%@page import="controller.RequestController"%>
                 cols: 8,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
-
             // ********************* BLUE *******************************
             var settings3 = {
                 rows: 3,
                 cols: 10,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -247,8 +320,8 @@ s<%@page import="controller.RequestController"%>
                 cols: 20,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -258,8 +331,8 @@ s<%@page import="controller.RequestController"%>
                 cols: 20,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -269,8 +342,8 @@ s<%@page import="controller.RequestController"%>
                 cols: 8,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -280,21 +353,20 @@ s<%@page import="controller.RequestController"%>
                 cols: 16,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
-
             // ********************* YELLOW *******************************
             var settings8 = {
                 rows: 3,
                 cols: 6,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -304,8 +376,8 @@ s<%@page import="controller.RequestController"%>
                 cols: 6,
                 rowCssPrefix: 'row-',
                 colCssPrefix: 'col-',
-                seatWidth: 35,
-                seatHeight: 35,
+                seatWidth: 50,
+                seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
@@ -321,7 +393,7 @@ s<%@page import="controller.RequestController"%>
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
-            var settings = {
+            var settings11 = {
                 rows: 3,
                 cols: 20,
                 rowCssPrefix: 'row-',
@@ -343,32 +415,32 @@ s<%@page import="controller.RequestController"%>
                 selectedSeatCss: 'selectedSeat',
                 selectingSeatCss: 'selectingSeat'
             };
-
-            var init = function (reservedSeat) {
-                var str = [], seatNo, className;
-                for (i = 0; i < settings.rows; i++) {
-                    for (j = 0; j < settings.cols; j++) {
-                        seatNo = (i + j * settings.rows + 1);
-                        className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
-                        if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
-                            className += ' ' + settings.selectedSeatCss;
-                        }
-                        str.push('<li class="' + className + '"' +
-                                'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
-                                '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
-                                '</li>');
-                    }
-                }
-                $('#place').html(str.join(''));
-            };
             //case I: Show from starting
             //init();
+            var init = function (reservedSeat) {
+                if (document.getElementById('cluster1') != null) {
+                    reservedSeat = initialiseLocker(document.getElementById("cluster1").value);
+                    var str = [], seatNo, className;
+                    for (i = 0; i < settings.rows; i++) {
+                        for (j = 0; j < settings.cols; j++) {
+                            seatNo = (i + j * settings.rows + 1);
+                            className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
+                            if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
 
-            //Case II: If already booked
-            var bookedSeats = [5, 10, 25];
+                            } else {
+                                className += ' ' + settings.selectedSeatCss;
+                            }
+                            str.push('<li class="' + className + '"' +
+                                    'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
+                                    '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
+                                    '</li>');
+                        }
+                    }
+                    $('#place').html(str.join(''));
+                }
+
+            };
             init(bookedSeats);
-
-
             $('.' + settings.seatCss).click(function () {
                 if ($(this).hasClass(settings.selectedSeatCss)) {
                     alert('This seat is already reserved');
@@ -376,7 +448,6 @@ s<%@page import="controller.RequestController"%>
                     $(this).toggleClass(settings.selectingSeatCss);
                 }
             });
-
             $('#btnShow').click(function () {
                 var str = [];
                 $.each($('#place li.' + settings.selectedSeatCss + ' a, #place li.' + settings.selectingSeatCss + ' a'), function (index, value) {

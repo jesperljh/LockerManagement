@@ -40,7 +40,7 @@ public class RequestController {
     public boolean acceptRequest(int id, String mySid, String rSid) {
         RequestDAO requestDAO = new RequestDAO();
         boolean update = false;
-        update = requestDAO.updateRequest(id, "accept", mySid);
+        update = requestDAO.updateRequest(id, "accept", mySid, rSid);
         LockerDAO lockerDAO = new LockerDAO();
         
         Locker locker1 = lockerDAO.retrieveLockersBySid(mySid);
@@ -54,10 +54,10 @@ public class RequestController {
         return update;
     }
 
-    public boolean rejectRequest(int id, String mySid) {
+    public boolean rejectRequest(int id, String mySid, String rSid) {
         RequestDAO requestDAO = new RequestDAO();
         boolean update = false;
-        update = requestDAO.updateRequest(id, "reject", mySid);
+        update = requestDAO.updateRequest(id, "reject", mySid, rSid);
 
         return update;
     }

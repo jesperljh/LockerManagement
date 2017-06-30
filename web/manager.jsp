@@ -178,9 +178,9 @@
             </form>
         </div>
         <%
-            for (int i = 1; i <= clusterNo; i++) {
+            //for (int i = 1; i <= clusterNo; i++) {
         %>
-        <div class="row" name="displayLocker<%=i%>" id="displayLocker<%=i%>">
+        <div class="row" name="displayLocker" id="displayLocker">
             <!--<div class="medium-8 columns">-->
             <!--<h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
             <div id="holder"> 
@@ -195,7 +195,7 @@
                 </ul>
             </div>-->
         </div>
-        <% }%>
+        <% //}%>
 
         <!-- Included JS Files (Compressed) -->
         <script src="js/vendor/jquery.js"></script>
@@ -213,15 +213,15 @@
         <script>
 
                                 //Case II: If already booked
-                                //var bookedSeats = [5, 10, 25];
-                                var bookedSeats = [];
-                                var countCluster = document.getElementById('noOfCluster').value;
+                                var bookedSeats = [5, 10, 25];
+                                //var bookedSeats = [];
+                                var countCluster = document.getElementById('noOfCluster1').value;
                                 var initialiseLocker = function (i, key) {
-                                    bookedSeats = [];
-                                    $("input[name='lockerNo" + i + "']").each(function () {
+                                    //bookedSeats = [];
+                                    /*$("input[name='lockerNo" + i + "']").each(function () {
                                         value = $(this).val();
                                         bookedSeats.push(parseInt(value.substring(1)));
-                                    });
+                                    });*/
                                     if (key == "rat") {
                                         setting = settings1;
                                     } else if (key == "ox") {
@@ -250,7 +250,7 @@
 
                                     var displayLocker = "<row><div class='medium-8 columns'>" +
                                             "<h5> Cluster " + key + ": </h5>" +
-                                            "<div id='holder" + i + "'> <ul id='place" + i + "'></ul>    </div>" +
+                                            "<div id='holder'> <ul id='place'></ul>    </div>" +
                                             "<div style='float:left;'>" +
                                             "<ul id='seatDescription'>" +
                                             "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Available Locker</li>" +
@@ -260,10 +260,10 @@
                                             "</div></row>";
 
 
-                                    $('#displayLocker' + i).html(displayLocker);
+                                    $('#displayLocker').html(displayLocker);
 
 
-                                    return bookedSeats;
+                                    //return bookedSeats;
                                 };
                                 //$(document).foundation();
                                 // ********************* YELLOW *******************************
@@ -415,35 +415,30 @@
                                 //case I: Show from starting
                                 //init();
                                 var init = function (reservedSeat) {
-                                    //loadNames();   //**********************************Diasbled for now
-                                    var clusterNo = 0;
-                                    for (a = 1; a <= 12; a++) {
-                                        if (document.getElementById('cluster' + a) != null) {
-                                            reservedSeat = initialiseLocker(a, document.getElementById("cluster" + a).value);
-                                            var str = [], seatNo, className;
-                                            for (i = 0; i < settings.rows; i++) {
-                                                for (j = 0; j < settings.cols; j++) {
-                                                    seatNo = (i + j * settings.rows + 1);
-                                                    className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
-                                                    if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
+                                    //for (a = 1; a <= 12; a++) {
+                                    if (document.getElementById('cluster1') != null) {
+                                        reservedSeat = initialiseLocker(1, document.getElementById("cluster1").value);
+                                        var str = [], seatNo, className;
+                                        for (i = 0; i < settings.rows; i++) {
+                                            for (j = 0; j < settings.cols; j++) {
+                                                seatNo = (i + j * settings.rows + 1);
+                                                className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
+                                                if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
 
-                                                    } else {
-                                                        className += ' ' + settings.selectedSeatCss;
-                                                    }
-                                                    str.push('<li class="' + className + '"' +
-                                                            'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
-                                                            '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
-                                                            '</li>');
+                                                } else {
+                                                    className += ' ' + settings.selectedSeatCss;
                                                 }
+                                                str.push('<li class="' + className + '"' +
+                                                        'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
+                                                        '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
+                                                        '</li>');
                                             }
-                                            clusterNo++;
-                                            $('#place' + clusterNo).html(str.join(''));
-                                            str = [];
                                         }
+                                        $('#place').html(str.join(''));
                                     }
-
                                 };
                                 init(bookedSeats);
+                                
                                 $('.' + settings.seatCss).click(function () {
                                     if ($(this).hasClass(settings.selectedSeatCss)) {
                                         alert('This seat is already reserved');

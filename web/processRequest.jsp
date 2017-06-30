@@ -22,7 +22,7 @@
             if (action != null && action.equals("accept")) {
                 requestCtrl.acceptRequest(id, mySid, rSid);
             } else if (action != null && action.equals("reject")) {
-                requestCtrl.rejectRequest(id, mySid);
+                requestCtrl.rejectRequest(id, mySid, rSid);
             }
             response.sendRedirect("user.jsp");
             %>
