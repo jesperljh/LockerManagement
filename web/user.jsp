@@ -45,7 +45,7 @@ s<%@page import="controller.RequestController"%>
         <input type="hidden" name="currentNB" id="currentNB" value="<%=currentUser.getNeighbourhood()%>">
         <div id="clusterInfo">
             <%
-                String cluster = request.getParameter("cluster");
+                String cluster = request.getParameter("lockerCluster");
                 LockerController locker_Ctrl = new LockerController();
                 HashMap<String, ArrayList<Locker>> mapLockerList = locker_Ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
 
@@ -78,10 +78,12 @@ s<%@page import="controller.RequestController"%>
                 <%                    LockerController lockerCtrl = new LockerController();
                     Locker myLocker = lockerCtrl.getLockerBySid(currentUser.getSid());
                     if (myLocker == null) {
+                        out.println("<input type='checkbox' name='myLocker' id='myLocker' value='A0' hidden>");
                 %>
                 <h4 style="color: teal"><strong>My Locker : </strong>No Locker</h4> 
                 <%
                 } else {
+                    out.println("<input type='checkbox' name='myLocker' id='myLocker' value='" + myLocker.getLocker_no() + "' hidden>");
                 %>
                 <h4 style="color: teal"><strong>My Locker : <%= myLocker.getLocker_no()%></strong></h4>
                 <%
@@ -138,40 +140,33 @@ s<%@page import="controller.RequestController"%>
             }
         %>
         <div class="row">
-            <hr>
-            <div class="small-4 columns">
+            <form action="user.jsp" method="POST">
+                <hr>
+                <div class="small-4 columns">
 
-                <input type="hidden" name="nb" value="<%=currentUser.getNeighbourhood()%>">
-                <label><strong>Locker Cluster</strong>
-                    <select name="lockerCluster" required>
-                        <%
-                            LockerController locker_ctrl = new LockerController();
-                            HashMap<String, ArrayList<Locker>> lockerMap = locker_ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
-                            //for (Map.Entry<String, ArrayList<Locker>> entry : lockerMap.entrySet()) {
-                            //  String key = (String) entry.getKey();
-                        %>
-                        <option value="1">1</option> 
-                        <!--<option value="ox">ox</option> 
-                        <option value="tiger">tiger</option>
-                        <option value="rabbit">rabbit</option>
-                        <option value="dragon">dragon</option>
-                        <option value="snake">snake</option>
-                        <option value="horse">horse</option>
-                        <option value="sheep">sheep</option>
-                        <option value="monkey">monkey</option>
-                        <option value="rooster">rooster</option>
-                        <option value="dog">dog</option>
-                        <option value="pig">pig</option>-->
-                        <%
-                            //}
-                        %>
-                    </select>
-                </label>
-            </div>
-            <div class="small-8 columns">
-                <!--Submit-->
-                <input type="submit" value="Select Cluster" style="margin-top: 10px" class="button sloca normal radius"/>
-            </div>
+                    <input type="hidden" name="nb" value="<%=currentUser.getNeighbourhood()%>">
+                    <label><strong>Locker Cluster</strong>
+                        <select name="lockerCluster" required>
+                            <%
+                                LockerController locker_ctrl = new LockerController();
+                                if (currentUser.getNeighbourhood() != null) {
+                                    HashMap<String, ArrayList<Locker>> lockerMap = locker_ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
+                                    for (Map.Entry<String, ArrayList<Locker>> entry : lockerMap.entrySet()) {
+                                        String key = (String) entry.getKey();
+                            %>
+                            <option value="<%=key%>"><%=key%></option>
+                            <%
+                                    }
+                                }
+                            %>
+                        </select>
+                    </label>
+                </div>
+                <div class="small-8 columns">
+                    <!--Submit-->
+                    <input type="submit" value="Select Cluster" style="margin-top: 10px" class="button sloca normal radius"/>
+                </div>
+            </form>
         </div>
         <div class="row" name="displayLocker" id="displayLocker">
             <!--<div class="medium-8 columns">-->
@@ -194,7 +189,9 @@ s<%@page import="controller.RequestController"%>
              </div>-->
             <!--</div>-->
         </div>
-
+        <div class="row">
+            <input type="submit" value="Request To Swap Locker" style="margin-top: 10px" class="button sloca normal radius"/>
+        </div>
         <!-- Included JS Files (Compressed) -->
         <script src="js/vendor/jquery.js"></script>
         <script src="js/datetime/foundation.min.js" type="text/javascript"></script>
@@ -363,6 +360,7 @@ s<%@page import="controller.RequestController"%>
             //var bookedSeats = [5, 10, 25];
             var bookedSeats = [];
             var restrictSeats = [];
+            var myLocker = [];
             //var countCluster = document.getElementById('noOfCluster').value;
             var initialiseLocker = function (key) {
                 key = document.getElementById("cluster").value;
@@ -370,11 +368,23 @@ s<%@page import="controller.RequestController"%>
                 restrictSeats = [];
                 $("input[name='lockerNo']").each(function () {
                     value = $(this).val();
-                    restrictSeats.push(parseInt(value.substring(1)));
+                    if (value.substring(0, 1) == 'A') {
+                        if (parseInt(value.substring(1)) >= 25) {
+                            restrictSeats.push(parseInt(value.substring(1)) - 24);
+                        }else{
+                            restrictSeats.push(parseInt(value.substring(1)));
+                        }
+                    } else {
+                        restrictSeats.push(parseInt(value.substring(1)));
+                    }
                 });
                 $("input[name='taken_by']").each(function () {
                     value = $(this).val();
                     bookedSeats.push(parseInt(value.substring(1)));
+                });
+                $("input[name='myLocker']").each(function () {
+                    value = $(this).val();
+                    myLocker.push(parseInt(value.substring(1)));
                 });
                 if (key == "rat") {
                     setting = settings1;
@@ -405,7 +415,7 @@ s<%@page import="controller.RequestController"%>
                 var displayLocker = "<row><div class='medium-8 columns'>" +
                         "<h5> Cluster " + key + ": </h5>" +
                         "<div id='holder'> <ul id='place'></ul>    </div>" +
-                        "<div style='float:left;'>" +
+                        "<div style='float:left; width: 750px'>" +
                         "<ul id='seatDescription'>" +
                         "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Available Locker</li>" +
                         "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Booked Locker</li>" +
@@ -433,15 +443,18 @@ s<%@page import="controller.RequestController"%>
                             seatNo = (i + j * settings.rows + 1);
                             className = settings.seatCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
                             if ($.isArray(reservedSeat) && $.inArray(seatNo, reservedSeat) != -1) {
-                                if($.isArray(bookedSeats) && $.inArray(seatNo, bookedSeats) != -1){
+                                if ($.isArray(bookedSeats) && $.inArray(seatNo, bookedSeats) != -1) {
                                     className += ' ' + settings.selectedSeatCss;
                                 }
                             } else {
                                 //className += ' ' + settings.selectedSeatCss;
                                 className += ' ' + settings.restrictedSeatCss;
                             }
-                            
-                            
+
+                            if ($.isArray(myLocker) && $.inArray(seatNo, myLocker) != -1) {
+                                className += ' myLocker';
+                            }
+
                             str.push('<li class="' + className + '"' +
                                     'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
                                     '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
@@ -456,7 +469,9 @@ s<%@page import="controller.RequestController"%>
             $('.' + settings.seatCss).click(function () {
                 if ($(this).hasClass(settings.restrictedSeatCss)) {
                     alert('This locker is not under your neighbourhood');
-                }else if ($(this).hasClass(settings.selectedSeatCss)) {
+                } else if ($(this).hasClass('myLocker')) {
+                    alert('You selected your own locker. Please select other locker.');
+                } else if ($(this).hasClass(settings.selectedSeatCss)) {
                     //alert('This seat is already reserved');
                     $("ul li").removeClass(setting.selectingSeatCss);
                     $(this).addClass(setting.selectingSeatCss);
