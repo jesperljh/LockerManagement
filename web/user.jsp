@@ -392,7 +392,7 @@ s<%@page import="controller.RequestController"%>
                     myLocker.push(parseInt(value.substring(1)));
                 });
                 if (key == "rat") {
-                    setting = settings1;
+                    settings = settings1;
                 } else if (key == "ox") {
                     settings = settings2;
                 } else if (key == "tiger") {
@@ -416,7 +416,7 @@ s<%@page import="controller.RequestController"%>
                 } else if (key == "pig") {
                     settings = settings12;
                 }
-                
+
                 document.getElementById("myCluster").value = key;
 
                 var displayLocker = "<row><div class='medium-8 columns'>" +
@@ -483,7 +483,7 @@ s<%@page import="controller.RequestController"%>
                     $("ul li").removeClass(setting.selectingSeatCss);
                     $(this).addClass(setting.selectingSeatCss);
                     document.getElementById("selectedLocker").value = $(this).text();
-                } else if($(this).hasClass(settings.selectingSeatCss)){
+                } else if ($(this).hasClass(settings.selectingSeatCss)) {
                     $("ul li").removeClass(setting.selectingSeatCss);
                     document.getElementById("selectedLocker").value = "";
                 } else {
