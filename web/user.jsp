@@ -422,7 +422,7 @@ s<%@page import="controller.RequestController"%>
                 var displayLocker = "<row><div class='medium-8 columns'>" +
                         "<h5> Cluster " + key + ": </h5>" +
                         "<div id='holder'> <ul id='place'></ul>    </div>" +
-                        "<div style='float:left; width: 750px'>" +
+                        "<div style='float:left; width: 850px'>" +
                         "<ul id='seatDescription'>" +
                         "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Available Locker</li>" +
                         "<li style='background:url(\"https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png\") no-repeat scroll 0 0 transparent; padding-right: 30px'>Booked Locker</li>" +
