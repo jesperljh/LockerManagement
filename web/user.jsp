@@ -168,30 +168,35 @@ s<%@page import="controller.RequestController"%>
                 </div>
             </form>
         </div>
-        <div class="row" name="displayLocker" id="displayLocker">
-            <!--<div class="medium-8 columns">-->
-            <!-- <h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
-             <div id="holder"> 
-                 <ul id="place">
-                 </ul>    
-             </div>
-             <div style="float:left;"> 
-                 <ul id="seatDescription">
-                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Available Locker</li>
-                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Booked Locker</li>
-                     <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Selected Locker</li>
-                     <li style="background:url('https://png.icons8.com/safe/android/24') no-repeat scroll 0 0 transparent; padding-right: 30px">Restricted Locker</li>
-                 </ul>
-             </div>
-             <div style="clear:both;width:100%">
-                 <input type="button" id="btnShowNew" value="Show Selected Seats" />
-                 <input type="button" id="btnShow" value="Show All" />           
-             </div>-->
-            <!--</div>-->
-        </div>
-        <div class="row">
-            <input type="submit" value="Request To Swap Locker" style="margin-top: 10px" class="button sloca normal radius"/>
-        </div>
+        <form action="lockerRequestServlet" method="POST">
+            <input type="hidden" name="selectedLocker" id="selectedLocker" value="">
+            <input type="hidden" name="requester" id="requester" value="<%=currentUser.getSid()%>">
+            <input type="hidden" name="myCluster" id="myCluster" value="">
+            <div class="row" name="displayLocker" id="displayLocker">
+                <!--<div class="medium-8 columns">-->
+                <!-- <h5> Choose locker by clicking the corresponding locker in the layout below:</h5>
+                 <div id="holder"> 
+                     <ul id="place">
+                     </ul>    
+                 </div>
+                 <div style="float:left;"> 
+                     <ul id="seatDescription">
+                         <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_in-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Available Locker</li>
+                         <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_out-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Booked Locker</li>
+                         <li style="background:url('https://maxcdn.icons8.com/Color/PNG/24/Finance/safe_ok-24.png') no-repeat scroll 0 0 transparent; padding-right: 30px">Selected Locker</li>
+                         <li style="background:url('https://png.icons8.com/safe/android/24') no-repeat scroll 0 0 transparent; padding-right: 30px">Restricted Locker</li>
+                     </ul>
+                 </div>
+                 <div style="clear:both;width:100%">
+                     <input type="button" id="btnShowNew" value="Show Selected Seats" />
+                     <input type="button" id="btnShow" value="Show All" />           
+                 </div>-->
+                <!--</div>-->
+            </div>
+            <div class="row">
+                <input type="submit" value="Request To Swap Locker" style="margin-top: 10px" class="button sloca normal radius"/>
+            </div>
+        </form>
         <!-- Included JS Files (Compressed) -->
         <script src="js/vendor/jquery.js"></script>
         <script src="js/datetime/foundation.min.js" type="text/javascript"></script>
@@ -371,7 +376,7 @@ s<%@page import="controller.RequestController"%>
                     if (value.substring(0, 1) == 'A') {
                         if (parseInt(value.substring(1)) >= 25) {
                             restrictSeats.push(parseInt(value.substring(1)) - 24);
-                        }else{
+                        } else {
                             restrictSeats.push(parseInt(value.substring(1)));
                         }
                     } else {
@@ -411,6 +416,8 @@ s<%@page import="controller.RequestController"%>
                 } else if (key == "pig") {
                     settings = settings12;
                 }
+                
+                document.getElementById("myCluster").value = key;
 
                 var displayLocker = "<row><div class='medium-8 columns'>" +
                         "<h5> Cluster " + key + ": </h5>" +
@@ -456,8 +463,8 @@ s<%@page import="controller.RequestController"%>
                             }
 
                             str.push('<li class="' + className + '"' +
-                                    'style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
-                                    '<a style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
+                                    'value="' + seatNo + '" style="top:' + (i * settings.seatHeight).toString() + 'px;left:' + (j * settings.seatWidth).toString() + 'px;">' +
+                                    '<a value="' + seatNo + '" style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 15px" title="' + seatNo + '">' + seatNo + '</a>' +
                                     '</li>');
                         }
                     }
@@ -475,9 +482,14 @@ s<%@page import="controller.RequestController"%>
                     //alert('This seat is already reserved');
                     $("ul li").removeClass(setting.selectingSeatCss);
                     $(this).addClass(setting.selectingSeatCss);
+                    document.getElementById("selectedLocker").value = $(this).text();
+                } else if($(this).hasClass(settings.selectingSeatCss)){
+                    $("ul li").removeClass(setting.selectingSeatCss);
+                    document.getElementById("selectedLocker").value = "";
                 } else {
                     $("ul li").removeClass(setting.selectingSeatCss);
                     $(this).addClass(setting.selectingSeatCss);
+                    document.getElementById("selectedLocker").value = $(this).text();
                     //$(this).toggleClass(settings.selectingSeatCss);
                 }
             });

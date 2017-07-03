@@ -94,7 +94,6 @@
                                 <i class="fa fa-user-plus" aria-hidden="true"></i>
                                 Assign Manager
                             </button>
-                            <a href="/AssignLockerToManager?sid=<%=demo.getSid()%>" class="button radius secondary small">Assign Locker Cluster</a>
                         </div>
                     </div>
                 </div>
@@ -169,51 +168,51 @@
                 <%
                     for (Demographics demographics : demoList) {
                 %>
-                    <div class="row add-people-section">
-                        <div class="small-12 medium-6 columns about-people">
-                            <div class="about-people-avatar">
-                                <img class="avatar-image" src="https://i.imgur.com/UPVxPjb.jpg" alt="Kishore Kumar">
-                            </div>
-                            <div class="about-people-author">
-                                <p class="author-name">
-                                    <%= demographics.getName()%>
-                                </p>
-                                <p class="author-location">
-                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                    <%= demographics.getNeighbourhood().toUpperCase() + " " + demographics.getRole()%>
-                                </p>
-                                <p class="author-mutual">
-                                    <strong><%= demographics.getSid()%></strong>
-                                    <input type="hidden" name="sid" id="sid" value="<%= demographics.getSid()%>">
-                                    <input type="hidden" name="neighbourhood" id="neighbourhood" value="<%= demographics.getNeighbourhood()%>">
-                                    <input type="hidden" name="role" id="role" value="user">
-                                </p>
-                            </div>    
+                <div class="row add-people-section">
+                    <div class="small-12 medium-6 columns about-people">
+                        <div class="about-people-avatar">
+                            <img class="avatar-image" src="https://i.imgur.com/UPVxPjb.jpg" alt="Kishore Kumar">
                         </div>
-                        <div class="small-12 medium-6 columns add-friend">
-                            <div class="add-friend-action">
-                                <button data-reveal-id="<%=demographics.getSid()%>Modal" class="button radius primary small">
-                                    <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                    Unassign Manager
-                                </button>
-                                <a href="/LockerAssignment/AssignLockerToManager.jsp?sid=<%=demographics.getSid()%>" class="button radius secondary small">Assign Locker Cluster</a>
-                            </div>
+                        <div class="about-people-author">
+                            <p class="author-name">
+                                <%= demographics.getName()%>
+                            </p>
+                            <p class="author-location">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <%= demographics.getNeighbourhood().toUpperCase() + " " + demographics.getRole()%>
+                            </p>
+                            <p class="author-mutual">
+                                <strong><%= demographics.getSid()%></strong>
+                                <input type="hidden" name="sid" id="sid" value="<%= demographics.getSid()%>">
+                                <input type="hidden" name="neighbourhood" id="neighbourhood" value="<%= demographics.getNeighbourhood()%>">
+                                <input type="hidden" name="role" id="role" value="user">
+                            </p>
+                        </div>    
+                    </div>
+                    <div class="small-12 medium-6 columns add-friend">
+                        <div class="add-friend-action">
+                            <button data-reveal-id="<%=demographics.getSid()%>Modal" class="button radius primary small">
+                                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                Unassign Manager
+                            </button>
+                            <a href="/LockerAssignment/AssignLockerToManager.jsp?sid=<%=demographics.getSid()%>" class="button radius secondary small">Assign Locker Cluster</a>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Reveal Modals begin -->
-                    <div id="<%=demographics.getSid()%>Modal" class="reveal-modal" data-reveal aria-labelledby="firstModalTitle" aria-hidden="true" role="dialog">
-                        <h2 id="firstModalTitle">Remove all users assigned to this neighbourhood?</h2>
-                        <form action="unassignManagerServlet" method="POST">
-                            <input type="hidden" name="sid" id="sid" value="<%=demographics.getSid()%>">
-                            <input type="hidden" name="neighbourhood" id="neighbourhood" value="<%=demographics.getNeighbourhood()%>">
-                            <label><strong>Please choose:</strong></label>
-                            <input type="radio" name="choice" value="yes" checked> Yes<br>
-                            <input type="radio" name="choice" value="no"> No<br>  
-                            <p><input type="submit" class="button sloca normal" value="Submit" /></p>
-                            <a class="close-reveal-modal" aria-label="Close">&#215;</a>
-                        </form>
-                    </div>
+                <!-- Reveal Modals begin -->
+                <div id="<%=demographics.getSid()%>Modal" class="reveal-modal" data-reveal aria-labelledby="firstModalTitle" aria-hidden="true" role="dialog">
+                    <h2 id="firstModalTitle">Remove all users assigned to this neighbourhood?</h2>
+                    <form action="unassignManagerServlet" method="POST">
+                        <input type="hidden" name="sid" id="sid" value="<%=demographics.getSid()%>">
+                        <input type="hidden" name="neighbourhood" id="neighbourhood" value="<%=demographics.getNeighbourhood()%>">
+                        <label><strong>Please choose:</strong></label>
+                        <input type="radio" name="choice" value="yes" checked> Yes<br>
+                        <input type="radio" name="choice" value="no"> No<br>  
+                        <p><input type="submit" class="button sloca normal" value="Submit" /></p>
+                        <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+                    </form>
+                </div>
                 <%
                     }
                 %>

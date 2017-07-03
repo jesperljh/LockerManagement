@@ -147,7 +147,7 @@ public class LockerDAO {
         return lockerList;
 
     }
-    
+
     public Locker retrieveLockersBySid(String sid) {
         //Declare a Demographics object as null
         Locker locker = null;
@@ -323,4 +323,96 @@ public class LockerDAO {
 
     }
 
+    public boolean updateLockerToNull(String sid) {
+        //Assume status is  true, set false only if exception is caught
+        boolean status = true;
+
+        //Prepare SQL statement
+        String stmt = "";
+
+        //Prepare SQL statement
+        stmt = "UPDATE lockers "
+                + "SET taken_by = ?"
+                + " WHERE taken_by = ?";
+
+        try {
+            //Get connection from DatabaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+
+            //Prepare prepared statement
+            pstmt = conn.prepareStatement(stmt);
+
+            //Set parameters into prepared statement
+            pstmt.setString(1, null);
+            pstmt.setString(2, sid);
+
+            //Execute update
+            pstmt.executeUpdate();
+
+            //If prepared statement is not null, close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            //end of for loop
+
+        } catch (SQLException e) {
+            //Set status to false, since there is an error in executing pstmt.executeUpdate();
+            status = false;
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                                    
+            System.out.println("Error occurred with update:" + e);
+        } finally {
+            //Close the connection from DatabaseConnectionManager after used            
+            DatabaseConnectionManager.closeConnection(conn);
+        }
+
+        //Returns true if successfully updated or false if update fail
+        return status;
+    }
+    
+    public boolean updateLockerToSid(String sid, String lockerNo) {
+        //Assume status is  true, set false only if exception is caught
+        boolean status = true;
+
+        //Prepare SQL statement
+        String stmt = "";
+
+        //Prepare SQL statement
+        stmt = "UPDATE lockers "
+                + "SET taken_by = ?"
+                + " WHERE lockerNo = ?";
+
+        try {
+            //Get connection from DatabaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+
+            //Prepare prepared statement
+            pstmt = conn.prepareStatement(stmt);
+
+            //Set parameters into prepared statement
+            pstmt.setString(1, sid);
+            pstmt.setString(2, lockerNo);
+
+            //Execute update
+            pstmt.executeUpdate();
+
+            //If prepared statement is not null, close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            //end of for loop
+
+        } catch (SQLException e) {
+            //Set status to false, since there is an error in executing pstmt.executeUpdate();
+            status = false;
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                                    
+            System.out.println("Error occurred with update:" + e);
+        } finally {
+            //Close the connection from DatabaseConnectionManager after used            
+            DatabaseConnectionManager.closeConnection(conn);
+        }
+
+        //Returns true if successfully updated or false if update fail
+        return status;
+    }
+    
 }

@@ -253,4 +253,43 @@ public class RequestDAO {
         //Returns true if successfully updated or false if update fail
         return status;
     }
+    
+    public boolean insertRequest(String requester, String receiver, String lockerNo) {
+        //Assume status is true, set false only if exception is caught
+        boolean status = true;
+
+        //Prepare SQL statement
+        String stmt = "INSERT into requests (requester, receiver, request_status, lockerNo) VALUES (?,?,?,?);";
+
+        try {
+            //Get connection from DatabaseConnectionManager
+            conn = DatabaseConnectionManager.getConnection();
+                    
+            //Prpeare statement
+            pstmt = conn.prepareStatement(stmt);
+
+            //Set parameters into prepared statement
+            pstmt.setString(1, requester);
+            pstmt.setString(2, receiver);
+            pstmt.setString(3, "pending");
+            pstmt.setString(4, lockerNo);
+
+            //Update prepared statement
+            pstmt.executeUpdate();
+
+            //If preparedstatement is not null, then close
+            if (pstmt != null) {
+                pstmt.close();
+            }
+
+        } catch (SQLException e) {
+            //Set status to false, since there is an error in executing pstmt.executeUpdate();            
+            status = false;
+            //Prints out SQLException - good for debugging if sql statement is buggy or constraints that may be causing issues                        
+            System.out.println("Error occurred with create:" + e);
+        }
+
+        //Returns true if successfully added or false if add fail
+        return status;
+    }
 }
