@@ -121,7 +121,7 @@
                         <option value="batman" selected>Batman Neighbourhood</option> 
                         <%
                             }
-                            if (!a.contains("spidarman")) {
+                            if (!a.contains("spiderman")) {
                         %>
                         <option value="spiderman">Spiderman Neighbourhood</option>
                         <%
