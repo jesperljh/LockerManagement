@@ -8,6 +8,7 @@ import controller.DemographicsCSVController;
 import controller.LockerController;
 import dao.DemographicsDAO;
 import dao.LockerDAO;
+import dao.RequestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -45,6 +46,10 @@ public class unassignManagerServlet extends HttpServlet {
             demoCtrl.unassignManager(sid, neighbourhood);
             if(choice.equals("yes")){
                 lockerCtrl.unassignAllMembersFromNeighbourhood(neighbourhood);
+                RequestDAO requestDAO = new RequestDAO();
+                requestDAO.updateRequests(sid, sid);
+                DemographicsDAO demoDAO = new DemographicsDAO();
+                demoDAO.updateNeighbourhoodToNull(neighbourhood);
             }
             
             response.sendRedirect("admin.jsp");
