@@ -66,7 +66,8 @@ public class clearLockerServlet extends HttpServlet {
                 }
             }
             lockerDAO.updateLockers(tempLockerList);
-            response.sendRedirect("managerRemoveUser.jsp");
+            request.setAttribute("success", "Successfully remove selected users from their locker.");
+            request.getRequestDispatcher("managerRemoveUser.jsp").forward(request, response);
             
         }
     }

@@ -72,6 +72,27 @@
             <h3 style="display: inline-block;"><strong>&nbspLocker Floorplan</strong></h3>
             <!--Divider-->
             <hr>
+            <%
+                String errorMsg = (String) request.getAttribute("error");
+                String success = (String) request.getAttribute("success");
+                if (errorMsg != null) {
+            %>
+            <div data-alert class="alert-box round" style="background-color: #5e001f">
+                <%=errorMsg%>
+                <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
+            </div>
+            <%
+            } else if (success != null) {
+            %>
+            <div data-alert class="alert-box success round">
+                <%=success%>
+                <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
+            </div>
+            <%
+                }
+                request.setAttribute("error", null);
+                request.setAttribute("success", null);
+            %>
         </div>
         <div class="row">
             <div class="small-6 columns">
@@ -85,7 +106,7 @@
                 } else {
                     out.println("<input type='checkbox' name='myLocker' id='myLocker' value='" + myLocker.getLocker_no() + "' hidden>");
                 %>
-                <h4 style="color: teal"><strong>My Locker : <%= myLocker.getLocker_no()%> - <%=myLocker.getCluster().toUpperCase() %> Cluster</strong></h4>
+                <h4 style="color: teal"><strong>My Locker : <%= myLocker.getLocker_no()%> - <%=myLocker.getCluster().toUpperCase()%> Cluster</strong></h4>
                 <%
                     }
                 %>
@@ -120,7 +141,7 @@
                                 <%
                                     LockerDAO lockerDAO = new LockerDAO();
                                     Locker locker = lockerDAO.retrieveLockersBySid(r.getRequester());
-                                    %>
+                                %>
                                 Locker number : <%=locker.getLocker_no()%>
                             </p>
                             <p class="author-mutual">
@@ -213,9 +234,10 @@
 
         <!-- Initialize JS Plugins -->
         <script src="js/datetime/app.js" type="text/javascript"></script>
-
+        <script src="js/foundation.min.js"></script>
         <script>
-
+            
+            
             // ********************* YELLOW *******************************
             var settings = {
                 rows: 3,
@@ -512,6 +534,8 @@
                 });
                 alert(str.join(','));
             })
+            
+            $(document).foundation();
         </script>
     </body>
 </html>

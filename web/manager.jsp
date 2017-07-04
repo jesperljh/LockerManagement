@@ -16,10 +16,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="include/protect.jsp" %>
 <%    String token = (String) session.getAttribute("token");
-    String error = (String) request.getAttribute("error");
+    /*String error = (String) request.getAttribute("error");
     if (error != null) {
         out.println("<script>alert('" + error + "');</script>");
-    }
+    }*/
 %>
 <!DOCTYPE html>
 <html>
@@ -89,10 +89,31 @@
         </div>
 
         <div class="row">
+            <%
+                String errorMsg = (String) request.getAttribute("error");
+                String success = (String) request.getAttribute("success");
+                if (errorMsg != null) {
+            %>
+            <div data-alert class="alert-box round" style="background-color: #5e001f">
+                <%=errorMsg%>
+                <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
+            </div>
+            <%
+            } else if (success != null) {
+            %>
+            <div data-alert class="alert-box success round">
+                <%=success%>
+                <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
+            </div>
+            <%
+                }
+                request.setAttribute("error", null);
+                request.setAttribute("success", null);
+            %>
             <form action="assignLockerServlet" method="POST">
                 <div>
                     <div class="row">
-                        <div class="small-5 columns elegantshd"><strong>User Without Locker</strong></div>
+                        <div class="small-5 columns deepshd"><strong>User Without Locker</strong></div>
                         <div class="small-2 columns"></div>
                         <div class="small-5 columns deepshd" style="margin-bottom: 20px"><strong>Selected User To Assign Locker</strong></div>
                     </div>
@@ -107,7 +128,7 @@
                                     DemographicsCSVController demoCtrl = new DemographicsCSVController();
                                     ArrayList<Demographics> demoList = demoCtrl.getUsersByNeighbourHood(currentUser.getNeighbourhood());
                                     ArrayList<String> listOfPeopleWithLockerSid = new ArrayList<String>();
-                                    for(Locker l : lockerList){
+                                    for (Locker l : lockerList) {
                                         listOfPeopleWithLockerSid.add(l.getTaken_by());
                                     }
                                     //ArrayList<Demographics> users = demo.getUsersByNeighbourHood(currentUser.getNeighbourhood());
@@ -145,7 +166,7 @@
                 <div class="small-4 columns">
 
                     <input type="hidden" name="nb" value="<%=currentUser.getNeighbourhood()%>">
-                    <label><strong>Locker Cluster</strong>
+                    <label style="padding-top: 20px"><strong>Select Locker Cluster To Assign</strong>
                         <select name="lockerCluster" required>
                             <%
                                 LockerController locker_ctrl = new LockerController();
@@ -209,9 +230,10 @@
 
         <!-- Initialize JS Plugins -->
         <script src="js/datetime/app.js" type="text/javascript"></script>
-
+        
+        <script src="js/foundation.min.js"></script>
         <script>
-
+            $(document).foundation();
                                 //Case II: If already booked
                                 var bookedSeats = [5, 10, 25];
                                 //var bookedSeats = [];
@@ -219,9 +241,9 @@
                                 var initialiseLocker = function (i, key) {
                                     //bookedSeats = [];
                                     /*$("input[name='lockerNo" + i + "']").each(function () {
-                                        value = $(this).val();
-                                        bookedSeats.push(parseInt(value.substring(1)));
-                                    });*/
+                                     value = $(this).val();
+                                     bookedSeats.push(parseInt(value.substring(1)));
+                                     });*/
                                     if (key == "rat") {
                                         setting = settings1;
                                     } else if (key == "ox") {
@@ -438,7 +460,7 @@
                                     }
                                 };
                                 init(bookedSeats);
-                                
+
                                 $('.' + settings.seatCss).click(function () {
                                     if ($(this).hasClass(settings.selectedSeatCss)) {
                                         alert('This seat is already reserved');

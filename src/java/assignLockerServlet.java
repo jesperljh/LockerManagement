@@ -62,7 +62,12 @@ public class assignLockerServlet extends HttpServlet {
             
             // assign users lockers, return user sids who were not assigned a locker
             sids = setLockerUsers(sids, nb, cluster);
-            response.sendRedirect("manager.jsp");
+            if(sids == null){
+                request.setAttribute("error", "Users selected are more than available lockers for selected cluster.");
+            }else{
+                request.setAttribute("success","Successfully assigned locker to selected users");
+            }
+            request.getRequestDispatcher("manager.jsp").forward(request, response);
         }
     }
 

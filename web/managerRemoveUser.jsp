@@ -16,10 +16,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="include/protect.jsp" %>
 <%    String token = (String) session.getAttribute("token");
-    String error = (String) request.getAttribute("error");
+    /*String error = (String) request.getAttribute("error");
     if (error != null) {
         out.println("<script>alert('" + error + "');</script>");
-    }
+    }*/
 %>
 <!DOCTYPE html>
 <html>
@@ -89,10 +89,31 @@
         </div>
 
         <div class="row">
+            <%
+                String errorMsg = (String) request.getAttribute("error");
+                String success = (String) request.getAttribute("success");
+                if (errorMsg != null) {
+            %>
+            <div data-alert class="alert-box round" style="background-color: #5e001f">
+                <%=errorMsg%>
+                <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
+            </div>
+            <%
+            } else if (success != null) {
+            %>
+            <div data-alert class="alert-box success round">
+                <%=success%>
+                <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
+            </div>
+            <%
+                }
+                request.setAttribute("error", null);
+                request.setAttribute("success", null);
+            %>
             <form action="clearLockerServlet" method="POST">
                 <div>
                     <div class="row">
-                        <div class="small-5 columns elegantshd"><strong>User With Locker</strong></div>
+                        <div class="small-5 columns deepshd"><strong>User With Locker</strong></div>
                         <div class="small-2 columns"></div>
                         <div class="small-5 columns deepshd" style="margin-bottom: 20px"><strong>Selected User To Unassign Locker</strong></div>
                     </div>
@@ -107,7 +128,7 @@
                                     DemographicsCSVController demoCtrl = new DemographicsCSVController();
                                     ArrayList<Demographics> demoList = demoCtrl.getUsersByNeighbourHood(currentUser.getNeighbourhood());
                                     ArrayList<String> listOfPeopleWithLockerSid = new ArrayList<String>();
-                                    for(Locker l : lockerList){
+                                    for (Locker l : lockerList) {
                                         listOfPeopleWithLockerSid.add(l.getTaken_by());
                                     }
                                     //ArrayList<Demographics> users = demo.getUsersByNeighbourHood(currentUser.getNeighbourhood());
@@ -147,28 +168,28 @@
                     <input type="hidden" name="nb" value="<%=currentUser.getNeighbourhood()%>">
                     <!--<label><strong>Locker Cluster</strong>
                         <select name="lockerCluster" required>-->
-                            <%
-                                //LockerController locker_ctrl = new LockerController();
-                                //HashMap<String, ArrayList<Locker>> lockerMap = locker_ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
-                                //for (Map.Entry<String, ArrayList<Locker>> entry : lockerMap.entrySet()) {
-                                  //  String key = (String) entry.getKey();
-                            %>
-                            <!--<option value="ox">ox</option> 
-                            <option value="tiger">tiger</option>
-                            <option value="rabbit">rabbit</option>
-                            <option value="dragon">dragon</option>
-                            <option value="snake">snake</option>
-                            <option value="horse">horse</option>
-                            <option value="sheep">sheep</option>
-                            <option value="monkey">monkey</option>
-                            <option value="rooster">rooster</option>
-                            <option value="dog">dog</option>
-                            <option value="pig">pig</option>-->
-                            <%
-                                //}
-                            %>
-                        <!--</select>
-                    </label>-->
+                    <%
+                        //LockerController locker_ctrl = new LockerController();
+                        //HashMap<String, ArrayList<Locker>> lockerMap = locker_ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
+                        //for (Map.Entry<String, ArrayList<Locker>> entry : lockerMap.entrySet()) {
+                        //  String key = (String) entry.getKey();
+                    %>
+                    <!--<option value="ox">ox</option> 
+                    <option value="tiger">tiger</option>
+                    <option value="rabbit">rabbit</option>
+                    <option value="dragon">dragon</option>
+                    <option value="snake">snake</option>
+                    <option value="horse">horse</option>
+                    <option value="sheep">sheep</option>
+                    <option value="monkey">monkey</option>
+                    <option value="rooster">rooster</option>
+                    <option value="dog">dog</option>
+                    <option value="pig">pig</option>-->
+                    <%
+                        //}
+                    %>
+                    <!--</select>
+                </label>-->
                     <!--Submit-->
                     <input type="submit" value="Unassign" class="button sloca normal radius" style="margin-top: 30px"/>
 
@@ -176,8 +197,7 @@
                 <hr>
             </form>
         </div>
-        <%
-            for (int i = 1; i <= clusterNo; i++) {
+        <%            for (int i = 1; i <= clusterNo; i++) {
         %>
         <div class="row" name="displayLocker<%=i%>" id="displayLocker<%=i%>">
             <!--<div class="medium-8 columns">-->
@@ -208,9 +228,9 @@
 
         <!-- Initialize JS Plugins -->
         <script src="js/datetime/app.js" type="text/javascript"></script>
-
+        <script src="js/foundation.min.js"></script>
         <script>
-
+                                $(document).foundation();
                                 //Case II: If already booked
                                 //var bookedSeats = [5, 10, 25];
                                 var bookedSeats = [];
