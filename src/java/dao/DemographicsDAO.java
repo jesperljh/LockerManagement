@@ -638,10 +638,6 @@ public class DemographicsDAO {
         //Returns true if successfully updated or false if update fail
         return status;
     }
-
-    
-    
-    
     
     public boolean updateNeighbourhoodToNull(String nb) {
         //Assume status is true, set false only if exception is caught

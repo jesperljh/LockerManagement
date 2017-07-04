@@ -123,7 +123,7 @@
                             }
                             if (!a.contains("spidarman")) {
                         %>
-                        <option value="spidarman">Spidarman Neighbourhood</option>
+                        <option value="spiderman">Spiderman Neighbourhood</option>
                         <%
                             }
                             if (!a.contains("superman")) {
