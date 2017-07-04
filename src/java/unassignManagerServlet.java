@@ -9,13 +9,17 @@ import controller.LockerController;
 import dao.DemographicsDAO;
 import dao.LockerDAO;
 import dao.RequestDAO;
+import entity.Locker;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -44,14 +48,23 @@ public class unassignManagerServlet extends HttpServlet {
             LockerController lockerCtrl = new LockerController();
             DemographicsCSVController demoCtrl = new DemographicsCSVController();
             demoCtrl.unassignManager(sid, neighbourhood);
-            if(choice.equals("yes")){
+            if (choice.equals("yes")) {
+                HashMap<String, ArrayList<Locker>> clusterMap = lockerCtrl.getLockerClusterListByNeighbourhood(neighbourhood);
+                for (Map.Entry<String, ArrayList<Locker>> entry : clusterMap.entrySet()) {
+                    String key = entry.getKey();
+                    ArrayList<Locker> value = entry.getValue();
+                    for (Locker l : value) {
+                        if (l.getTaken_by() != null && !l.getTaken_by().equals("")) {
+                            RequestDAO requestDAO = new RequestDAO();
+                            requestDAO.updateRequests(l.getTaken_by(), l.getTaken_by());
+                        }
+                    }
+                }
                 lockerCtrl.unassignAllMembersFromNeighbourhood(neighbourhood);
-                RequestDAO requestDAO = new RequestDAO();
-                requestDAO.updateRequests(sid, sid);
                 DemographicsDAO demoDAO = new DemographicsDAO();
                 demoDAO.updateNeighbourhoodToNull(neighbourhood);
             }
-            
+
             response.sendRedirect("admin.jsp");
         }
     }

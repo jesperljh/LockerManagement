@@ -44,6 +44,22 @@
             <h3 class="page-header" style="display: inline-block"><strong>&nbspNeighbourhood Manager</strong></h3>
             <!--Divider-->
             <hr>
+            <%                String sid;
+                if (request.getMethod() != null && request.getMethod().equals("POST")) {
+                    //Get the user input
+                    sid = request.getParameter("sid");
+                    DemographicsCSVController demoCtrl = new DemographicsCSVController();
+                    Demographics demo = demoCtrl.getUser(sid);
+                    if (demo == null) {
+            %>
+            <div data-alert class="alert-box alert round">
+                User not found - Please enter correct SID.
+                <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
+            </div>
+            <%
+                    }
+                }
+            %>
 
             <form method="POST">
                 <!-- Date Time Picker -->
@@ -55,7 +71,7 @@
         </div>
 
         <!-- **************************** Search SID Result ********************-->
-        <%            String sid;
+        <%
             if (request.getMethod() != null && request.getMethod().equals("POST")) {
                 //Get the user input
                 sid = request.getParameter("sid");
@@ -135,6 +151,11 @@
                         %>
                         <option value="ironman">Ironman Neighbourhood</option> 
                         <%
+                            }
+                            if (!a.contains("wonderwoman")) {
+                        %>
+                        <option value="wonderwoman">Wonderwoman</option> 
+                        <%
                                 }
                             }
                         %>
@@ -144,6 +165,10 @@
                 <a class="close-reveal-modal" aria-label="Close">&#215;</a>
             </form>
         </div>
+        <%
+        } else {
+        %>
+
         <%
                 }
             }

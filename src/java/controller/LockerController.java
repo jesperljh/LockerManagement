@@ -214,6 +214,7 @@ public class LockerController {
         for (Locker l : lockerList) {
             if (l.getNeighbourhood() != null && l.getNeighbourhood().equals(nb)) {
                 l.setNeighbourhood(null);
+                l.setTaken_by(null);
             }
         }
         lockerDAO.updateLockers(lockerList);
