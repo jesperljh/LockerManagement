@@ -470,7 +470,6 @@ s<%@page import="controller.RequestController"%>
                     }
                     $('#place').html(str.join(''));
                 }
-
             };
             init(bookedSeats);
             $('.' + settings.seatCss).click(function () {
@@ -480,15 +479,15 @@ s<%@page import="controller.RequestController"%>
                     alert('You selected your own locker. Please select other locker.');
                 } else if ($(this).hasClass(settings.selectedSeatCss)) {
                     //alert('This seat is already reserved');
-                    $("ul li").removeClass(setting.selectingSeatCss);
-                    $(this).addClass(setting.selectingSeatCss);
+                    $("ul li").removeClass(settings.selectingSeatCss);
+                    $(this).addClass(settings.selectingSeatCss);
                     document.getElementById("selectedLocker").value = $(this).text();
                 } else if ($(this).hasClass(settings.selectingSeatCss)) {
-                    $("ul li").removeClass(setting.selectingSeatCss);
+                    $("ul li").removeClass(settings.selectingSeatCss);
                     document.getElementById("selectedLocker").value = "";
                 } else {
-                    $("ul li").removeClass(setting.selectingSeatCss);
-                    $(this).addClass(setting.selectingSeatCss);
+                    $("ul li").removeClass(settings.selectingSeatCss);
+                    $(this).addClass(settings.selectingSeatCss);
                     document.getElementById("selectedLocker").value = $(this).text();
                     //$(this).toggleClass(settings.selectingSeatCss);
                 }

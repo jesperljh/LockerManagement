@@ -93,7 +93,7 @@ public class lockerRequestServlet extends HttpServlet {
                     receiver = l.getTaken_by();
                 }
             }
-            if(receiver.equals("")){
+            if(receiver == null || receiver.equals("")){
                 lockerDAO.updateLockerToNull(requester);
                 lockerDAO.updateLockerToSid(requester, selectedLocker);
             }else if(selectedLocker != null && !selectedLocker.equals("")){

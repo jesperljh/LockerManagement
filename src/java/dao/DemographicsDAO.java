@@ -639,6 +639,7 @@ public class DemographicsDAO {
         return status;
     }
 
+
     
     public boolean updateNeighbourhoodToNull(String nb) {
         //Assume status is true, set false only if exception is caught
@@ -678,7 +679,6 @@ public class DemographicsDAO {
         //Returns true if successfully updated or false if update fail
         return status;
     }
-
 
     /**
      * <br />Deletes a user in the Demographics table based on his email
