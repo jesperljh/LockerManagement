@@ -74,7 +74,7 @@
             <hr>
         </div>
         <div class="row">
-            <div class="small-4 columns">
+            <div class="small-6 columns">
                 <%                    LockerController lockerCtrl = new LockerController();
                     Locker myLocker = lockerCtrl.getLockerBySid(currentUser.getSid());
                     if (myLocker == null) {
@@ -85,7 +85,7 @@
                 } else {
                     out.println("<input type='checkbox' name='myLocker' id='myLocker' value='" + myLocker.getLocker_no() + "' hidden>");
                 %>
-                <h4 style="color: teal"><strong>My Locker : <%= myLocker.getLocker_no()%></strong></h4>
+                <h4 style="color: teal"><strong>My Locker : <%= myLocker.getLocker_no()%> - <%=myLocker.getCluster().toUpperCase() %> Cluster</strong></h4>
                 <%
                     }
                 %>
@@ -117,7 +117,11 @@
                             </p>
                             <p class="author-location">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                Locker number : <%=r.getLockerNo()%>
+                                <%
+                                    LockerDAO lockerDAO = new LockerDAO();
+                                    Locker locker = lockerDAO.retrieveLockersBySid(r.getRequester());
+                                    %>
+                                Locker number : <%=locker.getLocker_no()%>
                             </p>
                             <p class="author-mutual">
                                 Status : <strong><%=r.getStatus()%></strong>

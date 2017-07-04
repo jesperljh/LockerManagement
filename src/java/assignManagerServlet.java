@@ -5,8 +5,10 @@
  */
 
 import dao.DemographicsDAO;
+import entity.Demographics;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,6 +41,7 @@ public class assignManagerServlet extends HttpServlet {
             String neighbourhood = request.getParameter("neighbourhood");
             String role = request.getParameter("role");
             DemographicsDAO demoDAO = new DemographicsDAO();
+            ArrayList<Demographics> demoList = demoDAO.retrieveByNeighbourhood(neighbourhood);
             demoDAO.updateRole(sid, neighbourhood, role);
                     
             out.println("<!DOCTYPE html>");

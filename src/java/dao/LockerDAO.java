@@ -205,7 +205,13 @@ public class LockerDAO {
         for (Locker l : lockerList) {
             //Prepare SQL statement
             String stmt = "";
-            if (l.getNeighbourhood() == null) {
+            if (l.getNeighbourhood() == null && l.getTaken_by() == null) {
+                stmt = "UPDATE lockers "
+                        + "SET cluster=?,"
+                        + "neighbourhood = NULL,"
+                        + "taken_by = NULL"
+                        + " WHERE id = ?";
+            }else if (l.getNeighbourhood() == null) {
                 stmt = "UPDATE lockers "
                         + "SET cluster=?,"
                         + "neighbourhood = NULL"
