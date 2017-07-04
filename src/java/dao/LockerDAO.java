@@ -379,7 +379,7 @@ public class LockerDAO {
         //Prepare SQL statement
         stmt = "UPDATE lockers "
                 + "SET taken_by = ?"
-                + " WHERE lockerNo = ?";
+                + " WHERE locker_no = ?";
 
         try {
             //Get connection from DatabaseConnectionManager
