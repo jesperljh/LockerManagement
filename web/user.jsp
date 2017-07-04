@@ -6,7 +6,7 @@
 
 <%@page import="java.util.Map"%>
 <%@page import="entity.Request"%>
-s<%@page import="controller.RequestController"%>
+<%@page import="controller.RequestController"%>
 <%@page import="entity.Locker"%>
 <%@page import="controller.LockerController"%>
 <%@page import="dao.LockerDAO"%>
