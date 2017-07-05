@@ -100,8 +100,8 @@ public class lockerRequestServlet extends HttpServlet {
                 RequestDAO requestDAO = new RequestDAO();
                 requestDAO.insertRequest(requester, receiver, selectedLocker);
             }
-            
-            response.sendRedirect("user.jsp");
+            request.setAttribute("success", "Swap locker request successfully sent.");
+            request.getRequestDispatcher("user.jsp").forward(request, response);
         }
     }
 

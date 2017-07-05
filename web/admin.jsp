@@ -52,7 +52,7 @@
                     Demographics demo = demoCtrl.getUser(sid);
                     if (demo == null) {
             %>
-            <div data-alert class="alert-box alert round">
+            <div data-alert class="alert-box round" style="background-color: #5e001f">
                 User not found - Please enter correct SID.
                 <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
             </div>

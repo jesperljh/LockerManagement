@@ -44,7 +44,22 @@
             <h3 class="page-header" style="display: inline-block"><strong>&nbspRegister User</strong></h3>
             <!--Divider-->
             <hr>
-
+            <%                String sid;
+                if (request.getMethod() != null && request.getMethod().equals("POST")) {
+                    //Get the user input
+                    sid = request.getParameter("sid");
+                    DemographicsCSVController demoCtrl = new DemographicsCSVController();
+                    Demographics demo = demoCtrl.getUser(sid);
+                    if (demo == null) {
+            %>
+            <div data-alert class="alert-box round" style="background-color: #5e001f">
+                User not found - Please enter correct SID.
+                <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
+            </div>
+            <%
+                    }
+                }
+            %>
             <form method="POST">
                 <!-- Date Time Picker -->
                 <label><strong>SID</strong>
@@ -55,15 +70,14 @@
         </div>
 
         <!-- **************************** Search SID Result ********************-->
-        <%  
-            String sid;
+        <%
             if (request.getMethod() != null && request.getMethod().equals("POST")) {
                 //Get the user input
                 sid = request.getParameter("sid");
                 DemographicsCSVController demoCtrl = new DemographicsCSVController();
                 Demographics demo = demoCtrl.getUser(sid);
-                if (demo != null) {                      
-                                                    
+                if (demo != null) {
+
         %>
         <div class="row">
             <div class="people-you-might-know">
@@ -72,46 +86,46 @@
                         Search Result
                     </h6>
                 </div>
-                                    
-                    <% if(demo.getRole()!= null && demo.getRole().equals("user")){
-                    %>
+
+                <% if (demo.getRole() != null && demo.getRole().equals("user")) {
+                %>
                 <form action="registerUserServlet" method="POST">
-                <div class="row add-people-section">
-                    <div class="small-12 medium-6 columns about-people">
-                        <div class="about-people-avatar">
-                            <img class="avatar-image" src="https://i.imgur.com/UPVxPjb.jpg" alt="Kishore Kumar">
+                    <div class="row add-people-section">
+                        <div class="small-12 medium-6 columns about-people">
+                            <div class="about-people-avatar">
+                                <img class="avatar-image" src="https://i.imgur.com/UPVxPjb.jpg" alt="Kishore Kumar">
+                            </div>
+                            <div class="about-people-author">
+
+                                <p class="author-name" id="user_name">                            
+                                    <%= demo.getName()%>                               
+                                </p>
+                                <p class="author-mutual" id="user_sid">
+                                    <strong><%= demo.getSid()%></strong>
+                                </p>
+                            </div>    
                         </div>
-                        <div class="about-people-author">
-                            
-                            <p class="author-name" id="user_name">                            
-                                <%= demo.getName()%>                               
-                            </p>
-                            <p class="author-mutual" id="user_sid">
-                                <strong><%= demo.getSid()%></strong>
-                            </p>
-                        </div>    
-                    </div>
-                    <div class="small-12 medium-6 columns add-friend">
-                        <div class="add-friend-action">
-                            <input type="hidden" name="user_sid" id="user_sid" value="<%=demo.getSid()%>">
-                            <input type="hidden" name="mgr_sid" id="mgr_sid" value="<%=currentUser.getSid()%>">
-                            <input type="submit" class="radius button small" value="Add to Neighbourhood">   
-                            <input type="hidden" name="nb" value="<%=currentUser.getNeighbourhood()%>">                            
+                        <div class="small-12 medium-6 columns add-friend">
+                            <div class="add-friend-action">
+                                <input type="hidden" name="user_sid" id="user_sid" value="<%=demo.getSid()%>">
+                                <input type="hidden" name="mgr_sid" id="mgr_sid" value="<%=currentUser.getSid()%>">
+                                <input type="submit" class="radius button small" value="Add to Neighbourhood">   
+                                <input type="hidden" name="nb" value="<%=currentUser.getNeighbourhood()%>">                            
+                            </div>
                         </div>
                     </div>
-                </div>
                 </form>
-                        <% }else{ %>
-                    <script>alert('SID belongs to a manager');</script>
-                    <p class="author-mutual"> No users found</p>
-                    <% } %>
+                <% } else { %>
+                <script>alert('SID belongs to a manager');</script>
+                <p class="author-mutual"> No users found</p>
+                <% } %>
             </div>
         </div>    
         <%
                 } // End of if(demo != null())
             } // end of if (request.getMethod() != null && request.getMethod().equals("POST")) {
         %>                    
-                            
+
         <!-- **************************** End Search SID Result ********************-->
 
 
@@ -131,28 +145,28 @@
                 <%
                     for (Demographics demographics : demoList) {
                 %>
-                    <div class="row add-people-section">
-                        <div class="small-12 medium-6 columns about-people">
-                            <div class="about-people-avatar">
-                                <img class="avatar-image" src="https://i.imgur.com/UPVxPjb.jpg" alt="Kishore Kumar">
-                            </div>
-                            <div class="about-people-author">
-                                <p class="author-name">
-                                    <%= demographics.getName()%>
-                                </p>
-                                <p class="author-location">
-                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                    <%= demographics.getNeighbourhood().toUpperCase() + " " + demographics.getRole()%>
-                                </p>
-                                <p class="author-mutual">
-                                    <strong><%= demographics.getSid()%></strong>
-                                    <input type="hidden" name="sid" id="sid" value="<%= demographics.getSid()%>">
-                                    <input type="hidden" name="neighbourhood" id="neighbourhood" value="<%= demographics.getNeighbourhood()%>">
-                                    <input type="hidden" name="role" id="role" value="user">
-                                </p>
-                            </div>    
-                        </div>                                 
-                    </div>
+                <div class="row add-people-section">
+                    <div class="small-12 medium-6 columns about-people">
+                        <div class="about-people-avatar">
+                            <img class="avatar-image" src="https://i.imgur.com/UPVxPjb.jpg" alt="Kishore Kumar">
+                        </div>
+                        <div class="about-people-author">
+                            <p class="author-name">
+                                <%= demographics.getName()%>
+                            </p>
+                            <p class="author-location">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <%= demographics.getNeighbourhood().toUpperCase() + " " + demographics.getRole()%>
+                            </p>
+                            <p class="author-mutual">
+                                <strong><%= demographics.getSid()%></strong>
+                                <input type="hidden" name="sid" id="sid" value="<%= demographics.getSid()%>">
+                                <input type="hidden" name="neighbourhood" id="neighbourhood" value="<%= demographics.getNeighbourhood()%>">
+                                <input type="hidden" name="role" id="role" value="user">
+                            </p>
+                        </div>    
+                    </div>                                 
+                </div>
                 <%
                     }
                 %>
@@ -169,7 +183,7 @@
         <script src="js/vendor/jquery.js"></script>
         <script src="js/foundation.min.js"></script>
         <script>
-            $(document).foundation();
+                    $(document).foundation();
         </script>
     </body>
 </html>
