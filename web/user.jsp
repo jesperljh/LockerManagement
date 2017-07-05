@@ -50,17 +50,21 @@
                 HashMap<String, ArrayList<Locker>> mapLockerList = locker_Ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
 
                 if (cluster == null) {
-                    cluster = mapLockerList.keySet().iterator().next();
+                    if (mapLockerList != null && mapLockerList.keySet() != null) {
+                        cluster = mapLockerList.keySet().iterator().next();
+                    }
                 }
-                //int clusterNo = 0;
-                ArrayList<Locker> value = new ArrayList<Locker>();
-                out.println("<input type='checkbox' name='cluster' id='cluster' value='" + cluster + "' hidden>");
-                value = mapLockerList.get(cluster);
-                if (value != null) {
-                    for (Locker locker : value) {
-                        out.println("<input type='checkbox' name='lockerNo' id='lockerNo' value='" + locker.getLocker_no() + "' hidden>");
-                        if (locker.getTaken_by() != null) {
-                            out.println("<input type='checkbox' name='taken_by' id='taken_by' value='" + locker.getLocker_no() + "' hidden>");
+                if (cluster != null) {
+                    //int clusterNo = 0;
+                    ArrayList<Locker> value = new ArrayList<Locker>();
+                    out.println("<input type='checkbox' name='cluster' id='cluster' value='" + cluster + "' hidden>");
+                    value = mapLockerList.get(cluster);
+                    if (value != null) {
+                        for (Locker locker : value) {
+                            out.println("<input type='checkbox' name='lockerNo' id='lockerNo' value='" + locker.getLocker_no() + "' hidden>");
+                            if (locker.getTaken_by() != null) {
+                                out.println("<input type='checkbox' name='taken_by' id='taken_by' value='" + locker.getLocker_no() + "' hidden>");
+                            }
                         }
                     }
                 }
@@ -236,8 +240,8 @@
         <script src="js/datetime/app.js" type="text/javascript"></script>
         <script src="js/foundation.min.js"></script>
         <script>
-            
-            
+
+
             // ********************* YELLOW *******************************
             var settings = {
                 rows: 3,
@@ -534,7 +538,7 @@
                 });
                 alert(str.join(','));
             })
-            
+
             $(document).foundation();
         </script>
     </body>
