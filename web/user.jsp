@@ -279,7 +279,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             // ********************* BLUE *******************************
             var settings3 = {
@@ -291,7 +292,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             var settings4 = {
                 rows: 3,
@@ -302,7 +304,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             var settings5 = {
                 rows: 3,
@@ -313,7 +316,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             var settings6 = {
                 rows: 3,
@@ -324,7 +328,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             var settings7 = {
                 rows: 3,
@@ -335,7 +340,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             // ********************* YELLOW *******************************
             var settings8 = {
@@ -347,7 +353,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             var settings9 = {
                 rows: 3,
@@ -358,7 +365,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             var settings10 = {
                 rows: 3,
@@ -369,7 +377,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             var settings11 = {
                 rows: 3,
@@ -380,7 +389,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
             var settings12 = {
                 rows: 3,
@@ -391,7 +401,8 @@
                 seatHeight: 50,
                 seatCss: 'seat',
                 selectedSeatCss: 'selectedSeat',
-                selectingSeatCss: 'selectingSeat'
+                selectingSeatCss: 'selectingSeat',
+                restrictedSeatCss: 'restrictedSeat'
             };
 
             //Case II: If already booked
