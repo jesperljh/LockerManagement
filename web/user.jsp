@@ -158,8 +158,8 @@
                     </div>
                     <div class="small-12 medium-6 columns add-friend">
                         <div class="add-friend-action">
-                            <a href="/LockerAssignment/processRequest.jsp?request=accept&id=<%=r.getId()%>&mySid=<%=r.getReceiver()%>&rSid=<%=r.getRequester()%>" class="radius button small">Accept Request</a>
-                            <a href="/LockerAssignment/processRequest.jsp?request=reject&id=<%=r.getId()%>&mySid=<%=r.getReceiver()%>&rSid=<%=r.getRequester()%>" class="button radius secondary small">Reject Request</a>
+                            <a href="./processRequest.jsp?request=accept&id=<%=r.getId()%>&mySid=<%=r.getReceiver()%>&rSid=<%=r.getRequester()%>" class="radius button small">Accept Request</a>
+                            <a href="./processRequest.jsp?request=reject&id=<%=r.getId()%>&mySid=<%=r.getReceiver()%>&rSid=<%=r.getRequester()%>" class="button radius secondary small">Reject Request</a>
                         </div>
                     </div>
                 </div>

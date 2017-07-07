@@ -46,7 +46,7 @@ public class registerUserServlet extends HttpServlet {
             String sid = request.getParameter("user_sid");
             String mgrSID = request.getParameter("mgr_sid");
             String neighbourhood = request.getParameter("nb");
-            out.println("<script>alert('sid=" + sid + ", nb= " + neighbourhood + ", mgrSID=" + mgrSID + "');</script>");
+            //out.println("<script>alert('sid=" + sid + ", nb= " + neighbourhood + ", mgrSID=" + mgrSID + "');</script>");
             // Change Neighbourhood
             DemographicsDAO demoDAO = new DemographicsDAO();
             demoDAO.updateDemoBySID(sid, neighbourhood, mgrSID);

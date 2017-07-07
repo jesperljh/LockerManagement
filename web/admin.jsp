@@ -122,40 +122,35 @@
             <form action="assignManagerServlet" method="POST">
                 <input type="hidden" name="searchSID" id="searchSID" value="<%= demo.getSid()%>">
                 <input type="hidden" name="role" id="role" value="manager">
-                <label><strong>Choose Neigbourhood</strong>
+                <label><strong>Choose Neighbourhood</strong>
                     <select name="neighbourhood" id="neighbourhood" required>
                         <%
+                            ArrayList<String> hoodOptions =  new ArrayList<String>();
+                            hoodOptions.add("Bohemian");
+                            hoodOptions.add("Coastal");
+                            hoodOptions.add("Eclectic");
+                            hoodOptions.add("French Country");
+                            hoodOptions.add("Industrial");
+                            hoodOptions.add("Cottage");
+                            hoodOptions.add("Minimalist");
+                            hoodOptions.add("Zen");
+                            hoodOptions.add("Art Nouveau");
+                            hoodOptions.add("Victorian");
+                            
+                            
                             DemographicsCSVController dController = new DemographicsCSVController();
                             ArrayList<Demographics> demoList = dController.getManagers();
                             if (demoList != null && !demoList.isEmpty()) {
                                 ArrayList<String> a = new ArrayList<String>();
                                 for (Demographics d : demoList) {
                                     a.add(d.getNeighbourhood());
-                                }
-                                if (!a.contains("batman")) {
-                        %>
-                        <option value="batman" selected>Batman Neighbourhood</option> 
-                        <%
-                            }
-                            if (!a.contains("spiderman")) {
-                        %>
-                        <option value="spiderman">Spiderman Neighbourhood</option>
-                        <%
-                            }
-                            if (!a.contains("superman")) {
-                        %>
-                        <option value="superman">Superman Neighbourhood</option> 
-                        <%
-                            }
-                            if (!a.contains("ironman")) {
-                        %>
-                        <option value="ironman">Ironman Neighbourhood</option> 
-                        <%
-                            }
-                            if (!a.contains("wonderwoman")) {
-                        %>
-                        <option value="wonderwoman">Wonderwoman</option> 
-                        <%
+                                }                                
+                                for(String hood : hoodOptions) {
+                                    if(!a.contains(hood)){
+                                    %>
+                                    <option value='<%=hood%>' selected><%=hood%></option> 
+                                    <%
+                                    }
                                 }
                             }
                         %>
@@ -220,7 +215,10 @@
                                 <i class="fa fa-user-plus" aria-hidden="true"></i>
                                 Unassign Manager
                             </button>
-                            <a href="/LockerAssignment/AssignLockerToManager.jsp?sid=<%=demographics.getSid()%>" class="button radius secondary small">Assign Locker Cluster</a>
+                            <%
+                                
+                            %>
+                            <a href="./AssignLockerToManager.jsp?sid=<%=demographics.getSid()%>" class="button radius secondary small">Assign Locker Cluster</a>
                         </div>
                     </div>
                 </div>

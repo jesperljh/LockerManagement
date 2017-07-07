@@ -801,8 +801,8 @@ public class DemographicsDAO {
 
         //Prepare SQL statement
         String stmt = "UPDATE demographics "
-                + "SET neighbourhood_manager=?,"
-                + "neighbourhood=?"
+                //+ "SET neighbourhood_manager=?,"
+                + "SET neighbourhood=?"
                 + "WHERE sid = ?";
         try {
             //Get connection from DatabaseConnectionManager
@@ -812,9 +812,9 @@ public class DemographicsDAO {
             pstmt = conn.prepareStatement(stmt);
 
             //Set parameters into prepared statement
-            pstmt.setString(1, managerSID);
-            pstmt.setString(2, neighbourhood);
-            pstmt.setString(3, sid);
+            //pstmt.setString(1, managerSID);
+            pstmt.setString(1, neighbourhood);
+            pstmt.setString(2, sid);
 
             //Execute update
             pstmt.executeUpdate();
