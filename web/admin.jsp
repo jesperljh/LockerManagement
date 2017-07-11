@@ -61,6 +61,17 @@
                 }
             %>
 
+            <%
+                String success = (String) request.getAttribute("success");
+                if (success != null) {
+            %>
+            <div data-alert class="alert-box success round">
+                <%=success%>
+                <a href="#" class="close" style="color: whitesmoke; font-size: 25px">&times;</a>
+            </div>
+            <%
+                }
+            %>
             <form method="POST">
                 <!-- Date Time Picker -->
                 <label><strong>SID</strong>
@@ -125,7 +136,7 @@
                 <label><strong>Choose Neighbourhood</strong>
                     <select name="neighbourhood" id="neighbourhood" required>
                         <%
-                            ArrayList<String> hoodOptions =  new ArrayList<String>();
+                            ArrayList<String> hoodOptions = new ArrayList<String>();
                             hoodOptions.add("Bohemian");
                             hoodOptions.add("Coastal");
                             hoodOptions.add("Eclectic");
@@ -136,20 +147,19 @@
                             hoodOptions.add("Zen");
                             hoodOptions.add("Art Nouveau");
                             hoodOptions.add("Victorian");
-                            
-                            
+
                             DemographicsCSVController dController = new DemographicsCSVController();
                             ArrayList<Demographics> demoList = dController.getManagers();
                             if (demoList != null && !demoList.isEmpty()) {
                                 ArrayList<String> a = new ArrayList<String>();
                                 for (Demographics d : demoList) {
                                     a.add(d.getNeighbourhood());
-                                }                                
-                                for(String hood : hoodOptions) {
-                                    if(!a.contains(hood)){
-                                    %>
-                                    <option value='<%=hood%>' selected><%=hood%></option> 
-                                    <%
+                                }
+                                for (String hood : hoodOptions) {
+                                    if (!a.contains(hood)) {
+                        %>
+                        <option value='<%=hood%>' selected><%=hood%></option> 
+                        <%
                                     }
                                 }
                             }
@@ -216,7 +226,7 @@
                                 Unassign Manager
                             </button>
                             <%
-                                
+
                             %>
                             <a href="./AssignLockerToManager.jsp?sid=<%=demographics.getSid()%>" class="button radius secondary small">Assign Locker Cluster</a>
                         </div>

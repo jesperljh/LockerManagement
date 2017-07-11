@@ -173,8 +173,15 @@
                                 HashMap<String, ArrayList<Locker>> lockerMap = locker_ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
                                 for (Map.Entry<String, ArrayList<Locker>> entry : lockerMap.entrySet()) {
                                     String key = (String) entry.getKey();
+                                    ArrayList<Locker> value = (ArrayList<Locker>)entry.getValue();
+                                    int count = 0;
+                                    for(Locker l : value){
+                                        if(l.getTaken_by() == null){
+                                            count++;
+                                        }
+                                    }
                             %>
-                            <option value="<%=key%>"><%=key%></option> 
+                            <option value="<%=key%>"><%=key%> - <%=count%> available lockers</option> 
                             <!--<option value="ox">ox</option> 
                             <option value="tiger">tiger</option>
                             <option value="rabbit">rabbit</option>

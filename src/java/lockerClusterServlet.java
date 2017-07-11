@@ -84,7 +84,8 @@ public class lockerClusterServlet extends HttpServlet {
                  LockerController lockerCtrl = new LockerController();
                  lockerCtrl.assignLockerToManager(nb, lockerCluster);
              }
-             response.sendRedirect("admin.jsp");
+             request.setAttribute("success", "Successfully assigned locker cluster to Manager!");
+             request.getRequestDispatcher("admin.jsp").forward(request, response);
         }
     }
 
