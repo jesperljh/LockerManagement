@@ -173,10 +173,10 @@
                                 HashMap<String, ArrayList<Locker>> lockerMap = locker_ctrl.getLockerClusterListByNeighbourhood(currentUser.getNeighbourhood());
                                 for (Map.Entry<String, ArrayList<Locker>> entry : lockerMap.entrySet()) {
                                     String key = (String) entry.getKey();
-                                    ArrayList<Locker> value = (ArrayList<Locker>)entry.getValue();
+                                    ArrayList<Locker> value = (ArrayList<Locker>) entry.getValue();
                                     int count = 0;
-                                    for(Locker l : value){
-                                        if(l.getTaken_by() == null){
+                                    for (Locker l : value) {
+                                        if (l.getTaken_by() == null) {
                                             count++;
                                         }
                                     }
@@ -204,6 +204,9 @@
                 </div>
                 <hr>
             </form>
+        </div>
+        <div style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px;">
+            <img src="img/FloorLayout.png" style="border: 3px solid #ccc!important">
         </div>
         <%
             //for (int i = 1; i <= clusterNo; i++) {
@@ -237,10 +240,10 @@
 
         <!-- Initialize JS Plugins -->
         <script src="js/datetime/app.js" type="text/javascript"></script>
-        
+
         <script src="js/foundation.min.js"></script>
         <script>
-            $(document).foundation();
+                                $(document).foundation();
                                 //Case II: If already booked
                                 var bookedSeats = [5, 10, 25];
                                 //var bookedSeats = [];

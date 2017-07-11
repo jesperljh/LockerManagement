@@ -229,6 +229,11 @@
                 <input type="submit" value="Request To Swap Locker" style="margin-top: 10px" class="button sloca normal radius"/>
             </div>
         </form>
+
+        <div style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px;">
+            <img src="img/FloorLayout.png" style="border: 3px solid #ccc!important">
+        </div>
+            
         <!-- Included JS Files (Compressed) -->
         <script src="js/vendor/jquery.js"></script>
         <script src="js/datetime/foundation.min.js" type="text/javascript"></script>

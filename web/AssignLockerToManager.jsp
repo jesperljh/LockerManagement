@@ -92,7 +92,7 @@
                     </select>
                 </row>
                 <% } %>
-                
+
                 <%                            if (oxCount != 0) {
                 %>
                 <row>
@@ -105,9 +105,9 @@
                         %>
                     </select>
                 </row>
-                    <% } %>
-                    
-                    <%                            if (tigerCount != 0) {
+                <% } %>
+
+                <%                            if (tigerCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_tiger" name="check_tiger" value="tiger"> Tiger Locker Cluster<br>
@@ -119,9 +119,9 @@
                         %>
                     </select>
                 </row> 
-                    <% } %>
-                    
-                    <%                            if (rabbitCount != 0) {
+                <% } %>
+
+                <%                            if (rabbitCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_rabbit" name="check_rabbit" value="rabbit"> Rabbit Locker Cluster<br>  
@@ -133,9 +133,9 @@
                         %>
                     </select>
                 </row>  
-                    <% } %>
-                    
-                    <%                            if (dragonCount != 0) {
+                <% } %>
+
+                <%                            if (dragonCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_dragon" name="check_dragon" value="dragon"> Dragon Locker Cluster<br>
@@ -147,9 +147,9 @@
                         %>
                     </select>
                 </row>  
-                    <% } %>
-                    
-                    <%                            if (snakeCount != 0) {
+                <% } %>
+
+                <%                            if (snakeCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_snake" name="check_snake" value="snake"> Snake Locker Cluster<br>
@@ -161,9 +161,9 @@
                         %>
                     </select>
                 </row>  
-                    <% } %>
-                    
-                    <%                            if (horseCount != 0) {
+                <% } %>
+
+                <%                            if (horseCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_horse" name="check_horse" value="horse"> Horse Locker Cluster<br> 
@@ -175,9 +175,9 @@
                         %>
                     </select>
                 </row>  
-                    <% } %>
-                    
-                    <%                            if (sheepCount != 0) {
+                <% } %>
+
+                <%                            if (sheepCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_sheep" name="check_sheep" value="sheep"> Sheep Locker Cluster<br>
@@ -189,9 +189,9 @@
                         %>
                     </select>
                 </row>  
-                    <% } %>
-                    
-                    <%                            if (monkeyCount != 0) {
+                <% } %>
+
+                <%                            if (monkeyCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_monkey" name="check_monkey" value="monkey"> Monkey Locker Cluster<br>  
@@ -203,9 +203,9 @@
                         %>
                     </select>
                 </row>  
-                    <% } %>
-                    
-                    <%                            if (roosterCount != 0) {
+                <% } %>
+
+                <%                            if (roosterCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_rooster" name="check_rooster" value="rooster"> Rooster Locker Cluster<br>
@@ -217,9 +217,9 @@
                         %>
                     </select>
                 </row>  
-                    <% } %>
-                    
-                    <%                            if (dogCount != 0) {
+                <% } %>
+
+                <%                            if (dogCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_dog" name="check_dog" value="dog"> Dog Locker Cluster<br> 
@@ -231,9 +231,9 @@
                         %>
                     </select>
                 </row>  
-                    <% } %>
-                    
-                    <%                            if (pigCount != 0) {
+                <% } %>
+
+                <%                            if (pigCount != 0) {
                 %>
                 <row>
                     <input type="checkbox" id="check_pig" name="check_pig" value="pig"> Pig Locker Cluster<br> 
@@ -245,12 +245,16 @@
                         %>
                     </select>
                 </row>  
-                    <% } %>
+                <% }%>
                 <row>
                     <input style="margin-top: 15px" type="submit" value="Assign" class="button sloca normal radius"/>
                 </row> 
 
             </form>
+        </div>
+
+        <div style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px;">
+            <img src="img/FloorLayout.png" style="border: 3px solid #ccc!important">
         </div>
 
         <!-- Included JS Files (Compressed) -->
