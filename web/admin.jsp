@@ -147,6 +147,7 @@
                             hoodOptions.add("Zen");
                             hoodOptions.add("Art Nouveau");
                             hoodOptions.add("Victorian");
+                            hoodOptions.add("Medieval");
 
                             DemographicsCSVController dController = new DemographicsCSVController();
                             ArrayList<Demographics> demoList = dController.getManagers();
