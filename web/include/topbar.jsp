@@ -7,7 +7,7 @@
 <nav class="top-bar toggle-topbar" data-topbar>
     <ul class="title-area">
         <li class="name">
-            <h1><a href="heatmap.jsp">&nbspJP<i class="fi-clock"></i>Intern</a></h1>
+            <h1><a href="heatmap.jsp"><i class="fi-clock"></i>&nbspProBox</a></h1>
         </li>
     </ul>
 
