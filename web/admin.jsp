@@ -50,7 +50,7 @@
                     sid = request.getParameter("sid");
                     DemographicsCSVController demoCtrl = new DemographicsCSVController();
                     Demographics demo = demoCtrl.getUser(sid);
-                    if (demo == null) {
+                    if (demo == null && request.getAttribute("success") == null) {
             %>
             <div data-alert class="alert-box round" style="background-color: #5e001f">
                 User not found - Please enter correct SID.
@@ -137,17 +137,17 @@
                     <select name="neighbourhood" id="neighbourhood" required>
                         <%
                             ArrayList<String> hoodOptions = new ArrayList<String>();
-                            hoodOptions.add("Bohemian");
-                            hoodOptions.add("Coastal");
-                            hoodOptions.add("Eclectic");
-                            hoodOptions.add("French Country");
-                            hoodOptions.add("Industrial");
-                            hoodOptions.add("Cottage");
-                            hoodOptions.add("Minimalist");
-                            hoodOptions.add("Zen");
-                            hoodOptions.add("Art Nouveau");
-                            hoodOptions.add("Victorian");
-                            hoodOptions.add("Medieval");
+                            hoodOptions.add("Malaya");
+                            hoodOptions.add("Obsidian");
+                            hoodOptions.add("Peridot");
+                            hoodOptions.add("Aquamarine");
+                            hoodOptions.add("Coral");
+                            hoodOptions.add("Foresterite");
+                            hoodOptions.add("Topaz");
+                            hoodOptions.add("Moonstone");
+                            hoodOptions.add("Amethyst");
+                            hoodOptions.add("Zircon");
+                            hoodOptions.add("Sapphire");
 
                             DemographicsCSVController dController = new DemographicsCSVController();
                             ArrayList<Demographics> demoList = dController.getManagers();
